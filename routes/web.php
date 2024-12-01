@@ -1,7 +1,8 @@
 <?php
 
+use App\Http\Controllers\FrontEndController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
+Route::controller(FrontEndController::class)->group(function () {
+    Route::get('/', 'Home')->name('layouts.home');
 });

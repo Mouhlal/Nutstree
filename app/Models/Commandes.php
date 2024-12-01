@@ -11,5 +11,15 @@ class Commandes extends Model
     use HasFactory , SoftDeletes ;
 
     protected $guarded = [] ;
-    
+
+    public function User(){
+        return $this->belongsTo(User::class);
+    }
+    public function Commandes_produits(){
+        return $this->hasMany(Commandes_produits::class);
+    }
+    public function Paiements(){
+        return $this->hasOne(Paiements::class);
+    }
+
 }

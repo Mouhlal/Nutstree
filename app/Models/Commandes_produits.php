@@ -11,4 +11,11 @@ class Commandes_produits extends Model
     use HasFactory , SoftDeletes ;
 
     protected $guarded = [] ;
+
+    public function Commandes(){
+        return $this->belongsTo(Commandes::class);
+    }
+    public function Produits(){
+        return $this->belongsTo(Produits::class);
+    }
 }

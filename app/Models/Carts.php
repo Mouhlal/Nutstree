@@ -11,4 +11,11 @@ class Carts extends Model
     use HasFactory , SoftDeletes ;
 
     protected $guarded = [] ;
+
+    public function User(){
+        return $this->belongsTo(User::class);
+    }
+    public function CartItems(){
+        return $this->hasMany(CartItems::class);
+    }
 }

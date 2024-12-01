@@ -11,4 +11,9 @@ class Paiements extends Model
     use HasFactory , SoftDeletes ;
 
     protected $guarded = [] ;
+
+    public function Commandes(){
+        return $this->belongsTo(Commandes::class);
+    }
+
 }

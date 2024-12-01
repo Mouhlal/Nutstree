@@ -11,4 +11,14 @@ class Produits extends Model
     use HasFactory , SoftDeletes ;
 
     protected $guarded = [] ;
+
+    public function Categories(){
+        return $this->belongsTo(Categorie::class);
+    }
+    public function CartItems(){
+        return $this->hasMany(CartItems::class);
+    }
+    public function Commandes_produits(){
+        return $this->hasMany(Commandes_produits::class);
+    }
 }

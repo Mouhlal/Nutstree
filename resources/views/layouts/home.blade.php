@@ -72,61 +72,7 @@
 <body class="bg-white text-gray-600 work-sans leading-normal text-base tracking-normal">
 
     <!--Nav-->
-    <nav id="header" class="bg-gray-800 text-white shadow-lg">
-        <div class="w-full container mx-auto flex flex-wrap items-center justify-between mt-0 px-6 py-3">
-
-            <label for="menu-toggle" class="cursor-pointer md:hidden block">
-                <svg class="fill-current text-yellow-400" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
-                    <title>menu</title>
-                    <path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z"></path>
-                </svg>
-            </label>
-            <input class="hidden" type="checkbox" id="menu-toggle" />
-
-            <div class="hidden md:flex md:items-center md:w-auto w-full order-3 md:order-1" id="menu">
-                <nav>
-                    <ul class="md:flex items-center justify-between text-base text-gray-700 pt-4 md:pt-0">
-                        <li><a class="inline-block text-yellow-400 no-underline hover:text-gray-400 hover:underline py-2 px-4" href="">Shop</a></li>
-                        <li><a class="inline-block text-yellow-400 no-underline hover:text-gray-400 hover:underline py-2 px-4" href="">About</a></li>
-                        <li><a class="inline-block text-yellow-400 no-underline hover:text-gray-400 hover:underline py-2 px-4" href="">Contact</a></li>
-                        @guest
-                        <li><a class="inline-block text-yellow-400 no-underline hover:text-gray-400 hover:underline py-2 px-4" href="">Login</a></li>
-                             @endguest
-                             @auth
-                        <li><a class="text-yellow-400 inline-block no-underline hover:text-gray-400 hover:underline py-2 px-4" href="">Deconnexion</a></li>
-                            @endauth                    </ul>
-                </nav>
-            </div>
-
-            <div class="order-1 md:order-2">
-                <a class="flex items-center tracking-wide no-underline hover:no-underline font-bold text-yellow-400 text-2xl " href="/">
-                    <svg class="fill-current text-yellow-400 mr-2" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                        <path d="M5,22h14c1.103,0,2-0.897,2-2V9c0-0.553-0.447-1-1-1h-3V7c0-2.757-2.243-5-5-5S7,4.243,7,7v1H4C3.447,8,3,8.447,3,9v11 C3,21.103,3.897,22,5,22z M9,7c0-1.654,1.346-3,3-3s3,1.346,3,3v1H9V7z M5,10h2v2h2v-2h6v2h2v-2h2l0.002,10H5V10z" />
-                    </svg>
-                    Nutstree
-                </a>
-            </div>
-
-            <div class="order-2 md:order-3 flex items-center" id="nav-content">
-
-                <a class="inline-block no-underline hover:text-black" href="#">
-                    <svg class="fill-current text-yellow-400 hover:text-gray-400" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                        <circle fill="none" cx="12" cy="7" r="3" />
-                        <path d="M12 2C9.243 2 7 4.243 7 7s2.243 5 5 5 5-2.243 5-5S14.757 2 12 2zM12 10c-1.654 0-3-1.346-3-3s1.346-3 3-3 3 1.346 3 3S13.654 10 12 10zM21 21v-1c0-3.859-3.141-7-7-7h-4c-3.86 0-7 3.141-7 7v1h2v-1c0-2.757 2.243-5 5-5h4c2.757 0 5 2.243 5 5v1H21z" />
-                    </svg>
-                </a>
-
-                <a class="pl-3 inline-block no-underline text-yellow-400 hover:text-gray-400" href="#">
-                    <svg class="fill-current hover:text-black" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                        <path d="M21,7H7.462L5.91,3.586C5.748,3.229,5.392,3,5,3H2v2h2.356L9.09,15.414C9.252,15.771,9.608,16,10,16h8 c0.4,0,0.762-0.238,0.919-0.606l3-7c0.133-0.309,0.101-0.663-0.084-0.944C21.649,7.169,21.336,7,21,7z M17.341,14h-6.697L8.371,9 h11.112L17.341,14z" />
-                        <circle cx="10.5" cy="18.5" r="1.5" />
-                        <circle cx="17.5" cy="18.5" r="1.5" />
-                    </svg>
-                </a>
-
-            </div>
-        </div>
-    </nav>
+     @include('layouts.nav')
 
     <main class="my-8">
         <div class="container mx-auto px-6">
@@ -348,46 +294,7 @@
 
     </section>
 
-    <footer class="bg-gray-800 text-white py-8 border-t border-gray-700">
-        <div class="container mx-auto px-4">
-          <div class="flex flex-wrap">
-            <div class="w-full lg:w-1/2 mb-8 lg:mb-0">
-              <div class="text-center lg:text-left">
-                <h3 class="text-2xl font-bold text-yellow-400">Nutstree</h3>
-                <p class="text-lg mt-4">
-                  Nutstree est votre destination de confiance pour une sélection premium de fruits secs. Nous vous offrons des produits de qualité supérieure, allant des noix savoureuses aux fruits séchés soigneusement sélectionnés. Que ce soit pour une collation saine ou pour ajouter une touche gourmande à vos recettes, Nutstree répond à vos besoins avec des fruits secs d'exception. Découvrez notre offre et savourez la nature dans chaque bouchée.
-                </p>
-              </div>
-            </div>
-
-            <div class="w-full lg:w-1/2">
-              <div class="text-center lg:text-right">
-                <h3 class="text-2xl font-bold text-yellow-400">Suivez-nous</h3>
-                <div class="mt-4">
-                  <p class="text-lg">Restez à jour avec nos dernières nouveautés et promotions sur les fruits secs !</p>
-                  <div class="flex justify-center lg:justify-end mt-4">
-                    <a href="#" class="mx-2 text-yellow-400 hover:text-white">
-                      <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24">
-                        <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951..."></path>
-                      </svg>
-                    </a>
-                    <a href="#" class="mx-2 text-yellow-400 hover:text-white">
-                      <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24">
-                        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"></path>
-                      </svg>
-                    </a>
-                    <a href="#" class="mx-2 text-yellow-400 hover:text-white">
-                      <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24">
-                        <path d="M12 0C8.74 0 8.333.015 7.053.072 5.775.132 4.905.333 4.14.63c-.789.306-1.459.717-2.126 1.384S.935 3.35.63 4.14C.333 4.905.131 5.775.072 7.053.012 8.333 0 8.74 0 12s.015 3.667.072 4.947c.06 1.277.261 2.148.558 2.913.306.788.717 1.459 1.384 2.126.667.666 1.336 1.079 2.126 1.384.766.296 1.636.499 2.913.558C8.333 23.988 8.74 24 12 24s3.667-.015 4.947-.072c1.277-.06 2.148-.262 2.227-.415.562-.217.96-.477 1.382-.896.419-.42.679-.819.896-1.381.164-.422.36-1.057.413-2.227.057-1.266.07-1.646.07-4.85s-.015-3.585-.074-4.85c-.061-1.17-.256-1.805-.421-2.227-.224-.562-.479-.96-.899-1.382-.419-.419-.824-.679-1.38-.896-.42-.164-1.065-.36-2.235-.413-1.274-.057-1.649-.07-4.859-.07-3.211 0-3.586-.015-4.859-.074-1.171-.061-1.816-.256-2.236-.421-.569-.224-.96-.479-1.379-.899-.421-.419-.69-.824-.9-1.38-.165-.42-.359-1.065-.42-2.235-.045-1.26-.061-1.649-.061-4.844 0-3.196.016-3.586.061-4.861.061-1.17.255-1.814.42-2.234.21-.57.479-.96.9-1.381.419-.419.81-.689 1.379-.898.42-.166 1.051-.361 2.221-.421 1.275-.045 1.65-.06 4.859-.06l.045.03zm0 3.678c-3.405 0-6.162 2.76-6.162 6.162 0 3.405 2.76 6.162 6.162 6.162 3.405 0 6.162-2.76 6.162-6.162 0-3.405-2.76-6.162-6.162-6.162zM12 16c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zm7.846-10.405c0 .795-.646 1.44-1.44 1.44-.795 0-1.44-.646-1.44-1.44 0-.794.646-1.439 1.44-1.439.793-.001 1.44.645 1.44 1.439z"></path>
-                      </svg>
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </footer>
+   @include('layouts.footer') ;
 
 </body>
 

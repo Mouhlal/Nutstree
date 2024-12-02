@@ -17,10 +17,10 @@ class UserController extends Controller
         // $credentials = $request->only('email','password');
         $email = $request->email ;
         $password = $request->password ;
-        $credentials = $request->validate([
+        $credentials = [
             'email' => $email ,
             'password' => $password
-        ]);
+        ];
         if(Auth::attempt($credentials)){
             $request->session()->regenerate();
             return redirect()->route('layouts.home')->with('login','Login avec succées , Bienvenue');
@@ -45,10 +45,10 @@ class UserController extends Controller
             'cin' => 'nullable',
             'adresse'=>'nullable',
             'tel' => 'required|unique:users' ,
-            'email' => 'required|confirmed|unique:users' ,
-            'password' => 'required|min:5|string|max:25'
+            'email' => 'required|unique:users' ,
+            'password' => 'required|confirmed|min:5|string|max:25'
         ]);
-        $att['image'] = $request->file('image')->store('users','public');
+        //$att['image'] = $request->file('image')->store('users','public');
         $att['password'] = Hash::make($request->password);
         User::create($att);
         return redirect()->route('layouts.home')->with('register','Création du compte avec succes');

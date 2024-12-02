@@ -17,11 +17,13 @@ return new class extends Migration
             $table->string('image')->nullable();
             $table->string('cin')->nullable();
             $table->string('adresse')->default('casa')->nullable();
-            $table->string( 'tel')->unique();
+            $table->string( 'tel')->unique()->nullable();
             $table->boolean('isAdmin')->default(false);
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
+            $table->string('password')->nullable();
+            $table->string('google_id')->nullable()->unique();
+
             $table->softDeletes();
             $table->rememberToken();
             $table->timestamps();

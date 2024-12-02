@@ -38,13 +38,6 @@
                             placeholder="Votre nom">
                     </div>
 
-                    <div>
-                        <label for="tel" class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">Numéro De Télèphone</label>
-                        <input type="tel" value="{{old('tel')}}" pattern="[0-9]{10}"  name="tel" required
-                            class="w-full px-4 py-2 text-sm text-gray-900 bg-gray-50 border border-gray-300 rounded-lg dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:border-gray-600 focus:ring-blue-500 focus:border-blue-500"
-                            placeholder="Votre Numéro de Telephone">
-                    </div>
-
                     <!-- Adresse e-mail -->
                     <div>
                         <label for="email" class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">Adresse e-mail</label>
@@ -77,7 +70,7 @@
                 </form>
 
                 <!-- Connexion avec Google -->
-                <div class="relative my-6">
+                {{-- <div class="relative my-6">
                     <div class="absolute inset-0 flex items-center">
                         <div class="w-full border-t border-gray-300 dark:border-gray-600"></div>
                     </div>
@@ -95,7 +88,7 @@
                     </svg>
                     Continuer avec Google
                 </a>
-
+ --}}
                 <!-- Lien vers login -->
                 <p class="text-center text-sm text-gray-500 dark:text-gray-400">
                     Vous avez déjà un compte ?

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name')->nullable();
             $table->string('image')->nullable();
             $table->string('cin')->nullable();
-            $table->string('adresse')->default('casa');
+            $table->string('adresse')->default('casa')->nullable();
             $table->string( 'tel')->unique();
             $table->boolean('isAdmin')->default(false);
             $table->string('email')->unique();

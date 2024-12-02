@@ -15,10 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string("numCom");
             $table->date("dateCom");
-            $table->unsignedBigInteger('users_id');
-            $table->foreign('users_id')->references('id')->on('users');
+            $table->foreignId('users_id')->constrained()->onDelete('cascade');
             $table->text("location");
-            $table->string('status')->default('pending');
+            $table->enum('status', ['pending', 'completed', 'canceled'])->default('pending');
             $table->decimal("totalPrix",10,2);
             $table->softDeletes();
             $table->timestamps();

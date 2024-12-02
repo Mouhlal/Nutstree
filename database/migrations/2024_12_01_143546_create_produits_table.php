@@ -18,8 +18,7 @@ return new class extends Migration
             $table->string('image');
             $table->decimal('prix',8,2);
             $table->integer( 'quantite' )->default(0);
-            $table->unsignedBigInteger('categories_id');
-            $table->foreign('categories_id')->references('id')->on('categories');
+            $table->foreignId('categories_id')->constrained()->onDelete('cascade');
             $table->softDeletes();
             $table->timestamps();
         });

@@ -12,6 +12,8 @@
     <!-- Navbar -->
     @include('layouts.nav')
 
+    <br> <br> <br>
+
     <!-- Login Form Section -->
     <div class="flex items-center justify-center min-h-screen px-4">
         <div class="w-full max-w-md bg-white rounded-lg shadow-lg dark:bg-gray-800 dark:border-gray-700">
@@ -29,7 +31,7 @@
                 <form action="#" method="POST" class="space-y-6">
                     @csrf
                     @foreach($errors->all() as $error)
-                    <div class="text-red-800 p-4 text-center">
+                    <div class="text-yellow-400 border border-solid p-4 text-center">
                       <h2>{{ $error }}</h2>
                     </div>
                   @endforeach
@@ -94,6 +96,8 @@
             </div>
         </div>
     </div>
+
+    <br> <br> <br>
 
     <!-- Footer -->
     @include('layouts.footer')

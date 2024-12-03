@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('image');
             $table->decimal('prix',8,2);
             $table->integer( 'quantite' )->default(0);
-            $table->foreignId('categories_id')->constrained()->onDelete('cascade');
+            $table->foreignId('categorie_id')->constrained()->onDelete('cascade');
             $table->softDeletes();
             $table->timestamps();
         });

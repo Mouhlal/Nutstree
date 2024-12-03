@@ -58,4 +58,35 @@ class UserController extends Controller
         $user = User::find($id);
         return view('auth.profile',compact('user'));
     }
+    
+    public function editp($id) {
+        $user = User::find($id);
+        if (!$user) {
+            return redirect()->route('auth.profile', $id)->with('error', 'Utilisateur non trouvé');
+        }
+        return view('auth.editp', compact('user'));
+    }
+    public function updatep(Request $request, $id) {
+        $att = $request->validate([
+            'name' => 'required',
+            'image' => 'nullable|image',
+            'cin' => 'nullable',
+            'adresse' => 'nullable',
+            'tel' => 'nullable|unique:users,tel,' . $id,
+            'email' => 'nullable|unique:users,email,' . $id,
+            'password' => 'nullable|confirmed|min:5|string|max:25'
+        ]);
+        if ($request->hasFile('image')) {
+            $att['image'] = $request->file('image')->store('users', 'public');
+        }
+        $user = User::find($id);
+        if (!$user) {
+            return redirect()->route('auth.profile', $id)->with('error', 'Utilisateur non trouvé');
+        }
+        $user->update($att);
+
+        return redirect()->route('auth.profile', $id)->with('update', 'Modification du compte réussie');
+    }
+
+
 }

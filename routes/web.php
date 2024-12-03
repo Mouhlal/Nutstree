@@ -19,7 +19,9 @@ Route::controller(UserController::class)->group(function(){
     Route::get('/register','RegisterForm')->name('auth.showRegister');
     Route::post('/register','Register')->name('auth.register');
     Route::get('/logout','logout')->name('auth.logout');
-    Route::get('/profile/{id}','profile')->name(' auth.user');
+    Route::get('/profile/{id}','profile')->name('auth.profile');
+    Route::get('/profile/edit/{id}','editp')->name('auth.editp');
+    Route::post('/profile/edit/{id}','updatep')->name('auth.updatep');
 });
 
 Route::get('auth/google', [GoogleController::class, 'redirectToGoogle'])->name('auth.google');

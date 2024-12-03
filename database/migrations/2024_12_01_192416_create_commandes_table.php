@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string("numCom");
             $table->date("dateCom");
-            $table->foreignId('users_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->text("location");
             $table->enum('status', ['pending', 'completed', 'canceled'])->default('pending');
             $table->decimal("totalPrix",10,2);

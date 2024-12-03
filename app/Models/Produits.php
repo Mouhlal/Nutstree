@@ -21,4 +21,9 @@ class Produits extends Model
     public function Commandes_produits(){
         return $this->hasMany(Commandes_produits::class);
     }
+    public function reviews()
+{
+    return $this->hasMany(Reviews::class);
+}
+
 }

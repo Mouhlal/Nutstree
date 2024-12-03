@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Commandes;
+use App\Models\Produits;
 use Illuminate\Http\Request;
 
 class FrontEndController extends Controller
@@ -15,4 +17,5 @@ class FrontEndController extends Controller
     public function About(){
         return view('layouts.about');
     }
+    
 }

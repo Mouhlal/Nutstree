@@ -8,16 +8,27 @@ use Illuminate\Http\Request;
 
 class ProduitsController extends Controller
 {
-    public function index(){
-        $produits = Produits::with('categories');
-        return view('layouts.produits',[
+
+    public function index(Request $request)
+    {
+        $category_id = $request->input('category_id');
+        $categorie = Categorie::all();
+
+        if ($category_id) {
+            $produits = Produits::where('categorie_id', $category_id)->with('categories')->get();
+        } else {
+            $produits = Produits::with('categories')->get();
+        }
+        return view('produits.index',[
+            'category_id' => $category_id ,
+            'categorie' => $categorie ,
             'produits' => $produits
         ]);
     }
 
     public function add(){
         $categ = Categorie::all();
-        return view('produits.index',[
+        return view('produits.add',[
             'categ' => $categ
         ]);
     }
@@ -32,7 +43,7 @@ class ProduitsController extends Controller
         ]);
         $att['image'] = $request->file('image')->store('produits','public');
         Produits::create($att);
-        return redirect()->route('/')->with('addP','Produit a été ajoutée');
+        return redirect()->route('produits.index')->with('addP','Produit a été ajoutée');
     }
     public function edit($id){
         $produit = Produits::findOrFail($id);
@@ -56,12 +67,12 @@ class ProduitsController extends Controller
         }
         $prod = Produits::findOrFail($id) ;
         $prod->update($att);
-        return redirect()->route('/')->with('updateP','Produit a été modifié');
+        return redirect()->route('produits.index')->with('updateP','Produit a été modifié');
     }
     public function delete($id){
         $prod = Produits::findOrFail($id);
         $prod->delete();
-        return redirect()->route('/')->with('deleteP','Produit a été supprimé');
+        return redirect()->route('produits.index')->with('deleteP','Produit a été supprimé');
     }
     public function details($id){
         $id = Produits::with('categories')->findOrFail($id);

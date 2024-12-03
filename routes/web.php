@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\GoogleController;
+use App\Http\Controllers\CartsController;
 use App\Http\Controllers\CategorieController;
 use App\Http\Controllers\FrontEndController;
 use App\Http\Controllers\ProduitsController;
@@ -49,3 +50,9 @@ Route::controller(ProduitsController::class)->group(function(){
 });
 
 
+
+
+Route::controller(CartsController::class)->group(function(){
+    Route::post('/cart/add/{productId}','addToCart')->name('cart.add');
+    Route::get('/cart','showCart')->name('cart.show');
+});

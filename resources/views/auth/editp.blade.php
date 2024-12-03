@@ -35,7 +35,7 @@
                 <!-- Téléphone -->
                 <div class="mb-4">
                     <label for="tel" class="block font-medium">Téléphone</label>
-                    <input type="tel" name="tel" id="tel" value="{{ old('tel', $user->tel) }}" class="input-form border border-gray-300 rounded-lg px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <input type="tel" name="tel" id="tel" value="{{ old('tel', $user->tel) }}" class="input-form border border-gray-300 rounded-lg px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
                 </div>
 
                 <!-- Image de profil -->
@@ -57,6 +57,12 @@
                 </div>
 
                 <button type="submit" class="bg-yellow-500 text-black px-4 py-2 rounded-lg">Mettre à jour</button>
+
+               {{--  <a href="{{route('auth.profile',$user->id)}}">
+                    <button type="submit" class="bg-yellow-500 text-black px-4 py-2 rounded-lg">Annuler</button>
+                </a>
+ --}}
+
             </form>
         </div>
     </div>

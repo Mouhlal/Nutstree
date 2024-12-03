@@ -44,7 +44,7 @@ class UserController extends Controller
             'image' => 'nullable',
             'cin' => 'nullable',
             'adresse'=>'nullable',
-            'tel' => 'required|unique:users' ,
+            'tel' => 'nullable|unique:users' ,
             'email' => 'required|unique:users' ,
             'password' => 'required|confirmed|min:5|string|max:25'
         ]);
@@ -52,5 +52,10 @@ class UserController extends Controller
         $att['password'] = Hash::make($request->password);
         User::create($att);
         return redirect()->route('layouts.home')->with('register','Création du compte avec succes');
+    }
+
+    public function profile($id){
+        $user = User::find($id);
+        return view('auth.profile',compact('user'));
     }
 }

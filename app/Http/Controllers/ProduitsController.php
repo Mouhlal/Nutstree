@@ -74,11 +74,12 @@ class ProduitsController extends Controller
         $prod->delete();
         return redirect()->route('produits.index')->with('deleteP','Produit a été supprimé');
     }
-    public function details($id){
-        $id = Produits::with('categories')->findOrFail($id);
-        return view('produits.details',[
-            'produit' => $id
-        ]);
-    }
+    public function details($id)
+{
+    $produit = Produits::with('reviews.user')->findOrFail($id); 
+    return view('produits.details', [
+        'produit' => $produit
+    ]);
+}
 
 }

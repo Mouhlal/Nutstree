@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('produit_id')->constrained()->onDelete('cascade');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->text('content');  // Contenu de l'avis
-            $table->unsignedTinyInteger('rating'); // Note (1 à 5)
+            $table->string('content')->default('Avis non fourni');
+            $table->unsignedTinyInteger('rating'); 
             $table->softDeletes();
             $table->timestamps();
         });

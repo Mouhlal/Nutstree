@@ -5,6 +5,7 @@ use App\Http\Controllers\CartsController;
 use App\Http\Controllers\CategorieController;
 use App\Http\Controllers\FrontEndController;
 use App\Http\Controllers\ProduitsController;
+use App\Http\Controllers\ReviewsController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -60,3 +61,4 @@ Route::controller(CartsController::class)->group(function(){
 
 });
 
+Route::post('/produits/{id}/reviews', [ReviewsController::class, 'storeReview'])->name('reviews.store');

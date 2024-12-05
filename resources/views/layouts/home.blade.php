@@ -9,6 +9,7 @@
     <link rel="shortcut icon" href="{{asset('storage/layouts/logo.jpeg')}}" type="image/x-icon">
     <meta name="description" content="Free open source Tailwind CSS Store template">
     <meta name="keywords" content="tailwind,tailwindcss,tailwind css,css,starter template,free template,store template, shop layout, minimal, monochrome, minimalistic, theme, nordic">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     @vite('resources/css/app.css')
 

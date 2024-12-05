@@ -6,12 +6,15 @@
     <title>Panier - Nutstree</title>
     @vite('resources/css/app.css')
     <link rel="shortcut icon" href="{{ asset('storage/layouts/logo.jpeg') }}" type="image/x-icon">
-</head>
-<body class="bg-gray-50">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <!-- Navbar -->
     @include('layouts.nav')
 
-    <main class="container mx-auto py-12 px-4 lg:px-8">
+    <!-- Contenu principal -->
+    <main class="flex-grow container mx-auto py-12 px-4 lg:px-8">
         <div class="bg-white p-8 shadow-lg rounded-lg">
             <h1 class="text-4xl font-bold text-center text-gray-800 mb-8">Votre Panier</h1>
 
@@ -19,6 +22,12 @@
             @if(session('success'))
                 <div class="p-4 mb-6 text-green-800 bg-green-100 rounded-md text-center">
                     {{ session('success') }}
+                </div>
+            @endif
+
+            @if(session('delP'))
+                <div class="p-4 mb-6 text-red-700 bg-red-100 rounded-md text-center">
+                    {{ session('delP') }}
                 </div>
             @endif
 
@@ -84,9 +93,12 @@
         </div>
     </main>
 
-    @include('layouts.footer')
-
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-4 mt-auto">
+        @include('layouts.footer')
+    </footer>
 </body>
+
 <script>
     document.getElementById('menu-toggle').addEventListener('click', () => {
         const menu = document.getElementById('menu');

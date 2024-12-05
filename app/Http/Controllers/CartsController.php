@@ -35,6 +35,7 @@ class CartsController extends Controller
     }
 
     return response()->json(['message' => 'Produit ajouté au panier avec succès!']);
+    ;
 }
 
     public function showCart()
@@ -66,7 +67,7 @@ public function removeFromCart($id)
         $cartItem->delete();
 
         // Rediriger avec un message de succès
-        return redirect()->back()->with('success', 'Produit supprimé du panier avec succès.');
+        return redirect()->back()->with('delP', 'Produit supprimé du panier avec succès.');
     }
 
     public function updateQuantity(Request $request, $id)

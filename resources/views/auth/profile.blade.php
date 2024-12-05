@@ -7,6 +7,7 @@
     <title>NUTSTREE|PROFILE</title>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     @vite('resources/css/app.css')
+    <link rel="shortcut icon" href="{{ asset('storage/layouts/logo.jpeg') }}" type="image/x-icon">
     <style>
         body {
             font-family: 'Manrope', sans-serif;
@@ -16,6 +17,8 @@
 
 <body class="bg-gray-100">
     @include('layouts.nav')
+
+
 
     <div class="container mx-auto py-12">
         <div class="bg-white shadow-md rounded-lg p-6">
@@ -30,6 +33,11 @@
 
             <!-- Informations personnelles -->
             <div class="mb-6">
+                @if(session('update'))
+                <div class="p-4 mb-6 text-green-800 bg-green-100 rounded-md text-center">
+                    {{ session('update') }}
+                </div>
+            @endif
                 <h3 class="text-lg font-semibold">Informations personnelles</h3>
                 <p><strong>Nom :</strong> {{ $user->name }}</p>
                 <p><strong>Email :</strong> {{ $user->email }}</p>

@@ -58,7 +58,7 @@ class UserController extends Controller
         $user = User::find($id);
         return view('auth.profile',compact('user'));
     }
-    
+
     public function editp($id) {
         $user = User::find($id);
         if (!$user) {
@@ -85,7 +85,7 @@ class UserController extends Controller
         }
         $user->update($att);
 
-        return redirect()->route('auth.profile', $id)->with('update', 'Modification du compte réussie');
+        return redirect()->route('auth.profile', $id)->with('update', 'Modification du compte avec succéss');
     }
 
 

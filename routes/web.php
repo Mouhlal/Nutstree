@@ -42,9 +42,9 @@ Route::controller(ProduitsController::class)->group(function(){
     Route::get('/produits','index')->name('prod.index');
     Route::get('/produits/ajout','add')->name('prod.add');
     Route::post('/produits/ajout','store')->name('prod.store');
-    Route::get('/produits/{id}/edit','edit')->name('prod.edit')->middleware('isAdmin');
-    Route::post('/produits/{id}/edit','update')->name('prod.update')->middleware('isAdmin');
-    Route::get('/produits/{id}/delete','delete')->name('prod.delete')->middleware('isAdmin');
+    Route::get('/produits/{id}/edit','edit')->name('prod.edit');
+    Route::post('/produits/{id}/edit','update')->name('prod.update');
+    Route::get('/produits/{id}/delete','delete')->name('prod.delete');
     Route::get('/produits/détails/{id}','details')->name('prod.details');
 
 });

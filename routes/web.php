@@ -56,6 +56,6 @@ Route::controller(CartsController::class)->group(function(){
     Route::post('/cart/add/{productId}','addToCart')->name('cart.add');
     Route::get('/cart','showCart')->name('cart.show');
     Route::delete('/cart/remove/{id}','removeFromCart')->name('cart.remove');
+    Route::patch('/cart/update/{id}','updateQuantity')->name('cart.update');
 });
 
-Route::patch('/cart/update/{id}', [CartsController::class, 'updateQuantity'])->name('cart.update');

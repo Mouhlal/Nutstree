@@ -14,7 +14,7 @@
         .text-primary {
             color: #d53369;
         }
-        
+
         .hover\:bg-primary-hover:hover {
             background-color: #817e7e;
             color: black
@@ -76,5 +76,11 @@
     @include('layouts.footer')
 
 </body>
+<script>
+    document.getElementById('menu-toggle').addEventListener('click', () => {
+        const menu = document.getElementById('menu');
+        menu.classList.toggle('hidden');
+    });
+</script>
 
 </html>

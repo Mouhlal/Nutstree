@@ -62,3 +62,4 @@ Route::controller(CartsController::class)->group(function(){
 });
 
 Route::post('/produits/{id}/reviews', [ReviewsController::class, 'storeReview'])->name('reviews.store');
+

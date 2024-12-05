@@ -31,12 +31,12 @@ Route::get('auth/google/callback', [GoogleController::class, 'handleGoogleCallba
 
 
 Route::controller(CategorieController::class)->group(function(){
-    Route::get('/categories','index')->name('cat.index')->middleware('isAdmin');
-    Route::get('/categories/ajout','add')->name('cat.add')->middleware('isAdmin');
-    Route::post('/categories/ajout','store')->name('cat.store')->middleware('isAdmin');
-    Route::get('/categories/{id}/edit','edit')->name('cat.edit')->middleware('isAdmin');
-    Route::post('/categories/{id}/edit','update')->name('cat.update')->middleware('isAdmin');
-    Route::get('/categories/{id}/delete','delete')->name('cat.delete')->middleware('isAdmin');
+    Route::get('/categories','index')->name('cat.index');
+    Route::get('/categories/ajout','add')->name('cat.add');
+    Route::post('/categories/ajout','store')->name('cat.store');
+    Route::get('/categories/{id}/edit','edit')->name('cat.edit');
+    Route::post('/categories/{id}/edit','update')->name('cat.update');
+    Route::get('/categories/{id}/delete','delete')->name('cat.delete');
 });
 
 Route::controller(ProduitsController::class)->group(function(){

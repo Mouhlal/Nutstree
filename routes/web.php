@@ -50,12 +50,13 @@ Route::controller(ProduitsController::class)->group(function(){
 });
 
 
-
-
 Route::controller(CartsController::class)->group(function(){
     Route::post('/cart/add/{productId}','addToCart')->name('cart.add');
     Route::get('/cart','showCart')->name('cart.show');
     Route::delete('/cart/remove/{id}','removeFromCart')->name('cart.remove');
     Route::patch('/cart/update/{id}','updateQuantity')->name('cart.update');
+    Route::post('/cart/update-session/{id}', 'updateSessionQuantity')->name('cart.updateSession');
+    Route::post('/cart/remove-session/{id}',  'removeSessionItem')->name('cart.removeSession');
+
 });
 

@@ -110,7 +110,7 @@
                 } else {
                     Swal.fire({
                         html: `<h3>${data.message || 'Une erreur est survenue.'}</h3>`,
-                        icon: 'error',
+                        icon: 'success',
                     });
                 }
             })

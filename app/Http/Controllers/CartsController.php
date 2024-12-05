@@ -2,36 +2,96 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CartItems;
+use App\Models\Carts;
 use App\Models\Produits;
 use Illuminate\Http\Request;
 
 class CartsController extends Controller
 {
+
     public function addToCart($productId, Request $request)
-    {
-        // Trouver le produit par son ID
-        $product = Produits::findOrFail($productId);
-        // Vérifier si le panier existe déjà dans la session
-        $cart = session()->get('cart', []);
-        // Si le produit existe déjà dans le panier, on l'incrémente
-        if(isset($cart[$productId])) {
-            $cart[$productId]['quantite']++;
-        } else {
-            // Si le produit n'existe pas, on l'ajoute
-            $cart[$productId] = [
-                "nom" => $product->nom,
-                "quantite" => 1,
-                "prix" => $product->prix,
-                "image" => $product->image
-            ];
-        }
-        // Sauvegarder le panier dans la session
-        session()->put('cart', $cart);
-        return response()->json(['success' => true]);
+{
+    $product = Produits::findOrFail($productId);
+
+    // Récupérez le panier de l'utilisateur
+    $cart = Carts::firstOrCreate(['user_id' => auth()->id()]);
+
+    // Vérifiez si le produit est déjà dans le panier
+    $cartItem = CartItems::where('cart_id', $cart->id)
+                         ->where('produit_id', $product->id)
+                         ->first();
+
+    if ($cartItem) {
+        // Si le produit existe déjà, mettez à jour la quantité
+        $cartItem->increment('quantity');
+    } else {
+        // Sinon, ajoutez un nouvel élément
+        CartItems::create([
+            'cart_id' => $cart->id,
+            'produit_id' => $product->id,
+            'quantity' => 1,
+        ]);
     }
+
+    return response()->json(['message' => 'Produit ajouté au panier avec succès!']);
+}
+
     public function showCart()
-    {
-        $cart = session()->get('cart', []);
-        return view('cart.panier', compact('cart'));
+{
+    $cart = Carts::where('user_id', auth()->id())->first();
+
+    if (!$cart) {
+        $cartItems = collect(); // Aucun élément si le panier n'existe pas
+    } else {
+        $cartItems = CartItems::where('cart_id', $cart->id)
+                              ->with('product') // Charge le produit associé
+                              ->get();
     }
+
+    return view('cart.panier', compact('cartItems'));
+}
+
+public function removeFromCart($id)
+    {
+        // Trouver l'élément du panier
+        $cartItem = CartItems::findOrFail($id);
+
+        // Vérifiez si le produit appartient au panier de l'utilisateur connecté
+        if ($cartItem->cart->user_id !== auth()->id()) {
+            return redirect()->back()->withErrors('Action non autorisée.');
+        }
+
+        // Supprimer l'élément du panier
+        $cartItem->delete();
+
+        // Rediriger avec un message de succès
+        return redirect()->back()->with('success', 'Produit supprimé du panier avec succès.');
+    }
+
+    public function updateQuantity(Request $request, $id)
+{
+    // Valider la nouvelle quantité
+    $validated = $request->validate([
+        'quantity' => 'required|integer|min:1',
+    ]);
+
+    // Trouver l'élément du panier
+    $cartItem = CartItems::findOrFail($id);
+
+    // Vérifiez si l'élément appartient à l'utilisateur connecté
+    if ($cartItem->cart->user_id !== auth()->id()) {
+        return redirect()->back()->withErrors('Action non autorisée.');
+    }
+
+    // Mettre à jour la quantité
+    $cartItem->quantity = $validated['quantity'];
+    $cartItem->save();
+
+    // Rediriger avec un message de succès
+    return redirect()->back()->with('success', 'Quantité mise à jour avec succès.');
+}
+
+
+
 }

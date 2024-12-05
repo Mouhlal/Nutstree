@@ -39,7 +39,7 @@
             @foreach($produits as $product)
             <div class="bg-gray-200 rounded-lg shadow-lg overflow-hidden transition-transform transform hover:scale-105">
                 <a href="{{ route('prod.details', $product->id) }}">
-                    <img src="{{ asset('storage/produits/' . $product->image) }}" alt="Image de {{ $product->nom }}" class="w-full h-48 object-cover">
+                    <img src="{{ asset('storage/' . $product->image) }}" alt="Image de {{ $product->nom }}" class="w-full h-48 object-cover">
                     <div class="p-4">
                         <h3 class="text-lg font-bold text-gray-800">{{ $product->nom }}</h3>
                         <p class="text-sm text-gray-600 mt-2">{{ Str::limit($product->description, 80) }}</p>
@@ -48,11 +48,11 @@
                         </div>
                     </div>
                 </a>
-                <button
+                <button id="add-to-cart-btn-{{ $product->id }}"
                     class="w-full mt-3 py-2 border-2 border-blue-500 text-blue-500 rounded-md hover:bg-blue-500 hover:text-white transition duration-300"
                     onclick="addToCart({{ $product->id }})">
-                    Ajouter au panier
-                </button>
+                Ajouter au panier
+            </button>
             </div>
             @endforeach
         </div>
@@ -63,31 +63,23 @@
 
     <!-- Scripts -->
     <script>
-        function addToCart(productId) {
-            fetch(`/cart/add/${productId}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                },
-                body: JSON.stringify({
-                    productId: productId,
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('Produit ajouté au panier avec succès!');
-                } else {
-                    alert('Erreur lors de l\'ajout au panier.');
-                }
-            })
-            .catch(error => {
-                console.error('Erreur:', error);
-                alert('Erreur lors de l\'ajout au panier.');
-            });
-        }
-    </script>
+   function addToCart(productId) {
+    fetch(`/cart/add/${productId}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+        },
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert(data.message);  // Afficher le message de succès
+    })
+    .catch(error => {
+        alert('Erreur lors de l\'ajout au panier.');
+    });
+}
+
     </script>
 
 </body>

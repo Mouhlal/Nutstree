@@ -39,11 +39,11 @@ class ProduitsController extends Controller
             'image' => 'nullable|image' ,
             'prix' => 'required',
             'quantite' => 'required',
-            'categories_id' => 'required|exists:categories,id'
+            'categorie_id' => 'required|exists:categories,id'
         ]);
         $att['image'] = $request->file('image')->store('produits','public');
         Produits::create($att);
-        return redirect()->route('produits.index')->with('addP','Produit a été ajoutée');
+        return redirect()->route('prod.index')->with('addP','Produit a été ajoutée');
     }
     public function edit($id){
         $produit = Produits::findOrFail($id);

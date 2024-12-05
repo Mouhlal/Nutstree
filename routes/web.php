@@ -40,8 +40,8 @@ Route::controller(CategorieController::class)->group(function(){
 
 Route::controller(ProduitsController::class)->group(function(){
     Route::get('/produits','index')->name('prod.index');
-    Route::get('/produits/ajout','add')->name('prod.add')->middleware('isAdmin');
-    Route::post('/produits/ajout','store')->name('prod.store')->middleware('isAdmin');
+    Route::get('/produits/ajout','add')->name('prod.add');
+    Route::post('/produits/ajout','store')->name('prod.store');
     Route::get('/produits/{id}/edit','edit')->name('prod.edit')->middleware('isAdmin');
     Route::post('/produits/{id}/edit','update')->name('prod.update')->middleware('isAdmin');
     Route::get('/produits/{id}/delete','delete')->name('prod.delete')->middleware('isAdmin');
@@ -55,4 +55,7 @@ Route::controller(ProduitsController::class)->group(function(){
 Route::controller(CartsController::class)->group(function(){
     Route::post('/cart/add/{productId}','addToCart')->name('cart.add');
     Route::get('/cart','showCart')->name('cart.show');
+    Route::delete('/cart/remove/{id}','removeFromCart')->name('cart.remove');
 });
+
+Route::patch('/cart/update/{id}', [CartsController::class, 'updateQuantity'])->name('cart.update');

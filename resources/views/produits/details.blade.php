@@ -81,10 +81,12 @@
                 <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded">Soumettre</button>
             </form>
             <br>
-            Veuillez <a href="{{ route('auth.login') }}" class="text-blue-600"> vous connecter </a> pour laisser un avis.</p>
             @endauth
 
+            @guest
+            Veuillez <a href="{{ route('auth.login') }}" class="text-blue-600"> vous connecter </a> pour laisser un avis.</p>
             <br>
+            @endguest
 
             <!-- Liste des avis -->
             <div class="space-y-6">

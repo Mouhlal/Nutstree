@@ -76,7 +76,7 @@ class ProduitsController extends Controller
     }
     public function details($id)
 {
-    $produit = Produits::with('reviews.user')->findOrFail($id); 
+    $produit = Produits::with('reviews.user')->findOrFail($id);
     return view('produits.details', [
         'produit' => $produit
     ]);

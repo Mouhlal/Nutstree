@@ -13,6 +13,13 @@ Route::controller(FrontEndController::class)->group(function () {
     Route::get('/', 'Home')->name('layouts.home');
     Route::get('/about', 'About')->name('layouts.about');
     Route::get('/contact', 'Contact')->name('layouts.contact');
+    Route::get('/dashboard/home','Dash')->name('dash.home');
+    Route::get('/dashboard/tables','tables')->name('dash.tables');
+    Route::get('/dashboard/forms','forms')->name('dash.forms');
+    Route::get('/dashboard/calendar','calendar')->name('dash.calendar');
+    Route::get('/dashboard/blanks','blanks')->name('dash.blanks');
+
+
 });
 
 Route::controller(UserController::class)->group(function(){

@@ -79,8 +79,8 @@
                  </button>
                 <button x-show="isOpen" @click="isOpen = false" class="h-full w-full fixed inset-0 cursor-default"></button>
                 <div x-show="isOpen" class="absolute w-32 bg-white rounded-lg shadow-lg py-2 mt-16">
+                    <a href="/" class="block px-4 py-2 account-link hover:text-white">Acceuil</a>
                     <a href="{{ auth()->check() ? route('auth.profile', auth()->user()->id) : route('auth.showLogin') }}" class="block px-4 py-2 account-link hover:text-white">Account</a>
-                    <a href="#" class="block px-4 py-2 account-link hover:text-white">Support</a>
                     <a href="{{ auth()->check() ? route('auth.logout') : route('layouts.home') }} "class="block px-4 py-2 account-link hover:text-white">Sign Out</a>
                 </div>
             </div>
@@ -119,6 +119,10 @@
                     <i class="fas fa-calendar mr-3"></i>
                     Calendar
                 </a>
+                <a href="/" class="flex items-center text-white opacity-75 hover:opacity-100 py-2 pl-4 nav-item">
+                    <i class="fas fa-home mr-2"></i>
+                    Acceuil
+                </a>
                 <a href="{{ auth()->check() ? route('auth.profile', auth()->user()->id) : '/login' }}" class="flex items-center text-white opacity-75 hover:opacity-100 py-2 pl-4 nav-item">
                     <i class="fas fa-user mr-3"></i>
                     Mon Compte
@@ -137,6 +141,34 @@
             <main class="w-full flex-grow p-6">
                 <h1 class="text-3xl text-gray-800 font-bold pb-6">Gestion des Categories</h1>
 
+                <form action="{{ route('cat.store') }}" method="POST" class="mb-6 bg-white p-6 rounded-lg shadow-md border border-gray-200">
+                    @csrf
+                    <h2 class="text-xl font-semibold text-gray-800 mb-4">Ajouter une catégorie</h2>
+                    <div class="flex flex-wrap space-y-4 md:space-y-0 md:space-x-4">
+                        <!-- Input Field -->
+                        <div class="w-full md:w-2/3">
+                            <label for="type" class="block text-gray-700 font-medium mb-2">Nom de la catégorie</label>
+                            <input
+                                type="text"
+                                name="type"
+                                id="type"
+                                placeholder="Entrez le nom de la catégorie"
+                                class="w-full p-3 border border-gray-300 rounded-md focus:ring focus:ring-green-300 focus:outline-none"
+                                required>
+                        </div>
+
+
+                        <!-- Submit Button -->
+                        <div class="w-full relative top-4  md:w-1/3 flex items-end">
+                            <button
+                                type="submit"
+                                class="w-full px-4 py-3 bg-green-600 text-white font-semibold rounded-md shadow hover:bg-green-700 transition duration-200">
+                                Ajouter
+                            </button>
+                        </div>
+                    </div>
+                </form>
+
                 <div class="w-full mt-6">
                     <p class="text-xl pb-3 flex items-center text-gray-700">
                         <i class="fas fa-list mr-3 text-green-600"></i> Liste des Categories
@@ -148,6 +180,19 @@
                                 {{ session('catDelete') }}
                             </div>
                         @endif
+
+                        @if(session('catUpdate'))
+                            <div class="p-4 mb-6 text-yellow-600 bg-yellow-100 rounded-md text-center">
+                                {{ session('catUpdate') }}
+                            </div>
+                        @endif
+
+                        @if(session('catAdd'))
+                        <div class="p-4 mb-6 text-green-600 bg-green-100 rounded-md text-center">
+                            {{ session('catAdd') }}
+                        </div>
+                    @endif
+
                             <thead class="bg-green-700 text-white">
                                 <tr>
                                     <th class="text-left py-4 px-4 uppercase font-semibold text-sm border-b border-gray-200">
@@ -181,34 +226,6 @@
                             </tbody>
                         </table>
                     </div>
-
-                    <form action="{{ route('cat.store') }}" method="POST" class="mb-6 bg-white p-6 rounded-lg shadow-md border border-gray-200">
-                        @csrf
-                        <h2 class="text-xl font-semibold text-gray-800 mb-4">Ajouter une catégorie</h2>
-                        <div class="flex flex-wrap space-y-4 md:space-y-0 md:space-x-4">
-                            <!-- Input Field -->
-                            <div class="w-full md:w-2/3">
-                                <label for="type" class="block text-gray-700 font-medium mb-2">Nom de la catégorie</label>
-                                <input
-                                    type="text"
-                                    name="type"
-                                    id="type"
-                                    placeholder="Entrez le nom de la catégorie"
-                                    class="w-full p-3 border border-gray-300 rounded-md focus:ring focus:ring-green-300 focus:outline-none"
-                                    required>
-                            </div>
-
-
-                            <!-- Submit Button -->
-                            <div class="w-full relative top-4  md:w-1/3 flex items-end">
-                                <button
-                                    type="submit"
-                                    class="w-full px-4 py-3 bg-green-600 text-white font-semibold rounded-md shadow hover:bg-green-700 transition duration-200">
-                                    Ajouter
-                                </button>
-                            </div>
-                        </div>
-                    </form>
 
 
             </main>

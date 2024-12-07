@@ -7,12 +7,6 @@ use Illuminate\Http\Request;
 
 class CategorieController extends Controller
 {
-
-    public function index(){
-        $categories = Categorie::all();
-        return view('cat.index', compact('categories'));
-    }
-
     public function add(){
         return view('cat.add');
     }
@@ -21,7 +15,7 @@ class CategorieController extends Controller
             'type' => 'required',
         ]);
         Categorie::create($cat);
-        return redirect()->route('dash.tables')->with('catAdd','Categories ajoutée');
+        return redirect()->route('dash.cat')->with('catAdd','Categories ajoutée');
     }
     public function edit($id){
         $cat = Categorie::find($id);
@@ -32,11 +26,11 @@ class CategorieController extends Controller
             'type' => 'nullable',
         ]);
             Categorie::find($id)->update($cat);
-            return redirect()->route('dash.tables')->with('catUpdate','Categories modifiée');
+            return redirect()->route('dash.cat')->with('catUpdate','Categories modifiée');
     }
     public function delete($id){
         Categorie::find($id)->delete();
-        return redirect()->route('dash.tables')->with('catDelete','Categories supprimée');
+        return redirect()->route('dash.cat')->with('catDelete','Categories supprimée');
     }
 
 }

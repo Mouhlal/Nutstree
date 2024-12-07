@@ -52,7 +52,7 @@ class ProduitsController extends Controller
             'produit' => $produit,
             'categ' => $categ
             ]);
-            }
+    }
     public function update(Request $request, $id){
         $att = $request->validate([
             'nom' => 'required',
@@ -60,15 +60,16 @@ class ProduitsController extends Controller
             'image' => 'nullable|image' ,
             'prix' => 'nullable',
             'quantite' => 'nullable',
-            'categories_id' => 'required|exists:categories,id'
+            'categorie_id' => 'required|exists:categories,id'
         ]);
         if($request->hasFile('image')){
             $att['image'] = $request->file('image')->store('produits','public');
         }
         $prod = Produits::findOrFail($id) ;
         $prod->update($att);
-        return redirect()->route('produits.index')->with('updateP','Produit a été modifié');
+        return redirect()->route('dash.tables')->with('updateP','Produit a été modifié');
     }
+
     public function delete($id){
         $prod = Produits::findOrFail($id);
         $prod->delete();

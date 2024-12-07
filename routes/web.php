@@ -13,11 +13,11 @@ Route::controller(FrontEndController::class)->group(function () {
     Route::get('/', 'Home')->name('layouts.home');
     Route::get('/about', 'About')->name('layouts.about');
     Route::get('/contact', 'Contact')->name('layouts.contact');
-    Route::get('/dashboard/home','Dash')->name('dash.home');
-    Route::get('/dashboard/produit','tables')->name('dash.tables');
-    Route::get('/dashboard/categories','cat')->name('dash.cat');
-    Route::get('/dashboard/forms','forms')->name('dash.forms');
-    Route::get('/dashboard/calendar','calendar')->name('dash.calendar');
+    Route::get('/dashboard/home','Dash')->name('dash.home')->middleware('isAdmin');
+    Route::get('/dashboard/produit','tables')->name('dash.tables')->middleware('isAdmin');
+    Route::get('/dashboard/categories','cat')->name('dash.cat')->middleware('isAdmin');
+    Route::get('/dashboard/forms','forms')->name('dash.forms')->middleware('isAdmin');
+    Route::get('/dashboard/calendar','calendar')->name('dash.calendar')->middleware('isAdmin');
 
 
 });
@@ -38,20 +38,20 @@ Route::get('auth/google/callback', [GoogleController::class, 'handleGoogleCallba
 
 
 Route::controller(CategorieController::class)->group(function(){
-    Route::get('/categories/ajout','add')->name('cat.add');
-    Route::post('/categories/ajout','store')->name('cat.store');
-    Route::get('/categories/{id}/edit','edit')->name('cat.edit');
-    Route::post('/categories/{id}/edit','update')->name('cat.update');
-    Route::get('/categories/{id}/delete','delete')->name('cat.delete');
+    Route::get('/categories/ajout','add')->name('cat.add')->middleware('isAdmin');
+    Route::post('/categories/ajout','store')->name('cat.store')->middleware('isAdmin');
+    Route::get('/categories/{id}/edit','edit')->name('cat.edit')->middleware('isAdmin');
+    Route::post('/categories/{id}/edit','update')->name('cat.update')->middleware('isAdmin');
+    Route::get('/categories/{id}/delete','delete')->name('cat.delete')->middleware('isAdmin');
 });
 
 Route::controller(ProduitsController::class)->group(function(){
     Route::get('/produits','index')->name('prod.index');
-    Route::get('/produits/ajout','add')->name('prod.add');
-    Route::post('/produits/ajout','store')->name('prod.store');
-    Route::get('/produits/{id}/edit','edit')->name('prod.edit');
-    Route::post('/produits/{id}/edit','update')->name('prod.update');
-    Route::get('/produits/{id}/delete','delete')->name('prod.delete');
+    Route::get('/produits/ajout','add')->name('prod.add')->middleware('isAdmin');
+    Route::post('/produits/ajout','store')->name('prod.store')->middleware('isAdmin');
+    Route::get('/produits/{id}/edit','edit')->name('prod.edit')->middleware('isAdmin');
+    Route::put('/produits/{id}/update','update')->name('prod.update')->middleware('isAdmin');
+    Route::get('/produits/{id}/delete','delete')->name('prod.delete')->middleware('isAdmin');
     Route::get('/produits/détails/{id}','details')->name('prod.details');
 
 });

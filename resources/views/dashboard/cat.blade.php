@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NUTSTREE - ADMIN</title>
-    <meta name="author" content="David Grzyb">
-    <meta name="description" content="">
+    <title>ADMIN - TABLES</title>
     <link rel="shortcut icon" href="{{ asset('storage/layouts/logo.jpeg') }}" type="image/x-icon">
 
+    <meta name="author" content="David Grzyb">
+    <meta name="description" content="">
 
     <!-- Tailwind -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
@@ -39,21 +39,17 @@
                 <i class="fas fa-tachometer-alt mr-3"></i>
                 Dashboard
             </a>
-            <a href="{{route('dash.blanks')}}" class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item">
-                <i class="fas fa-sticky-note mr-3"></i>
-                Blank Page
-            </a>
             <a href="{{route('dash.tables')}}" class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item">
                 <i class="fas fa-table mr-3"></i>
-                Tables
+                Produits
+            </a>
+            <a href="{{route('dash.cat')}}" class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item">
+                <i class="fas fa-table mr-3"></i>
+                Categories
             </a>
             <a href="{{route('dash.forms')}}" class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item">
                 <i class="fas fa-align-left mr-3"></i>
                 Forms
-            </a>
-            <a href="{{route('cat.index')}}" class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item">
-                <i class="fas fa-align-left mr-3"></i>
-                Categories
             </a>
             </a>
             <a href="{{route('dash.calendar')}}" class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item">
@@ -106,21 +102,18 @@
                     <i class="fas fa-tachometer-alt mr-3"></i>
                     Dashboard
                 </a>
-                <a href="{{route('dash.blanks')}}" class="flex items-center text-white opacity-75 hover:opacity-100 py-2 pl-4 nav-item">
-                    <i class="fas fa-sticky-note mr-3"></i>
-                    Blank Page
-                </a>
-                <a href="{{route('dash.tables')}}" class="flex items-center active-nav-link text-white py-2 pl-4 nav-item">
+
+                <a href="{{route('dash.tables')}}" class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item">
                     <i class="fas fa-table mr-3"></i>
-                    Tables
+                    Produits
+                </a>
+                <a href="{{route('dash.cat')}}" class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item">
+                    <i class="fas fa-table mr-3"></i>
+                    Categories
                 </a>
                 <a href="{{route('dash.forms')}}" class="flex items-center text-white opacity-75 hover:opacity-100 py-2 pl-4 nav-item">
                     <i class="fas fa-align-left mr-3"></i>
                     Forms
-                </a>
-                <a href="{{route('cat.index')}}" class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item">
-                    <i class="fas fa-align-left mr-3"></i>
-                    Categories
                 </a>
                 <a href="{{route('dash.calendar')}}" class="flex items-center text-white opacity-75 hover:opacity-100 py-2 pl-4 nav-item">
                     <i class="fas fa-calendar mr-3"></i>
@@ -128,11 +121,11 @@
                 </a>
                 <a href="{{ auth()->check() ? route('auth.profile', auth()->user()->id) : '/login' }}" class="flex items-center text-white opacity-75 hover:opacity-100 py-2 pl-4 nav-item">
                     <i class="fas fa-user mr-3"></i>
-                    My Account
+                    Mon Compte
                 </a>
                 <a href="{{route('auth.logout')}}" class="flex items-center text-white opacity-75 hover:opacity-100 py-2 pl-4 nav-item">
                     <i class="fas fa-sign-out-alt mr-3"></i>
-                    Sign Out
+                    Deconnexion
                 </a>
             </nav>
             <!-- <button class="w-full bg-white cta-btn font-semibold py-2 mt-5 rounded-br-lg rounded-bl-lg rounded-tr-lg shadow-lg hover:shadow-xl hover:bg-gray-300 flex items-center justify-center">
@@ -142,13 +135,85 @@
 
         <div class="w-full h-screen overflow-x-hidden border-t flex flex-col">
             <main class="w-full flex-grow p-6">
-                <h1 class="text-3xl text-black pb-6">Blank Page</h1>
+                <h1 class="text-3xl text-gray-800 font-bold pb-6">Gestion des Categories</h1>
 
-                <!-- Content goes here! 😁 -->
+                <div class="w-full mt-6">
+                    <p class="text-xl pb-3 flex items-center text-gray-700">
+                        <i class="fas fa-list mr-3 text-green-600"></i> Liste des Categories
+                    </p>
+                    <div class="bg-white overflow-auto shadow-md rounded-lg">
+                        <table class="min-w-full bg-white border border-gray-200 rounded-lg">
+                            @if(session('catDelete'))
+                            <div class="p-4 mb-6 text-red-800 bg-red-100 rounded-md text-center">
+                                {{ session('catDelete') }}
+                            </div>
+                        @endif
+                            <thead class="bg-green-700 text-white">
+                                <tr>
+                                    <th class="text-left py-4 px-4 uppercase font-semibold text-sm border-b border-gray-200">
+                                        Catégories
+                                    </th>
+                                    <th class="text-left py-4 px-4 uppercase font-semibold text-sm border-b border-gray-200">
+                                        Actions
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-gray-700">
+                                @foreach($categories as $categorie)
+                                <tr class="hover:bg-green-50">
+                                    <td class="text-left py-4 px-4 border-b border-gray-200">
+                                                    <span class="bg-green-200 text-green-700 text-sm px-2 py-1 rounded">
+                                                        {{$categorie->type}}
+                                                    </span>
+                                    </td>
+                                    <td class="text-left py-4 px-4 border-b border-gray-200 flex gap-2">
+                                        <a href="{{route('cat.edit', $categorie->id) }}" class="px-3 py-2 bg-yellow-500 text-white text-sm font-medium rounded hover:bg-yellow-600">
+                                            Modifier
+                                        </a>
+                                        <a href="{{ route('cat.delete', $categorie->id) }}"  onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce produit ?')">
+                                            <button type="submit" class="px-3 py-2 bg-red-600 text-white text-sm font-medium rounded hover:bg-red-700">
+                                                Supprimer
+                                            </button>
+                                        </a>
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <form action="{{ route('cat.store') }}" method="POST" class="mb-6 bg-white p-6 rounded-lg shadow-md border border-gray-200">
+                        @csrf
+                        <h2 class="text-xl font-semibold text-gray-800 mb-4">Ajouter une catégorie</h2>
+                        <div class="flex flex-wrap space-y-4 md:space-y-0 md:space-x-4">
+                            <!-- Input Field -->
+                            <div class="w-full md:w-2/3">
+                                <label for="type" class="block text-gray-700 font-medium mb-2">Nom de la catégorie</label>
+                                <input
+                                    type="text"
+                                    name="type"
+                                    id="type"
+                                    placeholder="Entrez le nom de la catégorie"
+                                    class="w-full p-3 border border-gray-300 rounded-md focus:ring focus:ring-green-300 focus:outline-none"
+                                    required>
+                            </div>
+
+
+                            <!-- Submit Button -->
+                            <div class="w-full relative top-4  md:w-1/3 flex items-end">
+                                <button
+                                    type="submit"
+                                    class="w-full px-4 py-3 bg-green-600 text-white font-semibold rounded-md shadow hover:bg-green-700 transition duration-200">
+                                    Ajouter
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+
+
             </main>
-
-
         </div>
+
 
     </div>
 

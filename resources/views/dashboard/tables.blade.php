@@ -39,21 +39,17 @@
                 <i class="fas fa-tachometer-alt mr-3"></i>
                 Dashboard
             </a>
-            <a href="{{route('dash.blanks')}}" class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item">
-                <i class="fas fa-sticky-note mr-3"></i>
-                Blank Page
-            </a>
             <a href="{{route('dash.tables')}}" class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item">
                 <i class="fas fa-table mr-3"></i>
-                Tables
+                Produits
+            </a>
+            <a href="{{route('dash.cat')}}" class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item">
+                <i class="fas fa-table mr-3"></i>
+                Categories
             </a>
             <a href="{{route('dash.forms')}}" class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item">
                 <i class="fas fa-align-left mr-3"></i>
                 Forms
-            </a>
-            <a href="{{route('cat.index')}}" class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item">
-                <i class="fas fa-align-left mr-3"></i>
-                Categories
             </a>
             </a>
             <a href="{{route('dash.calendar')}}" class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item">
@@ -106,19 +102,19 @@
                     <i class="fas fa-tachometer-alt mr-3"></i>
                     Dashboard
                 </a>
-                <a href="{{route('dash.blanks')}}" class="flex items-center text-white opacity-75 hover:opacity-100 py-2 pl-4 nav-item">
-                    <i class="fas fa-sticky-note mr-3"></i>
-                    Blank Page
-                </a>
-                <a href="{{route('dash.tables')}}" class="flex items-center active-nav-link text-white py-2 pl-4 nav-item">
+                <a href="{{route('dash.tables')}}" class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item">
                     <i class="fas fa-table mr-3"></i>
-                    Tables
+                    Produits
+                </a>
+                <a href="{{route('dash.cat')}}" class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item">
+                    <i class="fas fa-table mr-3"></i>
+                    Categories
                 </a>
                 <a href="{{route('dash.forms')}}" class="flex items-center text-white opacity-75 hover:opacity-100 py-2 pl-4 nav-item">
                     <i class="fas fa-align-left mr-3"></i>
                     Forms
                 </a>
-                <a href="{{route('cat.index')}}" class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item">
+                <a href="{{route('dash.tables')}}" class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item">
                     <i class="fas fa-align-left mr-3"></i>
                     Categories
                 </a>
@@ -142,56 +138,75 @@
 
         <div class="w-full h-screen overflow-x-hidden border-t flex flex-col">
             <main class="w-full flex-grow p-6">
-                <h1 class="text-3xl text-black pb-6">Tables</h1>
+                <h1 class="text-3xl text-gray-800 font-bold pb-6">Gestion des Produits</h1>
 
                 <div class="w-full mt-6">
-                    <p class="text-xl pb-3 flex items-center">
-                        <i class="fas fa-list mr-3"></i> Table Example
+                    <p class="text-xl pb-3 flex items-center text-gray-700">
+                        <i class="fas fa-list mr-3 text-green-600"></i> Liste des Produits
                     </p>
-                    <div class="bg-white overflow-auto">
-                        <table class="min-w-full bg-white">
-                            <thead class="bg-gray-800 text-white">
+                    <div class="bg-white overflow-auto shadow-md rounded-lg">
+                        <table class="min-w-full bg-white border border-gray-200 rounded-lg">
+                            @if(session('deleteP'))
+                                <div class="p-4 mb-6 text-green-800 bg-green-100 rounded-md text-center">
+                                    {{ session('deleteP') }}
+                                </div>
+                                @endif
+                            <thead class="bg-green-700 text-white">
                                 <tr>
-                                    <th class="w-1/3 text-left py-3 px-4 uppercase font-semibold text-sm">Name</th>
-                                    <th class="w-1/3 text-left py-3 px-4 uppercase font-semibold text-sm">Last name</th>
-                                    <th class="text-left py-3 px-4 uppercase font-semibold text-sm">Phone</th>
-                                    <th class="text-left py-3 px-4 uppercase font-semibold text-sm">Email</td>
+                                    <th class="w-1/3 text-left py-4 px-4 uppercase font-semibold text-sm border-b border-gray-200">
+                                        Nom Produit
+                                    </th>
+                                    <th class="w-1/3 text-left py-4 px-4 uppercase font-semibold text-sm border-b border-gray-200">
+                                        Prix
+                                    </th>
+                                    <th class="text-left py-4 px-4 uppercase font-semibold text-sm border-b border-gray-200">
+                                        Catégories
+                                    </th>
+                                    <th class="text-left py-4 px-4 uppercase font-semibold text-sm border-b border-gray-200">
+                                        Quantité
+                                    </th>
+                                    <th class="text-left py-4 px-4 uppercase font-semibold text-sm border-b border-gray-200">
+                                        Actions
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody class="text-gray-700">
-                                <tr>
-                                    <td class="w-1/3 text-left py-3 px-4">Lian</td>
-                                    <td class="w-1/3 text-left py-3 px-4">Smith</td>
-                                    <td class="text-left py-3 px-4"><a class="hover:text-blue-500" href="tel:622322662">622322662</a></td>
-                                    <td class="text-left py-3 px-4"><a class="hover:text-blue-500" href="mailto:jonsmith@mail.com">jonsmith@mail.com</a></td>
+                                @foreach($produits as $produit)
+                                <tr class="hover:bg-green-50">
+                                    <td class="w-1/3 text-left py-4 px-4 border-b border-gray-200">{{$produit->nom}}</td>
+                                    <td class="w-1/3 text-left py-4 px-4 border-b border-gray-200">{{$produit->prix}} MAD</td>
+                                    <td class="text-left py-4 px-4 border-b border-gray-200">
+                                        @isset($produit->categorie_id)
+                                            @foreach($categories as $categorie)
+                                                @if($categorie->id == $produit->categorie_id)
+                                                    <span class="bg-green-200 text-green-700 text-sm px-2 py-1 rounded">
+                                                        {{$categorie->type}}
+                                                    </span>
+                                                @endif
+                                            @endforeach
+                                        @endisset
+                                    </td>
+                                    <td class="text-left py-4 px-4 border-b border-gray-200">{{$produit->quantite}}</td>
+                                    <td class="text-left py-4 px-4 border-b border-gray-200 flex gap-2">
+                                        <a href="{{ route('prod.edit', $produit->id) }}" class="px-3 py-2 bg-yellow-500 text-white text-sm font-medium rounded hover:bg-yellow-600">
+                                            Modifier
+                                        </a>
+                                        <a href="{{ route('prod.delete', $produit->id) }}"  onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce produit ?')">
+                                            <button type="submit" class="px-3 py-2 bg-red-600 text-white text-sm font-medium rounded hover:bg-red-700">
+                                                Supprimer
+                                            </button>
+                                        </a>
+                                    </td>
                                 </tr>
-                                <tr class="bg-gray-200">
-                                    <td class="w-1/3 text-left py-3 px-4">Emma</td>
-                                    <td class="w-1/3 text-left py-3 px-4">Johnson</td>
-                                    <td class="text-left py-3 px-4"><a class="hover:text-blue-500" href="tel:622322662">622322662</a></td>
-                                    <td class="text-left py-3 px-4"><a class="hover:text-blue-500" href="mailto:jonsmith@mail.com">jonsmith@mail.com</a></td>
-                                </tr>
-                                <tr>
-                                    <td class="w-1/3 text-left py-3 px-4">Oliver</td>
-                                    <td class="w-1/3 text-left py-3 px-4">Williams</td>
-                                    <td class="text-left py-3 px-4"><a class="hover:text-blue-500" href="tel:622322662">622322662</a></td>
-                                    <td class="text-left py-3 px-4"><a class="hover:text-blue-500" href="mailto:jonsmith@mail.com">jonsmith@mail.com</a></td>
-                                </tr>
-                                <tr class="bg-gray-200">
-                                    <td class="w-1/3 text-left py-3 px-4">Isabella</td>
-                                    <td class="w-1/3 text-left py-3 px-4">Brown</td>
-                                    <td class="text-left py-3 px-4"><a class="hover:text-blue-500" href="tel:622322662">622322662</a></td>
-                                    <td class="text-left py-3 px-4"><a class="hover:text-blue-500" href="mailto:jonsmith@mail.com">jonsmith@mail.com</a></td>
-                                </tr>
+                                @endforeach
                             </tbody>
                         </table>
                     </div>
-
                 </div>
+
             </main>
-
-
         </div>
+
 
     </div>
 

@@ -21,7 +21,7 @@ class CategorieController extends Controller
             'type' => 'required',
         ]);
         Categorie::create($cat);
-        return redirect()->route('cat.index')->with('catAdd','Categories ajoutée');
+        return redirect()->route('dash.tables')->with('catAdd','Categories ajoutée');
     }
     public function edit($id){
         $cat = Categorie::find($id);
@@ -32,11 +32,11 @@ class CategorieController extends Controller
             'type' => 'nullable',
         ]);
             Categorie::find($id)->update($cat);
-            return redirect()->route('cat.index')->with('catUpdate','Categories modifiée');
+            return redirect()->route('dash.tables')->with('catUpdate','Categories modifiée');
     }
     public function delete($id){
         Categorie::find($id)->delete();
-        return redirect()->route('cat.index')->with('catDelete','Categories supprimée');
+        return redirect()->route('dash.tables')->with('catDelete','Categories supprimée');
     }
 
 }

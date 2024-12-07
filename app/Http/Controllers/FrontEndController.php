@@ -20,15 +20,29 @@ class FrontEndController extends Controller
     }
     // Dashboard
     public function Dash(){
-        $produit = Produits::with('Categories')->get();
+        $produits = Produits::with('categories')
+                    ->orderByDesc('id')
+                    ->limit(5)
+                    ->get();
+        $categories = Categorie::all();
         return view('dashboard.home', [
-            'produit' => $produit
+            'produits' => $produits,
+            'categories' => $categories
         ]);
     }
     public function tables(){
-        $produit = Produits::with('Categories')->get();
-    return view('dashboard.home', [
-        'produit' => $produit,
+        $produits = Produits::with('categories')
+                    ->get();
+        $categories = Categorie::all();
+        return view('dashboard.tables', [
+        'produits' => $produits,
+        'categories' => $categories
+    ]);
+    }
+    public function cat(){
+        $categories = Categorie::all();
+        return view('dashboard.cat', [
+        'categories' => $categories
     ]);
     }
     public function calendar(){

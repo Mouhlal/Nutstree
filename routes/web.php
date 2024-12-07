@@ -14,10 +14,10 @@ Route::controller(FrontEndController::class)->group(function () {
     Route::get('/about', 'About')->name('layouts.about');
     Route::get('/contact', 'Contact')->name('layouts.contact');
     Route::get('/dashboard/home','Dash')->name('dash.home');
-    Route::get('/dashboard/tables','tables')->name('dash.tables');
+    Route::get('/dashboard/produit','tables')->name('dash.tables');
+    Route::get('/dashboard/categories','cat')->name('dash.cat');
     Route::get('/dashboard/forms','forms')->name('dash.forms');
     Route::get('/dashboard/calendar','calendar')->name('dash.calendar');
-    Route::get('/dashboard/blanks','blanks')->name('dash.blanks');
 
 
 });
@@ -38,7 +38,6 @@ Route::get('auth/google/callback', [GoogleController::class, 'handleGoogleCallba
 
 
 Route::controller(CategorieController::class)->group(function(){
-    Route::get('/categories','index')->name('cat.index');
     Route::get('/categories/ajout','add')->name('cat.add');
     Route::post('/categories/ajout','store')->name('cat.store');
     Route::get('/categories/{id}/edit','edit')->name('cat.edit');

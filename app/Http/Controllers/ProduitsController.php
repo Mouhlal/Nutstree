@@ -72,7 +72,7 @@ class ProduitsController extends Controller
     public function delete($id){
         $prod = Produits::findOrFail($id);
         $prod->delete();
-        return redirect()->route('produits.index')->with('deleteP','Produit a été supprimé');
+        return redirect()->route('dash.tables')->with('deleteP','Produit a été supprimé');
     }
     public function details($id)
 {

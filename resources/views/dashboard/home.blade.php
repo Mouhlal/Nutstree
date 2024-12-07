@@ -38,21 +38,17 @@
                 <i class="fas fa-tachometer-alt mr-3"></i>
                 Dashboard
             </a>
-            <a href="{{route('dash.blanks')}}" class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item">
-                <i class="fas fa-sticky-note mr-3"></i>
-                Blank Page
-            </a>
             <a href="{{route('dash.tables')}}" class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item">
                 <i class="fas fa-table mr-3"></i>
-                Tables
+                Produit
+            </a>
+            <a href="{{route('dash.cat')}}" class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item">
+                <i class="fas fa-table mr-3"></i>
+                Categories
             </a>
             <a href="{{route('dash.forms')}}" class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item">
                 <i class="fas fa-align-left mr-3"></i>
                 Forms
-            </a>
-            <a href="{{route('cat.index')}}" class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item">
-                <i class="fas fa-align-left mr-3"></i>
-                Categories
             </a>
             <a href="{{route('dash.calendar')}}" class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item">
                 <i class="fas fa-calendar mr-3"></i>
@@ -100,21 +96,17 @@
                     <i class="fas fa-tachometer-alt mr-3"></i>
                     Dashboard
                 </a>
-                <a href="{{route('dash.blanks')}}" class="flex items-center text-white opacity-75 hover:opacity-100 py-2 pl-4 nav-item">
-                    <i class="fas fa-sticky-note mr-3"></i>
-                    Blank Page
-                </a>
-                <a href="{{route('dash.tables')}}" class="flex items-center active-nav-link text-white py-2 pl-4 nav-item">
+                <a href="{{route('dash.tables')}}" class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item">
                     <i class="fas fa-table mr-3"></i>
-                    Tables
+                    Produit
+                </a>
+                <a href="{{route('dash.cat')}}" class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item">
+                    <i class="fas fa-table mr-3"></i>
+                    Categories
                 </a>
                 <a href="{{route('dash.forms')}}" class="flex items-center text-white opacity-75 hover:opacity-100 py-2 pl-4 nav-item">
                     <i class="fas fa-align-left mr-3"></i>
                     Forms
-                </a>
-                <a href="{{route('cat.index')}}" class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item">
-                    <i class="fas fa-align-left mr-3"></i>
-                    Categories
                 </a>
                 <a href="{{route('dash.calendar')}}" class="flex items-center text-white opacity-75 hover:opacity-100 py-2 pl-4 nav-item">
                     <i class="fas fa-calendar mr-3"></i>
@@ -133,66 +125,79 @@
         </header>
 
         <div class="w-full overflow-x-hidden border-t flex flex-col">
-            <main class="w-full flex-grow p-6">
-                <h1 class="text-3xl text-black pb-6">Dashboard</h1>
+            <main class="w-full flex-grow p-6 bg-gray-100">
+                <h1 class="text-3xl text-gray-800 font-bold pb-6">Dashboard</h1>
 
                 <div class="flex flex-wrap mt-6">
+                    <!-- Monthly Reports -->
                     <div class="w-full lg:w-1/2 pr-0 lg:pr-2">
-                        <p class="text-xl pb-3 flex items-center">
-                            <i class="fas fa-plus mr-3"></i> Monthly Reports
+                        <p class="text-xl pb-3 flex items-center text-gray-700">
+                            <i class="fas fa-plus mr-3 text-green-600"></i> Rapports Mensuels
                         </p>
-                        <div class="p-6 bg-white">
+                        <div class="p-6 bg-white shadow-md rounded-lg">
                             <canvas id="chartOne" width="400" height="200"></canvas>
                         </div>
                     </div>
+
+                    <!-- Resolved Reports -->
                     <div class="w-full lg:w-1/2 pl-0 lg:pl-2 mt-12 lg:mt-0">
-                        <p class="text-xl pb-3 flex items-center">
-                            <i class="fas fa-check mr-3"></i> Resolved Reports
+                        <p class="text-xl pb-3 flex items-center text-gray-700">
+                            <i class="fas fa-check mr-3 text-green-600"></i> Rapports Résolus
                         </p>
-                        <div class="p-6 bg-white">
+                        <div class="p-6 bg-white shadow-md rounded-lg">
                             <canvas id="chartTwo" width="400" height="200"></canvas>
                         </div>
                     </div>
                 </div>
 
+                <!-- Latest Reports -->
                 <div class="w-full mt-12">
-                    <p class="text-xl pb-3 flex items-center">
-                        <i class="fas fa-list mr-3"></i> Latest Reports
+                    <p class="text-xl pb-3 flex items-center text-gray-700">
+                        <i class="fas fa-list mr-3 text-green-600"></i> Derniers Rapports
                     </p>
-                    <div class="bg-white overflow-auto">
-                        <table class="min-w-full bg-white">
-                            <thead class="bg-gray-800 text-white">
+                    <div class="bg-white overflow-auto shadow-md rounded-lg">
+                        <table class="min-w-full bg-white border border-gray-200 rounded-lg">
+                            <thead class="bg-green-700 text-white">
                                 <tr>
-                                    <th class="w-1/3 text-left py-3 px-4 uppercase font-semibold text-sm">NomP</th>
-                                    <th class="w-1/3 text-left py-3 px-4 uppercase font-semibold text-sm">Prix</th>
-                                    <th class="text-left py-3 px-4 uppercase font-semibold text-sm">Categories</th>
-                                    <th class="text-left py-3 px-4 uppercase font-semibold text-sm">Quantité</th>
+                                    <th class="w-1/3 text-left py-4 px-4 uppercase font-semibold text-sm border-b border-gray-200">
+                                        Nom Produit
+                                    </th>
+                                    <th class="w-1/3 text-left py-4 px-4 uppercase font-semibold text-sm border-b border-gray-200">
+                                        Prix
+                                    </th>
+                                    <th class="text-left py-4 px-4 uppercase font-semibold text-sm border-b border-gray-200">
+                                        Catégorie
+                                    </th>
+                                    <th class="text-left py-4 px-4 uppercase font-semibold text-sm border-b border-gray-200">
+                                        Quantité
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody class="text-gray-700">
-                                @foreach($produit as $prod)
-                                <tr>
-                                    <td class="w-1/3 text-left py-3 px-4">{{$prod->nom}}</td>
-                                    <td class="w-1/3 text-left py-3 px-4">{{$prod->prix}}</td>
-                                    <td class="text-left py-3 px-4">
-                                        @if($prod->categories && $prod->categories->isNotEmpty())
-                                            @foreach($prod->categories as $categorie)
-                                                    {{ $categorie->type }}
+                                @foreach($produits as $produit)
+                                <tr class="hover:bg-green-50">
+                                    <td class="w-1/3 text-left py-4 px-4 border-b border-gray-200">{{$produit->nom}}</td>
+                                    <td class="w-1/3 text-left py-4 px-4 border-b border-gray-200">{{$produit->prix}} MAD</td>
+                                    <td class="text-left py-4 px-4 border-b border-gray-200">
+                                        @isset($produit->categorie_id)
+                                            @foreach($categories as $categorie)
+                                                @if($categorie->id == $produit->categorie_id)
+                                                    <span class="bg-green-200 text-green-700 text-sm px-2 py-1 rounded">
+                                                        {{$categorie->type}}
+                                                    </span>
+                                                @endif
                                             @endforeach
-                                        @else
-                                            No Categories
-                                        @endif
-
+                                        @endisset
                                     </td>
-                                    <td class="text-left py-3 px-4">{{$prod->quantite}}</td>
+                                    <td class="text-left py-4 px-4 border-b border-gray-200">{{$produit->quantite}}</td>
                                 </tr>
-                            @endforeach
-
+                                @endforeach
                             </tbody>
                         </table>
                     </div>
                 </div>
             </main>
+
 
 
         </div>

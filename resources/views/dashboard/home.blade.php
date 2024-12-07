@@ -11,7 +11,7 @@
     <!-- Tailwind -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css?family=Karla:400,700&display=swap');
+         @import url('https://fonts.googleapis.com/css?family=Karla:400,700&display=swap');
         .font-family-karla { font-family: karla; }
         .bg-sidebar { background: #3d68ff; }
         .cta-btn { color: #3d68ff; }
@@ -20,6 +20,23 @@
         .active-nav-link { background: #1947ee; }
         .nav-item:hover { background: #1947ee; }
         .account-link:hover { background: #3d68ff; }
+
+        .shadow-md {
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .rounded-full {
+        border-radius: 50%;
+    }
+
+    .bg-green-200 {
+        background-color: #C6F6D5;
+    }
+
+    .bg-blue-200 {
+        background-color: #BFDBFE;
+    }
+
     </style>
 </head>
 <body class="bg-gray-100 font-family-karla flex">
@@ -133,26 +150,35 @@
                 <h1 class="text-3xl text-gray-800 font-bold pb-6">Dashboard</h1>
 
                 <div class="flex flex-wrap mt-6">
-                    <!-- Monthly Reports -->
+                    <!-- Total des Produits -->
                     <div class="w-full lg:w-1/2 pr-0 lg:pr-2">
                         <p class="text-xl pb-3 flex items-center text-gray-700">
-                            <i class="fas fa-plus mr-3 text-green-600"></i> Rapports Mensuels
+                            <i class="fas fa-box-open mr-3 text-green-600"></i> Total des Produits
                         </p>
-                        <div class="p-6 bg-white shadow-md rounded-lg">
-                            <canvas id="chartOne" width="400" height="200"></canvas>
+                        <div class="p-6 bg-white shadow-md rounded-lg flex justify-center items-center">
+                            <div class="flex flex-col items-center justify-center h-40 w-40 bg-green-200 rounded-full shadow-md">
+                                <p class="text-4xl font-bold text-green-700">{{$produits->count()}}</p>
+                                <p class="text-lg text-gray-700">Produits</p>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Resolved Reports -->
+                    <!-- Total des Catégories -->
                     <div class="w-full lg:w-1/2 pl-0 lg:pl-2 mt-12 lg:mt-0">
                         <p class="text-xl pb-3 flex items-center text-gray-700">
-                            <i class="fas fa-check mr-3 text-green-600"></i> Rapports Résolus
+                            <i class="fas fa-tags mr-3 text-blue-600"></i> Total des Catégories
                         </p>
-                        <div class="p-6 bg-white shadow-md rounded-lg">
-                            <canvas id="chartTwo" width="400" height="200"></canvas>
+                        <div class="p-6 bg-white shadow-md rounded-lg flex justify-center items-center">
+                            <div class="flex flex-col items-center justify-center h-40 w-40 bg-blue-200 rounded-full shadow-md">
+                                <p class="text-4xl font-bold text-blue-700"> {{$categories->count()}} </p>
+                                <p class="text-lg text-gray-700">Catégories</p>
+                            </div>
                         </div>
                     </div>
                 </div>
+            </main>
+
+
 
                 <!-- Latest Reports -->
                 <div class="w-full mt-12">
@@ -214,83 +240,5 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js" integrity="sha256-KzZiKy0DWYsnwMF+X1DvQngQ2/FxF7MF3Ff72XcpuPs=" crossorigin="anonymous"></script>
     <!-- ChartJS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js" integrity="sha256-R4pqcOYV8lt7snxMQO/HSbVCFRPMdrhAFMH+vr9giYI=" crossorigin="anonymous"></script>
-
-    <script>
-        var chartOne = document.getElementById('chartOne');
-        var myChart = new Chart(chartOne, {
-            type: 'bar',
-            data: {
-                labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-                datasets: [{
-                    label: '# of Votes',
-                    data: [12, 19, 3, 5, 2, 3],
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(54, 162, 235, 0.2)',
-                        'rgba(255, 206, 86, 0.2)',
-                        'rgba(75, 192, 192, 0.2)',
-                        'rgba(153, 102, 255, 0.2)',
-                        'rgba(255, 159, 64, 0.2)'
-                    ],
-                    borderColor: [
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(75, 192, 192, 1)',
-                        'rgba(153, 102, 255, 1)',
-                        'rgba(255, 159, 64, 1)'
-                    ],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero: true
-                        }
-                    }]
-                }
-            }
-        });
-
-        var chartTwo = document.getElementById('chartTwo');
-        var myLineChart = new Chart(chartTwo, {
-            type: 'line',
-            data: {
-                labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-                datasets: [{
-                    label: '# of Votes',
-                    data: [12, 19, 3, 5, 2, 3],
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(54, 162, 235, 0.2)',
-                        'rgba(255, 206, 86, 0.2)',
-                        'rgba(75, 192, 192, 0.2)',
-                        'rgba(153, 102, 255, 0.2)',
-                        'rgba(255, 159, 64, 0.2)'
-                    ],
-                    borderColor: [
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(75, 192, 192, 1)',
-                        'rgba(153, 102, 255, 1)',
-                        'rgba(255, 159, 64, 1)'
-                    ],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero: true
-                        }
-                    }]
-                }
-            }
-        });
-    </script>
 </body>
 </html>

@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\CartsController;
 use App\Http\Controllers\CategorieController;
+use App\Http\Controllers\CommandesController;
 use App\Http\Controllers\FrontEndController;
 use App\Http\Controllers\ProduitsController;
 use App\Http\Controllers\ReviewsController;
@@ -19,6 +20,14 @@ Route::controller(FrontEndController::class)->group(function () {
     Route::get('/dashboard/forms','forms')->name('dash.forms')->middleware('isAdmin');
     Route::get('/dashboard/calendar','calendar')->name('dash.calendar')->middleware('isAdmin');
 
+
+});
+
+
+Route::controller(CommandesController::class)->group(function(){
+    Route::post('/commande', 'store')->name('commande.store');
+    Route::get('/commandes', 'index')->name('commandes.index');
+    Route::post('/commandes/{commande}/cancel', 'cancel')->name('commandes.cancel');
 
 });
 

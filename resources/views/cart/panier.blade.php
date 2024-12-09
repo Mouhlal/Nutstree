@@ -108,28 +108,39 @@
             @endif
 
             <!-- Total et bouton Passer à la caisse -->
-            @if((auth()->check() && $cartItems->count() > 0) || (!auth()->check() && session('cart') && count(session('cart')) > 0))
-                <div class="mt-8 flex flex-col sm:flex-row sm:justify-between items-center">
-                    <div class="text-xl font-semibold text-gray-800">
-                        <p>Total :
-                            <span class="text-green-600">
-                                {{ number_format(
-                                    (auth()->check()
-                                        ? $cartItems->sum(function($item) {
-                                            return $item->product ? $item->quantity * $item->product->prix : 0;
-                                        })
-                                        : array_sum(array_map(function($item) {
-                                            return $item['quantity'] * $item['price'];
-                                        }, session('cart')))
-                                    ), 2) }} MAD
-                            </span>
-                        </p>
-                    </div>
-                    <a href="#" class="mt-4 sm:mt-0 inline-block px-6 py-3 bg-yellow-500 text-black font-semibold rounded-md shadow hover:bg-yellow-400 transition duration-200">
-                        Passer à la caisse
-                    </a>
+            <div class="mt-8 flex flex-col sm:flex-row sm:justify-between items-center">
+                <div class="text-xl font-semibold text-gray-800">
+                    <p>Total :
+                        <span class="text-green-600">
+                            {{ number_format(
+                                (auth()->check()
+                                    ? $cartItems->sum(function($item) {
+                                        return $item->product ? $item->quantity * $item->product->prix : 0;
+                                    })
+                                    : array_sum(array_map(function($item) {
+                                        return $item['quantity'] * $item['price'];
+                                    }, session('cart')))
+                                ), 2) }} MAD
+                        </span>
+                    </p>
                 </div>
-            @endif
+
+                <form action="{{ route('commande.store') }}" method="POST" class="mt-4 sm:mt-0">
+                    @csrf
+                    <!-- Champ pour la localisation -->
+                    <div class="mb-4">
+                        <label for="location" class="block text-sm font-medium text-gray-700">Adresse de livraison :</label>
+                        <input type="text" id="location" name="location" required
+                               class="mt-1 p-2 block w-full border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+
+                    <!-- Bouton pour passer la commande -->
+                    <button type="submit" class="inline-block px-6 py-3 bg-yellow-500 text-black font-semibold rounded-md shadow hover:bg-yellow-400 transition duration-200">
+                        Passer à la commande
+                    </button>
+                </form>
+            </div>
+
         </div>
     </main>
 

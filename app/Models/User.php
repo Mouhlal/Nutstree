@@ -28,6 +28,11 @@ class User extends Authenticatable
         'google_id'
     ];
 
+    public function cartItems()
+    {
+        return $this->hasManyThrough(CartItems::class, Carts::class, 'user_id', 'cart_id');
+    }
+
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -44,7 +49,6 @@ class User extends Authenticatable
     public function Carts(){
         return $this->hasMany(Carts::class);
     }
-
     /**
      * Get the attributes that should be cast.
      *

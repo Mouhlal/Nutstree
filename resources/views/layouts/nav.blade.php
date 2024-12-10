@@ -13,6 +13,9 @@
             <nav>
                 <ul class="md:flex items-center justify-between text-base text-gray-700 pt-4 md:pt-0">
                     <li><a class="inline-block text-yellow-400 no-underline hover:text-gray-400 hover:underline py-2 px-4" href="{{route('prod.index')}}">Shop</a></li>
+                    @auth
+                        <li><a class="inline-block text-yellow-400 no-underline hover:text-gray-400 hover:underline py-2 px-4" href="{{route('commandes.index')}}">Commandes</a></li>
+                    @endauth
                     <li><a class="inline-block text-yellow-400 no-underline hover:text-gray-400 hover:underline py-2 px-4" href="{{route('layouts.about')}}">About</a></li>
                     <li><a class="inline-block text-yellow-400 no-underline hover:text-gray-400 hover:underline py-2 px-4" href="{{route('layouts.contact')}}">Contact</a></li>
                     @guest

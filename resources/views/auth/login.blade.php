@@ -78,7 +78,7 @@
                 <!-- Divider -->
                 <div class="text-center">
                     <p class="text-sm text-gray-500 dark:text-gray-400">Pas encore de compte ?
-                        <a href="#" class="font-medium text-yellow-300 hover:underline dark:text-yellow-300">Inscrivez-vous</a>
+                        <a href="{{route('auth.showRegister')}}" class="font-medium text-yellow-300 hover:underline dark:text-yellow-300">Inscrivez-vous</a>
                     </p>
                 </div>
 

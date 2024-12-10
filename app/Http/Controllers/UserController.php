@@ -87,6 +87,12 @@ class UserController extends Controller
 
         return redirect()->route('auth.profile', $id)->with('update', 'Modification du compte avec succéss');
     }
+    public function authenticated(Request $request, $user)
+    {
+        // Appeler la méthode mergeCart pour synchroniser le panier
+        app('App\Http\Controllers\CartsController')->mergeCart();
 
+        return redirect()->intended('/');
+    }
 
 }

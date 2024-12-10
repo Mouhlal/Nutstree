@@ -28,6 +28,7 @@ Route::controller(CommandesController::class)->group(function(){
     Route::post('/commande', 'store')->name('commande.store');
     Route::get('/commandes', 'index')->name('commandes.index');
     Route::post('/commandes/{commande}/cancel', 'cancel')->name('commandes.cancel');
+    Route::delete('/orders/{id}',  'deleteOrder')->name('orders.delete');
 
 });
 

@@ -32,7 +32,7 @@
 
             <!-- Vérification du contenu du panier -->
             @if(auth()->check() && $cartItems->count() > 0)
-                <div class="space-y-8">
+            <div class="space-y-8">
                     @foreach($cartItems as $item)
                     <div class="flex flex-col sm:flex-row sm:justify-between items-center border-b pb-6">
                         <div class="flex items-center space-x-4">
@@ -71,7 +71,7 @@
                     </div>
                     @endforeach
                 </div>
-            @elseif(!auth()->check() && session('cart') && count(session('cart')) > 0)
+                @elseif(!auth()->check() && session('cart'))
                 <div class="space-y-8">
                     @foreach(session('cart') as $item)
                     <div class="flex flex-col sm:flex-row sm:justify-between items-center border-b pb-6">
@@ -117,13 +117,15 @@
                                     ? $cartItems->sum(function($item) {
                                         return $item->product ? $item->quantity * $item->product->prix : 0;
                                     })
-                                    : array_sum(array_map(function($item) {
+                                    : (is_array(session('cart')) ? array_sum(array_map(function($item) {
                                         return $item['quantity'] * $item['price'];
-                                    }, session('cart')))
+                                    }, session('cart'))) : 0)
                                 ), 2) }} MAD
                         </span>
                     </p>
                 </div>
+
+
 
                 <form action="{{ route('commande.store') }}" method="POST" class="mt-4 sm:mt-0">
                     @csrf

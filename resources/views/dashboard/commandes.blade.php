@@ -22,6 +22,7 @@
         .nav-item:hover { background: #1947ee; }
         .account-link:hover { background: #3d68ff; }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body class="bg-gray-100 font-family-karla flex">
 
@@ -84,8 +85,8 @@
                 <button x-show="isOpen" @click="isOpen = false" class="h-full w-full fixed inset-0 cursor-default"></button>
                 <div x-show="isOpen" class="absolute w-32 bg-white rounded-lg shadow-lg py-2 mt-16">
                     <a href="/" class="block px-4 py-2 account-link hover:text-white">Acceuil</a>
-                    <a href="{{ auth()->check() ? route('auth.profile', auth()->user()->id) : route('auth.showLogin') }}" class="block px-4 py-2 account-link hover:text-white">Mon Compte</a>
-                    <a href="{{ auth()->check() ? route('auth.logout') : route('layouts.home') }} "class="block px-4 py-2 account-link hover:text-white">Deconnexion</a>
+                    <a href="{{ auth()->check() ? route('auth.profile', auth()->user()->id) : route('auth.showLogin') }}" class="block px-4 py-2 account-link hover:text-white">Account</a>
+                    <a href="{{ auth()->check() ? route('auth.logout') : route('layouts.home') }} "class="block px-4 py-2 account-link hover:text-white">Sign Out</a>
                 </div>
             </div>
         </header>
@@ -122,17 +123,13 @@
                     <i class="fas fa-align-left mr-3"></i>
                     Forms
                 </a>
-                <a href="{{route('dash.tables')}}" class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item">
-                    <i class="fas fa-align-left mr-3"></i>
-                    Categories
-                </a>
                 <a href="{{route('dash.calendar')}}" class="flex items-center text-white opacity-75 hover:opacity-100 py-2 pl-4 nav-item">
                     <i class="fas fa-calendar mr-3"></i>
                     Calendar
                 </a>
                 <a href="/" class="flex items-center text-white opacity-75 hover:opacity-100 py-2 pl-4 nav-item">
                     <i class="fas fa-home mr-2"></i>
-                    Home
+                    Acceuil
                 </a>
                 <a href="{{ auth()->check() ? route('auth.profile', auth()->user()->id) : '/login' }}" class="flex items-center text-white opacity-75 hover:opacity-100 py-2 pl-4 nav-item">
                     <i class="fas fa-user mr-3"></i>
@@ -150,86 +147,106 @@
 
         <div class="w-full h-screen overflow-x-hidden border-t flex flex-col">
             <main class="w-full flex-grow p-6">
-                <h1 class="text-3xl text-gray-800 font-bold pb-6">Gestion des Produits</h1>
+                <div class="container mx-auto py-8">
+                    <h1 class="text-2xl font-bold text-center text-gray-800 mb-6">Gestion des Commandes</h1>
 
-                <div class="w-full mt-6">
-                    <p class="text-xl pb-3 flex items-center text-gray-700">
-                        <i class="fas fa-list mr-3 text-green-600"></i> Liste des Produits
-                    </p>
-                    <div class="bg-white overflow-auto shadow-md rounded-lg">
-                        <table class="min-w-full bg-white border border-gray-200 rounded-lg">
-                            @if(session('deleteP'))
-                                <div class="p-4 mb-6 text-green-800 bg-green-100 rounded-md text-center">
-                                    {{ session('deleteP') }}
-                                </div>
-                                @endif
-                                @if(session('updateP'))
-                                <div class="p-4 mb-6 text-green-800 bg-green-100 rounded-md text-center">
-                                    {{ session('updateP') }}
-                                </div>
-                                @endif
-                            <thead class="bg-green-700 text-white">
-                                <tr>
-                                    <th class="w-1/3 text-left py-4 px-4 uppercase font-semibold text-sm border-b border-gray-200">
-                                        Nom Produit
-                                    </th>
-                                    <th class="w-1/3 text-left py-4 px-4 uppercase font-semibold text-sm border-b border-gray-200">
-                                        Prix
-                                    </th>
-                                    <th class="text-left py-4 px-4 uppercase font-semibold text-sm border-b border-gray-200">
-                                        Catégories
-                                    </th>
-                                    <th class="text-left py-4 px-4 uppercase font-semibold text-sm border-b border-gray-200">
-                                        Quantité
-                                    </th>
-                                    <th class="text-left py-4 px-4 uppercase font-semibold text-sm border-b border-gray-200">
-                                        Actions
-                                    </th>
+                    @if(session('deletedC'))
+                        <div class="p-4 mb-6 text-red-600 bg-red-100 rounded-md text-center">
+                            {{ session('deletedC') }}
+                        </div>
+                    @endif
+
+                    <!-- Orders Table -->
+                    <div class="bg-white shadow-md rounded-lg overflow-x-auto">
+                        <table class="min-w-full bg-white table-auto">
+                            <thead>
+                                <tr class="w-full bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+                                    <th class="py-3 px-6 text-left">Commande ID</th>
+                                    <th class="py-3 px-6 text-left">Client</th>
+                                    <th class="py-3 px-6 text-center">Total</th>
+                                    <th class="py-3 px-6 text-center">Statut</th>
+                                    <th class="py-3 px-6 text-center">Tel Client</th>
+                                    <th class="py-3 px-6 text-center">Localisation</th>
+                                    <th class="py-3 px-6 text-center">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody class="text-gray-700">
-                                @foreach($produits as $produit)
-                                <tr class="hover:bg-green-50">
-                                    <td class="w-1/3 text-left py-4 px-4 border-b border-gray-200">{{$produit->nom}}</td>
-                                    <td class="w-1/3 text-left py-4 px-4 border-b border-gray-200">{{$produit->prix}} MAD</td>
-                                    <td class="text-left py-4 px-4 border-b border-gray-200">
-                                        @isset($produit->categorie_id)
-                                            @foreach($categories as $categorie)
-                                                @if($categorie->id == $produit->categorie_id)
-                                                    <span class="bg-green-200 text-green-700 text-sm px-2 py-1 rounded">
-                                                        {{$categorie->type}}
-                                                    </span>
-                                                @endif
-                                            @endforeach
-                                        @endisset
-                                    </td>
-                                    <td class="text-left py-4 px-4 border-b border-gray-200">{{$produit->quantite}}</td>
-                                    <td class="text-left py-4 px-4 border-b border-gray-200 flex gap-2">
-                                        <a href="{{ route('prod.edit', $produit->id) }}" class="px-3 py-2 bg-yellow-500 text-white text-sm font-medium rounded hover:bg-yellow-600">
-                                            Modifier
-                                        </a>
-                                        <a href="{{ route('prod.delete', $produit->id) }}"  onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce produit ?')">
-                                            <button type="submit" class="px-3 py-2 bg-red-600 text-white text-sm font-medium rounded hover:bg-red-700">
-                                                Supprimer
-                                            </button>
-                                        </a>
-                                    </td>
-                                </tr>
+                            <tbody class="text-gray-600 text-sm font-light">
+                                @foreach($commandes as $commande)
+                                    <tr class="border-b border-gray-200 hover:bg-gray-100">
+                                        <td class="py-3 px-6 text-left whitespace-nowrap">{{ $commande->id }}</td>
+                                        <td class="py-3 px-6 text-left">{{ $commande->user->name }}</td>
+                                        <td class="py-3 px-6 text-center">{{ number_format($commande->total, 2) }} MAD</td>
+                                        <td class="py-3 px-6 text-center">
+                                            <span class="px-3 py-1 rounded-full text-white
+                                            {{ $commande->status === 'pending' ? 'bg-yellow-500' :
+                                               ($commande->status === 'completed' ? 'bg-green-500' :
+                                               ($commande->status === 'pending-cash' ? 'bg-blue-500' :
+                                               ($commande->status === 'failed' ? 'bg-gray-500' : 'bg-red-500'))) }}">
+                                            {{ ucfirst(str_replace('-', ' ', $commande->status)) }}
+                                        </span>
+                                        </td>
+                                        <td class="py-3 px-6 text-center">{{$commande->user->tel }} </td>
+                                        <td class="py-3 px-6 text-center">{{$commande->user->adresse }} </td>
+                                        <td class="py-3 px-6 text-center">
+                                            <!-- Form to update status -->
+                                            <form action="{{route('dash.commandes.update',$commande->id)}}" method="POST" class="inline-block">
+                                                @csrf
+                                                @method('PATCH')
+                                                <select name="status" class="bg-gray-50 border text-gray-600 py-1 px-2 rounded">
+                                                    <option value="pending" {{ $commande->status === 'pending' ? 'selected' : '' }}>En attente</option>
+                                                    <option value="completed" {{ $commande->status === 'completed' ? 'selected' : '' }}>Livrée</option>
+                                                    <option value="cancelled" {{ $commande->status === 'cancelled' ? 'selected' : '' }}>Annulée</option>
+                                                </select>
+                                                <button type="submit" class="ml-2 bg-blue-500 text-white py-1 px-2 rounded">Mettre à jour</button>
+                                            </form>
+
+                                            <!-- Delete Button -->
+                                            <form action="{{ route('dash.commandes.destroy', $commande->id) }}" method="POST" id="delete-form-{{$commande->id}}" class="inline-block">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="button" onclick="confirmDelete({{ $commande->id }})" class="ml-2 bg-red-500 text-white py-1 px-2 rounded">Supprimer</button>
+                                            </form>
+                                        </td>
+                                    </tr>
                                 @endforeach
                             </tbody>
                         </table>
                     </div>
                 </div>
-
             </main>
+
         </div>
-
-
     </div>
 
-    <!-- AlpineJS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
     <!-- Font Awesome -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js" integrity="sha256-KzZiKy0DWYsnwMF+X1DvQngQ2/FxF7MF3Ff72XcpuPs=" crossorigin="anonymous"></script>
+
+    <script>
+        document.getElementById('menu-toggle').addEventListener('click', () => {
+        const menu = document.getElementById('menu');
+        menu.classList.toggle('hidden');
+    });
+    function confirmDelete(commandeId) {
+        // Show SweetAlert confirmation dialog
+        Swal.fire({
+            title: 'Êtes-vous sûr?',
+            text: 'Vous ne pouvez pas annuler cette action!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Oui, supprimer!',
+            cancelButtonText: 'Annuler'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Submit the form if the user confirms
+                document.getElementById('delete-form-' + commandeId).submit();
+            }
+        });
+    }
+    </script>
+
 </body>
 </html>

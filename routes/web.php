@@ -5,6 +5,7 @@ use App\Http\Controllers\CartsController;
 use App\Http\Controllers\CategorieController;
 use App\Http\Controllers\CommandesController;
 use App\Http\Controllers\FrontEndController;
+use App\Http\Controllers\PaiementsController;
 use App\Http\Controllers\ProduitsController;
 use App\Http\Controllers\ReviewsController;
 use App\Http\Controllers\UserController;
@@ -19,7 +20,9 @@ Route::controller(FrontEndController::class)->group(function () {
     Route::get('/dashboard/categories','cat')->name('dash.cat')->middleware('isAdmin');
     Route::get('/dashboard/forms','forms')->name('dash.forms')->middleware('isAdmin');
     Route::get('/dashboard/calendar','calendar')->name('dash.calendar')->middleware('isAdmin');
-
+    Route::get('/dashboard/commandes','index')->name('dash.commandes')->middleware('isAdmin');
+    Route::delete('/dashboard/commandes/{id}','destroy')->name('dash.commandes.destroy')->middleware('isAdmin');
+    Route::patch('/dashboard/commandes/update/{id}','updateStatus')->name('dash.commandes.update')->middleware('isAdmin');
 
 });
 
@@ -77,5 +80,13 @@ Route::controller(CartsController::class)->group(function(){
 
 });
 
-Route::post('/produits/{id}/reviews', [ReviewsController::class, 'storeReview'])->name('reviews.store');
+/* Route::post('/produits/{id}/reviews', [ReviewsController::class, 'storeReview'])->name('reviews.store');
+
+Route::get('pay/create/{commandeId}', [PaiementsController::class, 'createPayment'])->name('pay.pay');
+Route::get('pay/success/{commandeId}', [PaiementsController::class, 'paymentSuccess'])->name('pay.success'); */
+
+Route::post('/pay/cash/{commande}', [PaiementsController::class, 'cashOnDelivery'])->name('pay.cash');
+Route::post('/pay/cmi/{commande}', [PaiementsController::class, 'payByCmi'])->name('pay.cmi');
+
+
 

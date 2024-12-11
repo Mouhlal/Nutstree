@@ -17,7 +17,9 @@ return new class extends Migration
             $table->date("dateCom");
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->text("location");
-            $table->enum('status', ['pending', 'completed', 'canceled'])->default('pending');
+            $table->string('payment_intent_id')->nullable();
+            $table->enum('status', ['pending', 'completed', 'failed', 'pending-cash', 'cancelled'])->default('pending');
+            $table->enum('payment_method', ['Cash on Delivery', 'Credit Card', 'PayPal'])->default('Cash on Delivery');
             $table->decimal("totalPrix",10,2);
             $table->softDeletes();
             $table->timestamps();

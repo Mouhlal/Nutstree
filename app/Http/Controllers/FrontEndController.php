@@ -54,5 +54,35 @@ class FrontEndController extends Controller
     public function blanks(){
         return view('dashboard.blank');
     }
+    public function index(Request $request)
+    {
+        $status = $request->query('status');
+        if ($status) {
+            $commandes = Commandes::where('status', $status)->paginate(10);
+        } else {
+            $commandes = Commandes::paginate(10);
+        }
+
+        return view('dashboard.commandes', [
+            'commandes' => $commandes,
+            'status' => $status,
+        ]);
+    }
+    public function updateStatus(Request $request, $id)
+    {
+        $request->validate([
+            'status' => 'required|string',
+        ]);
+        $commande = Commandes::findOrFail($id);
+        $commande->status = $request->input('status');
+        $commande->save();
+        return redirect()->route('dash.commandes')->with('success', 'Statut de la commande mis à jour avec succès.');
+    }
+    public function destroy($id)
+    {
+        $commande = Commandes::findOrFail($id);
+        $commande->delete();
+        return redirect()->route('dash.commandes')->with('deletedC', 'Commande supprimée avec succès.');
+    }
 
 }

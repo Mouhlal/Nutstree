@@ -9,6 +9,7 @@
     <link rel="shortcut icon" href="{{ asset('storage/layouts/logo.jpeg') }}" type="image/x-icon">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
+        /* Custom styles for your orders page */
         .status-pending {
             background-color: #fff3cd;
             color: #856404;
@@ -25,19 +26,24 @@
         }
 
         .card {
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
             background-color: #fff;
             padding: 20px;
             margin-bottom: 20px;
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
         }
 
         .btn {
             border-radius: 8px;
-            padding: 10px 20px;
+            padding: 12px 24px;
             font-size: 1rem;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: background-color 0.3s, transform 0.3s;
         }
 
         .btn-danger {
@@ -47,6 +53,7 @@
 
         .btn-danger:hover {
             background-color: #c82333;
+            transform: scale(1.05);
         }
 
         .btn-warning {
@@ -56,6 +63,7 @@
 
         .btn-warning:hover {
             background-color: #e0a800;
+            transform: scale(1.05);
         }
 
         .btn-success {
@@ -65,6 +73,39 @@
 
         .btn-success:hover {
             background-color: #218838;
+            transform: scale(1.05);
+        }
+
+        /* Modal Styles */
+        #payment-method-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 400px;
+        }
+
+        .modal-header {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .modal-body {
+            font-size: 1rem;
+            margin-bottom: 20px;
         }
     </style>
 </head>
@@ -104,35 +145,33 @@
                     @endforeach
                 </ul>
 
-                <!-- Annuler la commande -->
-                @if($commande->status !== 'cancelled')
-                <form id="cancel-form-{{ $commande->id }}" action="{{ route('commandes.cancel', $commande->id) }}" method="POST" class="inline">
-                    @csrf
-                    <button type="button" class="btn btn-warning" onclick="confirmCancel({{ $commande->id }})">
-                        Annuler la commande
-                    </button>
-                </form>
-                @else
-                <p class="text-red-500 mt-4">Commande annulée</p>
-                @endif
+                <!-- Modal for Payment Method -->
+                @if($commande->status !== 'completed')
+                <div class="mt-4 flex flex-col md:flex-row gap-4 md:space-x-4">
+                    <!-- Button for Cash on Delivery -->
+                    <form action="{{ route('pay.cash', $commande->id) }}" method="POST">
+                        @csrf
+                        <button type="submit" class="btn btn-warning">
+                            Paiement Cash (à livraison)
+                        </button>
+                    </form>
 
-                <!-- Supprimer la commande -->
-                <form action="{{ route('orders.delete', $commande->id) }}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette commande ?');" class="mt-4">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="btn btn-danger">
-                        Supprimer la commande
-                    </button>
-                </form>
+                    <!-- Button for Carte Bancaire -->
+                    <form action="" method="POST">
+                        @csrf
+                        <button type="submit" class="btn btn-success">
+                            Payer par Carte Bancaire
+                        </button>
+                    </form>
+                </div>
+                @endif
             </div>
             @endforeach
         @else
             <p class="text-center text-gray-600">Vous n'avez pas de commandes pour le moment.</p>
         @endif
     </div>
-
     @include('layouts.footer')
-
     <script>
         function confirmCancel(commandeId) {
             Swal.fire({
@@ -150,6 +189,10 @@
                 }
             });
         }
+        document.getElementById('menu-toggle').addEventListener('click', () => {
+        const menu = document.getElementById('menu');
+        menu.classList.toggle('hidden');
+    });
     </script>
 </body>
 </html>

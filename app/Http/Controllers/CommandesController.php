@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Mail\CommandeMail;
 use App\Models\Commandes;
 use App\Models\Commandes_produits;
+use App\Models\User;
 use App\Notifications\CommandeCanceled;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -30,12 +31,18 @@ class CommandesController extends Controller
     {
         $request->validate([
             'location' => 'required|string|max:255',
+            'tel' => 'required|regex:/^[0-9]{10}$/',
         ]);
+
 
         $user = Auth::user();
         if (!Auth::check()) {
             return redirect()->route('auth.showLogin')->with('error', 'Vous devez être connecté pour passer une commande.');
         }
+         // Mise à jour du numéro de téléphone de l'utilisateur
+    if ($user->tel !== $request->tel) {
+        $user->update(['tel' => $request->tel]);
+    }
         // Création de la commande
         $commande = Commandes::create([
             'numCom' => 'CMD-' . strtoupper(uniqid()),

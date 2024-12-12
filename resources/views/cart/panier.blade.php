@@ -125,15 +125,21 @@
                     </p>
                 </div>
 
-
-
                 <form action="{{ route('commande.store') }}" method="POST" class="mt-4 sm:mt-0">
                     @csrf
                     <!-- Champ pour la localisation -->
                     <div class="mb-4">
                         <label for="location" class="block text-sm font-medium text-gray-700">Adresse de livraison :</label>
-                        <input type="text" id="location" name="location" required
+                        <input type="text" placeholder="Localisation" id="location" name="location" required
                                class="mt-1 p-2 block w-full border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+
+                    <!-- Champ pour le téléphone -->
+                    <div class="mb-4">
+                        <label for="phone" class="block text-sm font-medium text-gray-700">Numéro de téléphone :</label>
+                        <input type="tel" id="phone" name="tel" required pattern="[0-9]{10}"
+                               class="mt-1 p-2 block w-full border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                               placeholder="Numéro de téléphone">
                     </div>
 
                     <!-- Bouton pour passer la commande -->

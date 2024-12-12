@@ -217,7 +217,7 @@
                                                     {{ $commande->status === 'pending' ? 'bg-yellow-500' :
                                                     ($commande->status === 'completed' ? 'bg-green-500' :
                                                     ($commande->status === 'failed' ? 'bg-red-500' :
-                                                    ($commande->status === 'pending-cash' ? 'bg-blue-500' : 'bg-gray-500'))) }}">
+                                                    ($commande->status === 'pending-cash' ? 'bg-blue-500 text-nowrap truncate' : 'bg-gray-500'))) }}">
                                                     {{ ucfirst(str_replace('-', ' ', $commande->status)) }}
                                                 </span>
                                             </td>
@@ -233,9 +233,9 @@
                                                         <option value="completed" {{ $commande->status === 'completed' ? 'selected' : '' }}>Livrée</option>
                                                         <option value="cancelled" {{ $commande->status === 'cancelled' ? 'selected' : '' }}>Annulée</option>
                                                     </select>
-                                                    <button type="submit" class="ml-2 bg-blue-500 text-white py-1 px-2 rounded">Mettre à jour</button>
+                                                    <button type="submit" class="ml-2 bg-blue-500 relative top-1 text-white py-1 px-2 rounded">Mettre à jour</button>
                                                 </form>
-                                                <form action="{{ route('dash.commandes.destroy', $commande->id) }}" class="inline-block" method="POST">
+                                                <form action="{{ route('dash.commandes.destroy', $commande->id) }}" class="inline-block p-2" method="POST">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="ml-2 bg-red-500 text-white py-1 px-2 rounded">Supprimer</button>

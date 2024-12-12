@@ -56,18 +56,32 @@ class FrontEndController extends Controller
     }
     public function index(Request $request)
     {
+        $search = $request->input('search');
         $status = $request->query('status');
+        $commandesQuery = Commandes::query();
+
         if ($status) {
-            $commandes = Commandes::where('status', $status)->paginate(10);
-        } else {
-            $commandes = Commandes::paginate(10);
+            $commandesQuery->where('status', $status);
         }
+        if ($search) {
+            $commandesQuery->where(function ($query) use ($search) {
+                $query->where('numCom', 'like', "%$search%")
+                      ->orWhereHas('user', function ($query) use ($search) {
+                          $query->where('name', 'like', "%$search%");
+                      });
+            });
+        }
+
+        // Récupérer les commandes avec pagination
+        $commandes = $commandesQuery->paginate(10);
 
         return view('dashboard.commandes', [
             'commandes' => $commandes,
             'status' => $status,
+            'search' => $search,
         ]);
     }
+
     public function updateStatus(Request $request, $id)
     {
         $request->validate([

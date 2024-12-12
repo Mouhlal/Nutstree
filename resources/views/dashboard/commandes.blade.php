@@ -85,8 +85,8 @@
                 <button x-show="isOpen" @click="isOpen = false" class="h-full w-full fixed inset-0 cursor-default"></button>
                 <div x-show="isOpen" class="absolute w-32 bg-white rounded-lg shadow-lg py-2 mt-16">
                     <a href="/" class="block px-4 py-2 account-link hover:text-white">Acceuil</a>
-                    <a href="{{ auth()->check() ? route('auth.profile', auth()->user()->id) : route('auth.showLogin') }}" class="block px-4 py-2 account-link hover:text-white">Account</a>
-                    <a href="{{ auth()->check() ? route('auth.logout') : route('layouts.home') }} "class="block px-4 py-2 account-link hover:text-white">Sign Out</a>
+                    <a href="{{ auth()->check() ? route('auth.profile', auth()->user()->id) : route('auth.showLogin') }}" class="block px-4 py-2 account-link hover:text-white">Mon Compte</a>
+                    <a href="{{ auth()->check() ? route('auth.logout') : route('layouts.home') }} "class="block px-4 py-2 account-link hover:text-white">Deconnexion</a>
                 </div>
             </div>
         </header>
@@ -156,61 +156,116 @@
                         </div>
                     @endif
 
+                    @if(session('success'))
+                    <div class="p-4 mb-6 text-green-600 bg-green-100 rounded-md text-center">
+                        {{ session('success') }}
+                    </div>
+                @endif
+
                     <!-- Orders Table -->
                     <div class="bg-white shadow-md rounded-lg overflow-x-auto">
-                        <table class="min-w-full bg-white table-auto">
-                            <thead>
-                                <tr class="w-full bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
-                                    <th class="py-3 px-6 text-left">Commande ID</th>
-                                    <th class="py-3 px-6 text-left">Client</th>
-                                    <th class="py-3 px-6 text-center">Total</th>
-                                    <th class="py-3 px-6 text-center">Statut</th>
-                                    <th class="py-3 px-6 text-center">Tel Client</th>
-                                    <th class="py-3 px-6 text-center">Localisation</th>
-                                    <th class="py-3 px-6 text-center">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody class="text-gray-600 text-sm font-light">
-                                @foreach($commandes as $commande)
-                                    <tr class="border-b border-gray-200 hover:bg-gray-100">
-                                        <td class="py-3 px-6 text-left whitespace-nowrap">{{ $commande->id }}</td>
-                                        <td class="py-3 px-6 text-left">{{ $commande->user->name }}</td>
-                                        <td class="py-3 px-6 text-center">{{ number_format($commande->total, 2) }} MAD</td>
-                                        <td class="py-3 px-6 text-center">
-                                            <span class="px-3 py-1 rounded-full text-white
-                                            {{ $commande->status === 'pending' ? 'bg-yellow-500' :
-                                               ($commande->status === 'completed' ? 'bg-green-500' :
-                                               ($commande->status === 'pending-cash' ? 'bg-blue-500' :
-                                               ($commande->status === 'failed' ? 'bg-gray-500' : 'bg-red-500'))) }}">
-                                            {{ ucfirst(str_replace('-', ' ', $commande->status)) }}
-                                        </span>
-                                        </td>
-                                        <td class="py-3 px-6 text-center">{{$commande->user->tel }} </td>
-                                        <td class="py-3 px-6 text-center">{{$commande->user->adresse }} </td>
-                                        <td class="py-3 px-6 text-center">
-                                            <!-- Form to update status -->
-                                            <form action="{{route('dash.commandes.update',$commande->id)}}" method="POST" class="inline-block">
-                                                @csrf
-                                                @method('PATCH')
-                                                <select name="status" class="bg-gray-50 border text-gray-600 py-1 px-2 rounded">
-                                                    <option value="pending" {{ $commande->status === 'pending' ? 'selected' : '' }}>En attente</option>
-                                                    <option value="completed" {{ $commande->status === 'completed' ? 'selected' : '' }}>Livrée</option>
-                                                    <option value="cancelled" {{ $commande->status === 'cancelled' ? 'selected' : '' }}>Annulée</option>
-                                                </select>
-                                                <button type="submit" class="ml-2 bg-blue-500 text-white py-1 px-2 rounded">Mettre à jour</button>
-                                            </form>
+                                <div>
+                                    <h2 class="text-lg p-5 font-bold text-gray-800 mb-4">Autres Commandes</h2>
+                                    <table class="min-w-full md:w-full bg-white table-auto overflow-x-auto">
+                                        <thead>
+                                            <tr class="w-full bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+                                                <th class="py-3 px-6 text-left">N°Commande</th>
+                                                <th class="py-3 px-6 text-left">Client</th>
+                                                <th class="py-3 px-6 text-center">Total</th>
+                                                <th class="py-3 px-6 text-center">Statut</th>
+                                                <th class="py-3 px-6 text-center">Tel Client</th>
+                                                <th class="py-3 px-6 text-center">Localisation</th>
+                                                <th class="py-3 px-6 text-center">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="text-gray-600 text-sm font-light">
+                                            @foreach($commandes->where('status', 'pending-cash') as $commande)
+                                                <tr class="border-b border-gray-200 hover:bg-gray-100">
+                                                    <td class="py-3 px-6 text-left whitespace-nowrap">{{ $commande->numCom }}</td>
+                                                    <td class="py-3 px-6 text-left">{{ $commande->user->name }}</td>
+                                                    <td class="py-3 px-6 text-center">{{ number_format($commande->total, 2) }} MAD</td>
+                                                    <td class="py-3 px-6 text-center">
+                                                        <span class="px-2 py-1 rounded-full text-white bg-blue-500">En attente paiement</span>
+                                                    </td>
+                                                    <td class="py-3 px-6 text-center">{{ $commande->user->tel }}</td>
+                                                    <td class="py-3 px-6 text-center">{{ $commande->user->adresse }}</td>
+                                                    <td class="py-3 px-6 text-center">
+                                                        <!-- Ajouter des actions spécifiques -->
+                                                        <form action="{{ route('dash.commandes.update', $commande->id) }}" method="POST">
+                                                            @csrf
+                                                            @method('PATCH')
+                                                            <select name="status" class="bg-gray-50 border text-gray-600 py-1 px-2 rounded">
+                                                                <option value="completed">Livrée</option>
+                                                                <option value="cancelled">Annulée</option>
+                                                            </select>
+                                                            <button type="submit" class="ml-2 bg-blue-500 text-white py-1 px-2 rounded">Mettre à jour</button>
+                                                        </form>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
 
-                                            <!-- Delete Button -->
-                                            <form action="{{ route('dash.commandes.destroy', $commande->id) }}" method="POST" id="delete-form-{{$commande->id}}" class="inline-block">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="button" onclick="confirmDelete({{ $commande->id }})" class="ml-2 bg-red-500 text-white py-1 px-2 rounded">Supprimer</button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                                <!-- Autres commandes -->
+                                <div>
+                                    <h2 class="text-lg p-5 font-bold text-gray-800 mb-4">Autres Commandes</h2>
+                                    <table class="min-w-full bg-white table-auto overflow-x-auto">
+                                        <thead>
+                                            <tr class="w-full bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+                                                <th class="py-3 px-6 text-left">N°Commande</th>
+                                                <th class="py-3 px-6 text-left">Client</th>
+                                                <th class="py-3 px-6 text-center">Total</th>
+                                                <th class="py-3 px-6 text-center">Statut</th>
+                                                <th class="py-3 px-6 text-center">Tel Client</th>
+                                                <th class="py-3 px-6 text-center">Localisation</th>
+                                                <th class="py-3 px-6 text-center">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="text-gray-600 text-sm font-light">
+                                            @foreach($commandes->where('status', '!=', 'pending-cash') as $commande)
+                                                <tr class="border-b border-gray-200 hover:bg-gray-100">
+                                                    <td class="py-3 px-6 text-left whitespace-nowrap">{{ $commande->numCom }}</td>
+                                                    <td class="py-3 px-6 text-left">{{ $commande->user->name }}</td>
+                                                    <td class="py-3 px-6 text-center">{{ number_format($commande->total, 2) }} MAD</td>
+                                                    <td class="py-3 px-6 text-center">
+                                                        <span class="px-3 py-1 rounded-full text-white
+                                                            {{ $commande->status === 'pending' ? 'bg-yellow-500' :
+                                                            ($commande->status === 'completed' ? 'bg-green-500' :
+                                                            ($commande->status === 'failed' ? 'bg-red-500' :
+                                                            ($commande->status === 'pending-cash' ? 'bg-blue-500' : 'bg-gray-500'))) }}">
+                                                            {{ ucfirst(str_replace('-', ' ', $commande->status)) }}
+                                                        </span>
+
+                                                    </td>
+                                                    <td class="py-3 px-6 text-center">{{ $commande->user->tel }}</td>
+                                                    <td class="py-3 px-6 text-center">{{ $commande->user->adresse }}</td>
+                                                    <td class="py-3 px-6 text-center">
+                                                        <form action="{{ route('dash.commandes.update', $commande->id) }}" method="POST">
+                                                            @csrf
+                                                            @method('PATCH')
+                                                            <select name="status" class="bg-gray-50 border text-gray-600 py-1 px-2 rounded">
+                                                                <option value="pending" {{ $commande->status === 'pending' ? 'selected' : '' }}>En cours</option>
+                                                                <option value="pending-cash" {{ $commande->status === 'pending-cash' ? 'selected' : '' }}>
+                                                                    en attente de paiement
+                                                                </option>
+                                                                <option value="completed" {{ $commande->status === 'completed' ? 'selected' : '' }}>Livrée</option>
+                                                                <option value="cancelled" {{ $commande->status === 'cancelled' ? 'selected' : '' }}>Annulée</option>
+                                                            </select>
+                                                            <button type="submit" class="ml-2 bg-blue-500 text-white py-1 px-2 rounded">Mettre à jour</button>
+                                                        </form>
+                                                        <form action="{{ route('dash.commandes.destroy', $commande->id) }}" class="p-2" method="POST">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" class="ml-2 bg-red-500 text-white py-1 px-2 rounded">Supprimer</button>
+                                                        </form>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                     </div>
                 </div>
             </main>

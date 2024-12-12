@@ -76,20 +76,45 @@
 
     <main class="my-8">
         <div class="container mx-auto px-6">
-            <div class="h-64 rounded-md overflow-hidden bg-cover bg-center" style="background-image: url('https://ortan-nature.com/wp-content/uploads/2024/02/fruits-secs-.jpeg')">
+            <div id="image-slider" class="h-64 rounded-md overflow-hidden bg-cover bg-center transition-all duration-700" style="background-image: url('https://ortan-nature.com/wp-content/uploads/2024/02/fruits-secs-.jpeg')">
                 <div class="bg-gray-900 bg-opacity-50 flex items-center h-full">
                     <div class="px-10 max-w-xl">
                         <h2 class="text-2xl text-white font-semibold">Offres spéciales</h2>
                         <p class="mt-2 text-gray-200">
                             Profitez de nos offres exclusives pour découvrir nos produits à prix réduits !
-                            Abonnez-vous à notre newsletter pour être informé de nos promotions et de nos nouveautés.</p>
+                            Abonnez-vous à notre newsletter pour être informé de nos promotions et de nos nouveautés.
+                        </p>
                         <button class="flex items-center mt-4 px-3 py-2 bg-yellow-400 text-black text-sm uppercase font-medium rounded hover:bg-yellow-500 focus:outline-none focus:bg-yellow-500">
                             <span>Shop Now</span>
-                            <svg class="h-5 w-5 mx-2" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor"><path d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                            <svg class="h-5 w-5 mx-2" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
+                                <path d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                            </svg>
                         </button>
                     </div>
                 </div>
             </div>
+
+            <script>
+                // Liste des images à afficher
+                const images = [
+                    'https://ortan-nature.com/wp-content/uploads/2024/02/fruits-secs-.jpeg',
+                    'https://www.shutterstock.com/image-photo/dried-fruit-that-has-had-260nw-2489832773.jpg',
+                    'https://media.istockphoto.com/id/639201332/fr/photo/composition-avec-un-assortiment-de-noix-et-de-fruits-secs.jpg?s=612x612&w=0&k=20&c=V3yJly3jsN-NlTaCMzIs0DAc7iwZf9RiCjUom3Tn_hs=',
+                    'https://img-3.journaldesfemmes.fr/klQXxQDCaHGIjU2rDYHs2Y7sR_w=/1500x/smart/1be07b6379f941f484764e5f4693a067/ccmcms-jdf/16962606.jpg'
+                ];
+
+                const slider = document.getElementById('image-slider');
+
+                function changeBackgroundImage() {
+                    // Sélectionner une image aléatoire
+                    const randomImage = images[Math.floor(Math.random() * images.length)];
+                    // Mettre à jour l'image de fond
+                    slider.style.backgroundImage = `url('${randomImage}')`;
+                }
+                // Changer l'image toutes les 5 secondes
+                setInterval(changeBackgroundImage, 2000);
+            </script>
+
 
             <!-- Section supplémentaires -->
             {{-- <div class="md:flex mt-8 md:-mx-4">
@@ -200,10 +225,10 @@
     <!-- Grid -->
     <div class="grid lg:grid-cols-2 lg:gap-y-16 gap-10">
       <!-- Card -->
-      <a class="group rounded-xl overflow-hidden" href="#">
+      <a class="group rounded-xl overflow-hidden" href="{{route('prod.index')}}">
         <div class="sm:flex">
           <div class="flex-shrink-0 relative rounded-xl overflow-hidden w-full sm:w-56 h-44">
-            <img class="group-hover:scale-105 transition-transform duration-500 ease-in-out size-full absolute top-0 start-0 object-cover rounded-xl" src="https://www.footpack.fr/wp-content/uploads/2023/11/maillots-foot-footpack-4-800x800-c-center.jpg"alt="Image Description">
+            <img class="group-hover:scale-105 transition-transform duration-500 ease-in-out size-full absolute top-0 start-0 object-cover rounded-xl" src="https://img-3.journaldesfemmes.fr/klQXxQDCaHGIjU2rDYHs2Y7sR_w=/1500x/smart/1be07b6379f941f484764e5f4693a067/ccmcms-jdf/16962606.jpg"alt="Image Description">
           </div>
 
           <div class="grow mt-4 sm:mt-0 sm:ms-6 px-4 sm:px-0">
@@ -222,7 +247,7 @@
       <!-- End Card -->
 
       <!-- Card -->
-      <a class="group rounded-xl overflow-hidden" href="#">
+      <a class="group rounded-xl overflow-hidden" href="{{route('layouts.about')}}">
         <div class="sm:flex">
           <div class="flex-shrink-0 relative rounded-xl overflow-hidden w-full sm:w-56 h-44">
             <img class="group-hover:scale-105 transition-transform duration-500 ease-in-out size-full absolute top-0 start-0 object-cover rounded-xl" src="https://bmmagazine.co.uk/wp-content/uploads/2020/03/AdobeStock_239743980-scaled-e1584008515740.jpeg" alt="Image Description">
@@ -244,10 +269,10 @@
       <!-- End Card -->
 
       <!-- Card -->
-      <a class="group rounded-xl overflow-hidden" href="#">
+      <a class="group rounded-xl overflow-hidden" href="{{route('layouts.about')}}">
         <div class="sm:flex">
           <div class="flex-shrink-0 relative rounded-xl overflow-hidden w-full sm:w-56 h-44">
-            <img class="group-hover:scale-105 transition-transform duration-500 ease-in-out size-full absolute top-0 start-0 object-cover rounded-xl" src="https://images.lesindesradios.fr/fit-in/1100x2000/filters:format(webp)/medias/A8i6543ugr/image/Nouveaux_maillots_UEFA_EURO_2024_par_Adidas1710496685392.jpeg" alt="Image Description">
+            <img class="group-hover:scale-105 transition-transform duration-500 ease-in-out size-full absolute top-0 start-0 object-cover rounded-xl" src="https://www.shutterstock.com/image-photo/dried-fruit-that-has-had-260nw-2489832773.jpg" alt="Image Description">
           </div>
 
           <div class="grow mt-4 sm:mt-0 sm:ms-6 px-4 sm:px-0">
@@ -266,7 +291,7 @@
       <!-- End Card -->
 
       <!-- Card -->
-      <a class="group rounded-xl overflow-hidden" href="#">
+      <a class="group rounded-xl overflow-hidden" href="{{route('layouts.contact')}}">
         <div class="sm:flex">
           <div class="flex-shrink-0 relative rounded-xl overflow-hidden w-full sm:w-56 h-44">
             <img class="group-hover:scale-105 transition-transform duration-500 ease-in-out size-full absolute top-0 start-0 object-cover rounded-xl" src="https://c7.alamy.com/comp/2K5B0G0/help!-clipart-text-illustration-vector-2K5B0G0.jpg" alt="Image Description">

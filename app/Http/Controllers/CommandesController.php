@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-
+use App\Mail\CommandeMail;
 use App\Models\Commandes;
 use App\Models\Commandes_produits;
 use App\Notifications\CommandeCanceled;
@@ -59,6 +59,8 @@ class CommandesController extends Controller
         }
         // Vider le panier de l'utilisateur
         $user->cartItems()->delete();
+        // Envoi d'une notification
+        Mail::to($commande->user->email)->send(new CommandeMail($commande));
         return redirect()->route('commandes.index')->with('success', 'Commande passée avec succès !');
     }
 

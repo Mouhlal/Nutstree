@@ -30,7 +30,7 @@
     <section id="contact" class="py-16 flex items-center justify-center min-h-screen bg-gray-50">
         <div class="container px-5 py-24 mx-auto flex sm:flex-nowrap flex-wrap">
             <!-- Map Section -->
-            <div class="lg:w-2/3 md:w-1/2 bg-green-300 text-white rounded-lg overflow-hidden sm:mr-10 p-10 flex items-end justify-start relative shadow-lg">
+            <div class="lg:w-2/3 md:w-1/2  text-white rounded-lg overflow-hidden sm:mr-10 p-10 flex items-end justify-start relative shadow-lg">
                 <iframe width="100%" height="100%" class="absolute inset-0" frameborder="0" title="map" marginheight="0" marginwidth="0" scrolling="no"
                     src="https://maps.google.com/maps?width=100%&height=600&hl=en&q=maroc+(Nutstree)&ie=UTF8&t=&z=14&iwloc=B&output=embed"
                     style="filter: grayscale(0) contrast(1.2) opacity(0.8);"></iframe>

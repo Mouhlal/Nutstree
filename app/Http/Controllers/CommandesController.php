@@ -94,7 +94,7 @@ public function store(Request $request)
             return back()->with('error', 'Cette commande est déjà annulée.');
         }
         // Annuler la commande
-        $commande->update(['status' => 'canceled']);
+        $commande->update(['status' => 'cancelled']);
         // Envoyer la notification à l'utilisateur
         Notification::route('mail', $commande->user->email)
                     ->notify(new CommandeCanceled($commande));
@@ -118,7 +118,6 @@ public function store(Request $request)
         // Rediriger avec un message de succès
         return redirect()->route('commandes.index')->with('success', 'Commande supprimée avec succès.');
     }
-
 
 }
 

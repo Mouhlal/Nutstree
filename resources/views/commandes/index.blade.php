@@ -128,6 +128,7 @@
 
         @if($commandes && $commandes->isNotEmpty())
             @foreach($commandes as $commande)
+            @if($commande->status !== 'cancelled')
             <div class="card {{ 'status-' . $commande->status }}">
                 <h2 class="text-2xl font-bold mb-2">Commande #{{ $commande->numCom }}</h2>
                 <p class="text-sm text-gray-600">Date : {{ $commande->dateCom->format('d/m/Y') }}</p>
@@ -146,7 +147,7 @@
                 </ul>
 
                 <!-- Modal for Payment Method -->
-                @if($commande->status !== 'completed')
+                @if($commande->status !== 'completed' && $commande->status !== 'cancelled')
                 <div class="mt-4 flex flex-col md:flex-row gap-4 md:space-x-4">
                     <!-- Button for Cash on Delivery -->
                     <form action="{{ route('pay.cash', $commande->id) }}" method="POST">
@@ -163,9 +164,18 @@
                             Payer par Carte Bancaire
                         </button>
                     </form>
+                    @if($commande->status !== 'pending-cash' && $commande->status !== 'cancelled')
+                    <form id="cancel-form-{{ $commande->id }}" action="{{ route('commandes.cancel', $commande->id) }}" method="POST" onsubmit="return confirmCancel({{ $commande->id }})">
+                        @csrf
+                        <button type="submit" class="btn btn-danger">
+                            Annuler la commande
+                        </button>
+                    </form>
+                    @endif
                 </div>
                 @endif
             </div>
+            @endif
             @endforeach
         @else
             <p class="text-center text-gray-600">Vous n'avez pas de commandes pour le moment.</p>

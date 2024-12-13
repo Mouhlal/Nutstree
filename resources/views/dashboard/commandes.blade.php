@@ -211,7 +211,7 @@
                                         <tr class="border-b border-gray-200 hover:bg-gray-100">
                                             <td class="py-3 px-6 text-left whitespace-nowrap">{{ $commande->numCom }}</td>
                                             <td class="py-3 px-6 text-left">{{ $commande->user->name }}</td>
-                                            <td class="py-3 px-6 text-center">{{ number_format($commande->total, 2) }} MAD</td>
+                                            <td class="py-3 px-6 text-center">{{ number_format($commande->totalPrix, 2) }} MAD</td>
                                             <td class="py-3 px-6 text-center">
                                                 <span class="px-3 py-1 rounded-full text-white
                                                     {{ $commande->status === 'pending' ? 'bg-yellow-500' :

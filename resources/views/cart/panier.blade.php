@@ -29,6 +29,12 @@
                     {{ session('delP') }}
                 </div>
             @endif
+            @if(session('error'))
+    <div class="p-4 mb-6 text-red-700 bg-red-100 rounded-md text-center">
+        {{ session('error') }}
+    </div>
+@endif
+
 
             <!-- Vérification du contenu du panier -->
             @if(auth()->check() && $cartItems->count() > 0)

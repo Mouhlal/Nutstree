@@ -26,6 +26,13 @@
     </script>
     @endif
 
+    @if(session('error'))
+    <div class="p-4 mb-6 text-red-700 bg-red-100 rounded-md text-center">
+        {{ session('error') }}
+    </div>
+@endif
+
+
     <!-- Main Content -->
     <main class="container mx-auto py-16 px-6 lg:px-12">
         <h1 class="text-4xl font-extrabold text-center text-gray-900 mb-12">
@@ -71,11 +78,17 @@
                         </div>
                     </div>
                 </a>
+                @if($product->quantite > 0)
                 <button id="add-to-cart-btn-{{ $product->id }}"
                         class="w-full py-3 bg-blue-600 text-white font-semibold rounded-b-lg hover:bg-blue-700 transition duration-300"
                         onclick="addToCart({{ $product->id }})">
                     Ajouter au panier
                 </button>
+                @else
+                <p
+                class="w-full py-3 p-16 bg-red-500 text-black font-semibold rounded-b-lg hover:bg-red-600 transition duration-300">Rupture de stock</p>
+                @endif
+
             </div>
             @endforeach
         </div>

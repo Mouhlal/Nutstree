@@ -64,7 +64,7 @@
                     <label for="message" class="leading-7 text-sm text-gray-600">Message</label>
                     <textarea id="message" name="message" class="w-full bg-gray-50 rounded border border-gray-300 focus:border-primary focus:bg-white focus:ring-2 focus:ring-primary h-32 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out"></textarea>
                 </div>
-                <button type="submit" class="bg-primary italic border-0 py-2 px-6 bg-yellow-500 focus:outline-none text-black hover:bg-primary-hover rounded text-lg">Submit</button>
+                <button type="button" class="bg-primary italic border-0 py-2 px-6 bg-yellow-500 focus:outline-none text-black hover:bg-primary-hover rounded text-lg">Submit</button>
             </div>
         </div>
     </section>

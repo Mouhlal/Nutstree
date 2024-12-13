@@ -10,6 +10,7 @@ use App\Notifications\CommandeCanceled;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
 
@@ -27,22 +28,22 @@ class CommandesController extends Controller
     }
 
 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'location' => 'required|string|max:255',
-            'tel' => 'required|regex:/^[0-9]{10}$/',
-        ]);
 
+public function store(Request $request)
+{
+    $request->validate([
+        'location' => 'required|string|max:255',
+        'tel' => 'required|regex:/^[0-9]{10}$/',
+    ]);
 
-        $user = Auth::user();
-        if (!Auth::check()) {
-            return redirect()->route('auth.showLogin')->with('error', 'Vous devez être connecté pour passer une commande.');
-        }
-         // Mise à jour du numéro de téléphone de l'utilisateur
-    if ($user->tel !== $request->tel) {
-        $user->update(['tel' => $request->tel]);
+    $user = Auth::user();
+    if (!Auth::check()) {
+        return redirect()->route('auth.showLogin')->with('error', 'Vous devez être connecté pour passer une commande.');
     }
+
+    DB::beginTransaction();
+
+    try {
         // Création de la commande
         $commande = Commandes::create([
             'numCom' => 'CMD-' . strtoupper(uniqid()),
@@ -52,24 +53,37 @@ class CommandesController extends Controller
             'status' => 'pending',
             'totalPrix' => $user->cartItems->sum(fn($item) => $item->product->prix * $item->quantity),
         ]);
-        // Ajout des produits à la commande
+
         foreach ($user->cartItems as $cartItem) {
+            $product = $cartItem->product;
+
+            if (!$product || $product->quantite < $cartItem->quantity) {
+                throw new \Exception("Stock insuffisant pour le produit : {$product->nom}");
+            }
+
+            $product->decrement('quantite', $cartItem->quantity);
+
+            // Ajouter le produit à la commande
             Commandes_produits::create([
                 'commande_id' => $commande->id,
-                'produit_id' => $cartItem->product->id,
+                'produit_id' => $product->id,
                 'quantity' => $cartItem->quantity,
-                'prix' => $cartItem->product->prix,
+                'prix' => $product->prix,
             ]);
-
-            // Optionnel : Décrémenter le stock du produit
-            $cartItem->product->decrement('quantite', $cartItem->quantity);
         }
-        // Vider le panier de l'utilisateur
+
+        // Vider le panier
         $user->cartItems()->delete();
-        // Envoi d'une notification
-        Mail::to($commande->user->email)->send(new CommandeMail($commande));
+
+        DB::commit();
+
         return redirect()->route('commandes.index')->with('success', 'Commande passée avec succès !');
+    } catch (\Exception $e) {
+        DB::rollBack();
+        return back()->with('error', $e->getMessage());
     }
+}
+
 
     public function cancel($id)
     {

@@ -12,46 +12,66 @@ class CartsController extends Controller
 {
 
     public function addToCart($productId, Request $request)
-    {
-        $product = Produits::findOrFail($productId);
+{
+    $product = Produits::findOrFail($productId);
 
-        if (Auth::check()) {
-            // Utilisateur authentifié - Enregistrez dans la base de données
-            $cart = Carts::firstOrCreate(['user_id' => auth()->id()]);
+    // Vérifier si le produit est en stock
+    if ($product->quantite <= 0) {
+        return response()->json(['message' => 'Ce produit est en rupture de stock.'], 400);
+    }
 
-            $cartItem = CartItems::where('cart_id', $cart->id)
-                                 ->where('produit_id', $product->id)
-                                 ->first();
+    if (Auth::check()) {
+        // Utilisateur authentifié - Enregistrer dans la base de données
+        $cart = Carts::firstOrCreate(['user_id' => auth()->id()]);
 
-            if ($cartItem) {
-                $cartItem->increment('quantity');
-            } else {
-                CartItems::create([
-                    'cart_id' => $cart->id,
-                    'produit_id' => $product->id,
-                    'quantity' => 1,
-                ]);
+        $cartItem = CartItems::where('cart_id', $cart->id)
+                             ->where('produit_id', $product->id)
+                             ->first();
+
+        if ($cartItem) {
+            // Vérifier si l'incrément dépasse le stock disponible
+            if ($cartItem->quantity + 1 > $product->quantite) {
+                return response()->json(['message' => 'Stock insuffisant pour ce produit.'], 400);
             }
+
+            $cartItem->increment('quantity');
         } else {
-            // Utilisateur non authentifié - Stocker dans la session
-            $cart = session()->get('cart', []);
-            if (isset($cart[$productId])) {
-                $cart[$productId]['quantity']++;
-            } else {
-                $cart[$productId] = [
-                    'id' => $product->id,
-                    'name' => $product->nom,
-                    'price' => $product->prix,
-                    'image' => $product->image,
-                    'quantity' => 1,
-                ];
+            CartItems::create([
+                'cart_id' => $cart->id,
+                'produit_id' => $product->id,
+                'quantity' => 1,
+            ]);
+        }
+    } else {
+        // Utilisateur non authentifié - Stocker dans la session
+        $cart = session()->get('cart', []);
+
+        if (isset($cart[$productId])) {
+            // Vérifier si l'incrément dépasse le stock disponible
+            if ($cart[$productId]['quantity'] + 1 > $product->quantite) {
+                return response()->json(['message' => 'Stock insuffisant pour ce produit.'], 400);
             }
 
-            session()->put('cart', $cart);
+            $cart[$productId]['quantity']++;
+        } else {
+            $cart[$productId] = [
+                'id' => $product->id,
+                'name' => $product->nom,
+                'price' => $product->prix,
+                'image' => $product->image,
+                'quantity' => 1,
+            ];
         }
 
-        return response()->json(['message' => 'Produit ajouté au panier avec succès!']);
+        session()->put('cart', $cart);
     }
+
+    // Décrémenter le stock après ajout au panier
+    $product->decrement('quantite', 1);
+
+    return response()->json(['message' => 'Produit ajouté au panier avec succès!']);
+}
+
 
     public function showCart()
     {

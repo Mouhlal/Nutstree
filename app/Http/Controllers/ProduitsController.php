@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Categorie;
 use App\Models\Produits;
+use App\Models\Produits_Images;
 use Illuminate\Http\Request;
 
 class ProduitsController extends Controller
@@ -13,6 +14,7 @@ class ProduitsController extends Controller
     {
         $category_id = $request->input('category_id');
         $categorie = Categorie::all();
+
 
         if ($category_id) {
             $produits = Produits::where('categorie_id', $category_id)->with('categories')->get();
@@ -32,19 +34,41 @@ class ProduitsController extends Controller
             'categ' => $categ
         ]);
     }
-    public function store(Request $request){
+    public function store(Request $request) {
         $att = $request->validate([
             'nom' => 'required',
-            'description' => 'nullable' ,
-            'image' => 'nullable|image' ,
-            'prix' => 'required',
-            'quantite' => 'required',
-            'categorie_id' => 'required|exists:categories,id'
+            'description' => 'nullable',
+            'image.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'prix' => 'required|numeric',
+            'quantite' => 'required|numeric',
+            'categorie_id' => 'required|exists:categories,id',
         ]);
-        $att['image'] = $request->file('image')->store('produits','public');
-        Produits::create($att);
-        return redirect()->route('prod.index')->with('addP','Produit a été ajoutée');
+
+        // Créez le produit
+        $produit = Produits::create([
+            'nom' => $att['nom'],
+            'description' => $att['description'],
+            'prix' => $att['prix'],
+            'quantite' => $att['quantite'],
+            'categorie_id' => $att['categorie_id'],
+        ]);
+
+        // Traitez et enregistrez les images
+        if ($request->hasFile('image')) {
+            foreach ($request->file('image') as $image) {
+                $path = $image->store('produits', 'public'); // Stocke l'image dans le dossier `storage/app/public/produits`
+                Produits_Images::create([
+                    'produit_id' => $produit->id,
+                    'images' => $path,
+                ]);
+            }
+        }
+
+        return redirect()->route('prod.index')->with('addP', 'Produit a été ajoutée avec succès.');
     }
+
+
+
     public function edit($id){
         $produit = Produits::findOrFail($id);
         $categ = Categorie::all();
@@ -78,9 +102,10 @@ class ProduitsController extends Controller
     public function details($id)
 {
     $produit = Produits::with('reviews.user')->findOrFail($id);
-    return view('produits.details', [
-        'produit' => $produit
-    ]);
+
+    return view('produits.details', compact('produit'));
 }
+
+
 
 }

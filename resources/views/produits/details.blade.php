@@ -7,17 +7,37 @@
         @vite('resources/css/app.css')
         <link rel="shortcut icon" href="{{ asset('storage/layouts/logo.jpeg') }}" type="image/x-icon">
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+        <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
     </head>
-<body class="bg-gray-50">
+<body class="bg-gray-50 flex flex-col min-h-screen">
     <!-- Navbar -->
     @include('layouts.nav')
 
     <!-- Contenu principal -->
-    <main class="container mx-auto py-12 px-4 lg:px-8">
+    <main class="container mx-auto py-12 px-4 lg:px-8 flex-1">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8 bg-white p-8 shadow-lg rounded-lg">
-            <!-- Image du produit -->
-            <div class="flex justify-center">
-                <img src="{{ asset('storage/' . $produit->image) }}" alt="{{ $produit->nom }}" class="w-full h-auto max-w-md rounded-lg shadow-md">
+            <!-- Image principale et miniatures -->
+            <div>
+                <div class="relative">
+                    <!-- Image principale -->
+                    <div class="flex justify-center mb-4">
+                        <img id="mainImage"
+                             src="{{ asset('storage/' . ($produit->images->first()->images ?? 'default.jpg')) }}"
+                             alt="{{ $produit->nom }}"
+                             class="rounded-lg shadow-md max-h-96 object-contain">
+                    </div>
+
+                    <!-- Miniatures -->
+                    <div class="flex justify-center gap-4">
+                        @foreach ($produit->images as $image)
+                            <img src="{{ asset('storage/' . $image->images) }}"
+                                 alt="{{ $produit->nom }}"
+                                 class="w-20 h-20 rounded-lg shadow-md cursor-pointer object-contain border border-gray-200 hover:border-blue-500 transition"
+                                 onclick="changeImage('{{ asset('storage/' . $image->images) }}')">
+                        @endforeach
+                    </div>
+                </div>
             </div>
 
             <!-- Détails du produit -->
@@ -42,25 +62,24 @@
                 </div>
 
                 <!-- Boutons d'action -->
-                <div class="mt-8 flex space-x-4">
-                        <button
-                        onclick="addToCart({{ $produit->id }})"
-                        type="submit" class="px-6 py-3 bg-blue-600 text-white rounded-md font-semibold shadow hover:bg-blue-700 transition duration-200">
-                            Ajouter au panier
-                        </button>
-                    </form>
+                <div class="mt-8 flex flex-wrap gap-4">
+                    <button onclick="addToCart({{ $produit->id }})" class="px-6 py-3 bg-blue-600 text-white rounded-md font-semibold shadow hover:bg-blue-700 transition duration-200">
+                        Ajouter au panier
+                    </button>
                     <a href="{{ route('prod.index') }}" class="px-6 py-3 bg-gray-200 text-gray-800 rounded-md font-semibold shadow hover:bg-gray-300 transition duration-200">
                         Retour
                     </a>
                 </div>
             </div>
         </div>
+
+        <!-- Avis des clients -->
         <div class="bg-white p-8 shadow-lg rounded-lg mt-8">
             <h2 class="text-2xl font-bold text-gray-800 mb-4">Avis des clients</h2>
 
-            <!-- Formulaire pour laisser un avis -->
             @auth
-            <form action="{{ route('reviews.store', $produit->id) }}" method="POST">
+            <!-- Formulaire d'avis -->
+            <form action="{{ route('reviews.store', $produit->id) }}" method="POST" class="mb-6">
                 @csrf
                 <div class="mb-4">
                     <label for="rating" class="block text-gray-700">Évaluation</label>
@@ -80,12 +99,10 @@
 
                 <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded">Soumettre</button>
             </form>
-            <br>
             @endauth
 
             @guest
-            Veuillez <a href="{{ route('auth.login') }}" class="text-blue-600"> vous connecter </a> pour laisser un avis.</p>
-            <br>
+            <p>Veuillez <a href="{{ route('auth.login') }}" class="text-blue-600">vous connecter</a> pour laisser un avis.</p>
             @endguest
 
             <!-- Liste des avis -->
@@ -114,52 +131,61 @@
                 @endforelse
             </div>
         </div>
-
     </main>
 
+    <script>
+        function changeImage(imageUrl) {
+            document.getElementById('mainImage').src = imageUrl;
+        }
+    </script>
+
+
     <!-- Footer -->
-    <footer class="bg-gray-800 text-white py-4 mt-auto">
+    <footer class="bg-gray-800 text-white py-4">
         @include('layouts.footer')
     </footer>
 </body>
 
 <script>
-        function addToCart(productId) {
-            fetch(`/cart/add/${productId}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                },
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    Swal.fire({
-                        html: `<h3>${data.message}</h3>`,
-                        icon: 'success',
-                    });
-                } else {
-                    Swal.fire({
-                        html: `<h3>${data.message || 'Une erreur est survenue.'}</h3>`,
-                        icon: 'success',
-                    });
-                }
-            })
-            .catch(error => {
-                Swal.fire({
-                    html: `<h3>Erreur lors de l'ajout au panier.</h3>`,
-                    icon: 'error',
-                });
-            });
-        }
-</script>
-<script>
-    document.getElementById('menu-toggle').addEventListener('click', () => {
-        const menu = document.getElementById('menu');
-        menu.classList.toggle('hidden');
+   function addToCart(productId) {
+    fetch(`/cart/add/${productId}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+        },
+    })
+    .then(response => response.json())
+    .then(data => {
+        Swal.fire({
+            html: `<h3>${data.message}</h3>`,
+            icon: data.success ? 'success' : 'error', // Correction ici
+        });
+    })
+    .catch(() => {
+        Swal.fire({
+            html: `<h3>Erreur lors de l'ajout au panier.</h3>`,
+            icon: 'error',
+        });
+    });
+}
+
+
+    const swiper = new Swiper('.swiper-container', {
+        loop: true,
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+        },
+        pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+        },
+        autoplay: {
+            delay: 3000,
+        },
+        slidesPerView: 1,
+        spaceBetween: 10,
     });
 </script>
-
-
 </html>

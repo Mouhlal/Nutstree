@@ -59,39 +59,60 @@
         </div>
 
         <!-- Produits -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-            @foreach($produits as $product)
-            <div class="bg-white rounded-lg shadow-lg hover:shadow-xl transform transition-all hover:scale-105">
-                <a href="{{ route('prod.details', $product->id) }}">
-                    <img src="{{ asset('storage/' . $product->image) }}" alt="Image de {{ $product->nom }}" class="w-full h-56 object-cover rounded-t-lg">
-                    <div class="p-6">
-                        <h3 class="text-lg font-semibold text-gray-800 hover:text-green-600 transition duration-200">
-                            {{ $product->nom }}
-                        </h3>
-                        <p class="text-sm text-gray-500 mt-2">
-                            {{ Str::limit($product->description, 80) }}
-                        </p>
-                        <div class="flex justify-between items-center mt-6">
-                            <span class="text-green-600 font-bold text-lg">
-                                {{ number_format($product->prix, 2) }} MAD
-                            </span>
-                        </div>
-                    </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 p-6">
+            @foreach ($produits as $product)
+            <div class="bg-white rounded-lg shadow-md hover:shadow-lg transition-transform transform hover:scale-105 border">
+                <!-- Lien vers les détails du produit -->
+                <a href="{{ route('prod.details', $product->id) }}" class="block">
+                    <!-- Image du produit -->
+                    <img
+                        src="{{ $product->firstImage ? asset('storage/' . $product->firstImage->images) : asset('storage/default.jpg') }}"
+                        alt="Image du produit"
+                        class="w-full h-48 object-cover rounded-t-lg">
                 </a>
-                @if($product->quantite > 0)
-                <button id="add-to-cart-btn-{{ $product->id }}"
-                        class="w-full py-3 bg-blue-600 text-white font-semibold rounded-b-lg hover:bg-blue-700 transition duration-300"
-                        onclick="addToCart({{ $product->id }})">
+
+                <!-- Informations du produit -->
+                <div class="p-4">
+                    <!-- Titre -->
+                    <h3 class="text-lg font-semibold text-gray-800 hover:text-green-600 transition-colors duration-200">
+                        {{ $product->nom }}
+                    </h3>
+
+                    <!-- Description courte -->
+                    <p class="text-sm text-gray-500 mt-2">
+                        {{ Str::limit($product->description, 80, '...') }}
+                    </p>
+
+                    <!-- Prix et disponibilité -->
+                    <div class="flex justify-between items-center mt-4">
+                        <span class="text-green-600 font-bold text-lg">
+                            {{ number_format($product->prix, 2) }} MAD
+                        </span>
+                        @if ($product->quantite > 0)
+                            <span class="text-sm text-gray-600">En stock</span>
+                        @else
+                            <span class="text-sm text-red-500">Rupture de stock</span>
+                        @endif
+                    </div>
+                </div>
+
+                <!-- Bouton Ajouter au panier -->
+                @if ($product->quantite > 0)
+                <button
+                    id="add-to-cart-btn-{{ $product->id }}"
+                    class="w-full py-3 bg-blue-600 text-white font-semibold rounded-b-lg hover:bg-blue-700 transition duration-300"
+                    onclick="addToCart({{ $product->id }})">
                     Ajouter au panier
                 </button>
                 @else
-                <p
-                class="w-full py-3 p-16 bg-red-500 text-black font-semibold rounded-b-lg hover:bg-red-600 transition duration-300">Rupture de stock</p>
+                <p class="w-full py-3 text-center bg-red-500 text-white font-semibold rounded-b-lg">
+                    Rupture de stock
+                </p>
                 @endif
-
             </div>
             @endforeach
         </div>
+
     </main>
 
     <!-- Footer -->

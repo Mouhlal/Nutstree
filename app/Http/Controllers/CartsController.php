@@ -58,7 +58,7 @@ class CartsController extends Controller
                 'id' => $product->id,
                 'name' => $product->nom,
                 'price' => $product->prix,
-                'image' => $product->image,
+                'image' => $product->images->first() ?? 'default-image.jpg',
                 'quantity' => 1,
             ];
         }
@@ -69,23 +69,24 @@ class CartsController extends Controller
     // Décrémenter le stock après ajout au panier
     $product->decrement('quantite', 1);
 
-    return response()->json(['message' => 'Produit ajouté au panier avec succès!']);
+    return response()->json(['message' => 'Produit ajouté au panier avec succès!','success' => true,]);
+}
+
+public function showCart()
+{
+    if (Auth::check()) {
+        // Récupérer le panier de l'utilisateur connecté avec les produits et leurs images
+        $cart = Carts::where('user_id', auth()->id())->first();
+        $cartItems = $cart ? $cart->items->load(['product', 'product.firstImage']) : collect();
+    } else {
+        // Panier pour utilisateurs non connectés
+        $cartItems = collect(session()->get('cart', []));
+    }
+
+    return view('cart.panier', compact('cartItems'));
 }
 
 
-    public function showCart()
-    {
-        if (Auth::check()) {
-            // Panier pour utilisateur authentifié
-            $cart = Carts::where('user_id', auth()->id())->first();
-            $cartItems = $cart ? $cart->items : collect();
-        } else {
-            // Panier pour utilisateur non authentifié
-            $cartItems = session()->get('cart', []);
-        }
-
-        return view('cart.panier', compact('cartItems'));
-    }
 
 
 public function removeFromCart($id)

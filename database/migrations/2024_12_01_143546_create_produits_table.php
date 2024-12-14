@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('nom');
             $table->string('description')->nullable();
-            $table->string('image');
+            $table->string('image')->nullable()->default('default_image.jpg')->change();
             $table->decimal('prix',8,2);
             $table->integer( 'quantite' )->default(0);
             $table->foreignId('categorie_id')->constrained()->onDelete('cascade');

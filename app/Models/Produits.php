@@ -25,5 +25,10 @@ class Produits extends Model
     {
         return $this->hasMany(Reviews::class, 'produit_id');
     }
-
+    public function images() {
+        return $this->hasMany(Produits_Images::class, 'produit_id');
+    }
+    public function firstImage() {
+        return $this->hasOne(Produits_Images::class, 'produit_id')->oldest();
+    }
 }

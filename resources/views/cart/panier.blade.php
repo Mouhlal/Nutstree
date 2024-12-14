@@ -43,11 +43,13 @@
                     <div class="flex flex-col sm:flex-row sm:justify-between items-center border-b pb-6">
                         <div class="flex items-center space-x-4">
                             @if($item->product)
-                                <img src="{{ asset('storage/' . $item->product->image) }}" alt="{{ $item->product->nom }}" class="w-16 h-16 rounded-md object-cover">
-                                <div>
-                                    <h2 class="text-lg font-semibold text-gray-800">{{ $item->product->nom }}</h2>
-                                    <p class="text-sm text-gray-600">{{ number_format($item->product->prix, 2) }} MAD</p>
-                                </div>
+                            <img src="{{ asset('storage/' . ($item->product->firstImage?->images ?? 'default-image.jpg')) }}"
+                            alt="{{ $item->product->nom }}"
+                            class="w-16 h-16 rounded-md object-cover">
+                        <div>
+                            <h2 class="text-lg font-semibold text-gray-800">{{ $item->product->nom }}</h2>
+                            <p class="text-sm text-gray-600">{{ number_format($item->product->prix, 2) }} MAD</p>
+                        </div>
                             @else
                                 <span class="text-gray-500">Produit non disponible</span>
                             @endif
@@ -82,7 +84,9 @@
                     @foreach(session('cart') as $item)
                     <div class="flex flex-col sm:flex-row sm:justify-between items-center border-b pb-6">
                         <div class="flex items-center space-x-4">
-                            <img src="{{ asset('storage/' . $item['image']) }}" alt="{{ $item['name'] }}" class="w-16 h-16 rounded-md object-cover">
+                            <img src="{{ asset('storage/' . ($item['images'] ?? 'default-image.jpg')) }}"
+                         alt="{{ $item['name'] }}"
+                         class="w-16 h-16 rounded-md object-cover">
                             <div>
                                 <h2 class="text-lg font-semibold text-gray-800">{{ $item['name'] }}</h2>
                                 <p class="text-sm text-gray-600">{{ number_format($item['price'], 2) }} MAD</p>

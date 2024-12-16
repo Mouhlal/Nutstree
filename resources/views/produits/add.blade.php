@@ -66,10 +66,19 @@
                 </div>
             </div>
 
+            <div class="form-group">
+                <label for="measurement" class="form-label">Unité de mesure</label>
+                <select name="mesure" id="mesure" class="w-full p-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    <option value="kg" {{ old('measurement', $produit->mesure ?? 'kg') == 'kg' ? 'selected' : '' }}>Kg</option>
+                    <option value="g" {{ old('measurement', $produit->mesure ?? 'kg') == 'g' ? 'selected' : '' }}>Gramme</option>
+                    <option value="L" {{ old('measurement', $produit->mesure ?? 'kg') == 'L' ? 'selected' : '' }}>Litre</option>
+                    <option value="packet" {{ old('measurement', $produit->mesure ?? 'kg') == 'packet' ? 'selected' : '' }}>Paquet</option>
+                </select>
+            </div>
 
             <!-- Quantité -->
             <div class="form-group mt-6">
-                <label for="quantite" class="block text-gray-700 font-semibold">Quantité (kg)</label>
+                <label for="quantite" class="block text-gray-700 font-semibold">Quantité</label>
                 <input type="number" value="{{old('quantite')}}" name="quantite" class="w-full p-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
                 @error('quantite')
                 <span class="text-red-500 text-sm">{{ $message }}</span>

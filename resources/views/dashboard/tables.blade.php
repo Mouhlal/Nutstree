@@ -203,7 +203,7 @@
                                             @endforeach
                                         @endisset
                                     </td>
-                                    <td class="text-left py-4 px-4 border-b border-gray-200">{{$produit->quantite}}</td>
+                                    <td class="text-left py-4 px-4 border-b border-gray-200">{{$produit->quantite}} ({{$produit->mesure}}) </td>
                                     <td class="text-left py-4 px-4 border-b border-gray-200 flex gap-2">
                                         <a href="{{ route('prod.edit', $produit->id) }}" class="px-3 py-2 bg-yellow-500 text-white text-sm font-medium rounded hover:bg-yellow-600">
                                             Modifier

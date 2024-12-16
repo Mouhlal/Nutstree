@@ -40,6 +40,7 @@ class ProduitsController extends Controller
             'description' => 'nullable',
             'image.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
             'prix' => 'required|numeric',
+            'mesure' => 'required',
             'quantite' => 'required|numeric',
             'categorie_id' => 'required|exists:categories,id',
         ]);
@@ -49,6 +50,7 @@ class ProduitsController extends Controller
             'nom' => $att['nom'],
             'description' => $att['description'],
             'prix' => $att['prix'],
+            'mesure' => $att['mesure'],
             'quantite' => $att['quantite'],
             'categorie_id' => $att['categorie_id'],
         ]);
@@ -83,6 +85,7 @@ class ProduitsController extends Controller
             'description' => 'nullable' ,
             'image' => 'nullable|image' ,
             'prix' => 'nullable',
+            'mesure' => 'nullable',
             'quantite' => 'nullable',
             'categorie_id' => 'required|exists:categories,id'
         ]);

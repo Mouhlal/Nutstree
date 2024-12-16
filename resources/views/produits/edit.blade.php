@@ -62,6 +62,15 @@
                         @endforeach
                     </select>
                 </div>
+                <div>
+                    <label for="mesure" class="block text-lg font-medium text-gray-700">Mesure</label>
+                    <select name="mesure" id="mesure" class="w-full p-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                        <option value="kg" {{ old('mesure', $produit->mesure ?? 'kg') == 'kg' ? 'selected' : '' }}>Kg</option>
+                        <option value="g" {{ old('mesure', $produit->mesure ?? 'kg') == 'g' ? 'selected' : '' }}>Gramme</option>
+                        <option value="L" {{ old('mesure', $produit->mesure ?? 'kg') == 'L' ? 'selected' : '' }}>Litre</option>
+                        <option value="packet" {{ old('mesure', $produit->mesure ?? 'kg') == 'packet' ? 'selected' : '' }}>Paquet</option>
+                    </select>
+                </div>
 
                 <!-- Quantité -->
                 <div>

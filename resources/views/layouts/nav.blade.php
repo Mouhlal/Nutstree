@@ -27,14 +27,13 @@
                     @auth
                     <li><a class="text-yellow-400 inline-block no-underline hover:text-gray-400 hover:underline py-2 px-4" href="{{route('auth.logout')}}">Deconnexion</a></li>
                     @endauth
-                    @if(auth()->check() && auth()->user()->isAdmin)
+                    @if(auth()->check() && (auth()->user()->isAdmin() || auth()->user()->isSuperAdmin()))
                     <li>
-                        <a class="text-yellow-400 inline-block no-underline hover:text-gray-400 hover:underline py-2 px-4" href="{{ route('dash.home') }}">
-                            Dashboard
-                        </a>
-                    </li>
-                @endif
-
+                    <a class="text-yellow-400 inline-block no-underline hover:text-gray-400 hover:underline py-2 px-4" href="{{ route('dash.home') }}">
+                        Dashboard
+                    </a>
+                </li>
+            @endif
                 </ul>
             </nav>
         </div>

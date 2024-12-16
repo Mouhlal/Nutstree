@@ -25,8 +25,19 @@ class User extends Authenticatable
         'tel',
         'email',
         'password',
+        'role',
         'google_id'
     ];
+
+    public function isAdmin()
+    {
+        return $this->role === 'admin';
+    }
+
+    public function isSuperAdmin()
+    {
+        return $this->role === 'superadmin';
+    }
 
     public function cartItems()
     {

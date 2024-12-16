@@ -18,7 +18,6 @@ return new class extends Migration
             $table->string('cin')->nullable();
             $table->string('adresse')->default('casa')->nullable();
             $table->string( 'tel')->unique()->nullable();
-            $table->boolean('isAdmin')->default(false);
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password')->nullable();

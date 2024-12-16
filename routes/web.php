@@ -15,14 +15,14 @@ Route::controller(FrontEndController::class)->group(function () {
     Route::get('/', 'Home')->name('layouts.home');
     Route::get('/about', 'About')->name('layouts.about');
     Route::get('/contact', 'Contact')->name('layouts.contact');
-    Route::get('/dashboard/home','Dash')->name('dash.home')->middleware('isAdmin');
-    Route::get('/dashboard/produit','tables')->name('dash.tables')->middleware('isAdmin');
-    Route::get('/dashboard/categories','cat')->name('dash.cat')->middleware('isAdmin');
-    Route::get('/dashboard/forms','forms')->name('dash.forms')->middleware('isAdmin');
-    Route::get('/dashboard/calendar','calendar')->name('dash.calendar')->middleware('isAdmin');
-    Route::get('/dashboard/commandes','index')->name('dash.commandes')->middleware('isAdmin');
-    Route::delete('/dashboard/commandes/{id}','destroy')->name('dash.commandes.destroy')->middleware('isAdmin');
-    Route::patch('/dashboard/commandes/update/{id}','updateStatus')->name('dash.commandes.update')->middleware('isAdmin');
+    Route::get('/dashboard/home','Dash')->name('dash.home')->middleware(['role:admin,superadmin']);
+    Route::get('/dashboard/produit','tables')->name('dash.tables')->middleware(['role:admin,superadmin']);
+    Route::get('/dashboard/categories','cat')->name('dash.cat')->middleware(['role:admin,superadmin']);
+    Route::get('/dashboard/forms','forms')->name('dash.forms')->middleware(['role:admin,superadmin']);
+    Route::get('/dashboard/calendar','calendar')->name('dash.calendar')->middleware(['role:admin,superadmin']);
+    Route::get('/dashboard/commandes','index')->name('dash.commandes')->middleware(['role:superadmin']);
+    Route::delete('/dashboard/commandes/{id}','destroy')->name('dash.commandes.destroy')->middleware(['role:superadmin']);
+    Route::patch('/dashboard/commandes/update/{id}','updateStatus')->name('dash.commandes.update')->middleware(['role:superadmin']);
 
 });
 
@@ -51,20 +51,20 @@ Route::get('auth/google/callback', [GoogleController::class, 'handleGoogleCallba
 
 
 Route::controller(CategorieController::class)->group(function(){
-    Route::get('/categories/ajout','add')->name('cat.add')->middleware('isAdmin');
-    Route::post('/categories/ajout','store')->name('cat.store')->middleware('isAdmin');
-    Route::get('/categories/{id}/edit','edit')->name('cat.edit')->middleware('isAdmin');
-    Route::post('/categories/{id}/edit','update')->name('cat.update')->middleware('isAdmin');
-    Route::get('/categories/{id}/delete','delete')->name('cat.delete')->middleware('isAdmin');
+    Route::get('/categories/ajout','add')->name('cat.add')->middleware(['role:admin,superadmin']);
+    Route::post('/categories/ajout','store')->name('cat.store')->middleware(['role:admin,superadmin']);
+    Route::get('/categories/{id}/edit','edit')->name('cat.edit')->middleware(['role:admin,superadmin']);
+    Route::post('/categories/{id}/edit','update')->name('cat.update')->middleware(['role:admin,superadmin']);
+    Route::get('/categories/{id}/delete','delete')->name('cat.delete')->middleware(['role:admin,superadmin']);
 });
 
 Route::controller(ProduitsController::class)->group(function(){
     Route::get('/produits','index')->name('prod.index');
-    Route::get('/produits/ajout','add')->name('prod.add')->middleware('isAdmin');
-    Route::post('/produits/ajout','store')->name('prod.store')->middleware('isAdmin');
-    Route::get('/produits/{id}/edit','edit')->name('prod.edit')->middleware('isAdmin');
-    Route::put('/produits/{id}/update','update')->name('prod.update')->middleware('isAdmin');
-    Route::get('/produits/{id}/delete','delete')->name('prod.delete')->middleware('isAdmin');
+    Route::get('/produits/ajout','add')->name('prod.add')->middleware(['role:admin,superadmin']);
+    Route::post('/produits/ajout','store')->name('prod.store')->middleware(['role:admin,superadmin']);
+    Route::get('/produits/{id}/edit','edit')->name('prod.edit')->middleware(['role:admin,superadmin']);
+    Route::put('/produits/{id}/update','update')->name('prod.update')->middleware(['role:admin,superadmin']);
+    Route::get('/produits/{id}/delete','delete')->name('prod.delete')->middleware(['role:admin,superadmin']);
     Route::get('/produits/détails/{id}','details')->name('prod.details');
 
 });
@@ -83,7 +83,7 @@ Route::controller(CartsController::class)->group(function(){
  Route::post('/produits/{id}/reviews', [ReviewsController::class, 'storeReview'])->name('reviews.store');
 
 Route::get('pay/create/{commandeId}', [PaiementsController::class, 'createPayment'])->name('pay.pay');
-Route::get('pay/success/{commandeId}', [PaiementsController::class, 'paymentSuccess'])->name('pay.success'); 
+Route::get('pay/success/{commandeId}', [PaiementsController::class, 'paymentSuccess'])->name('pay.success');
 
 Route::post('/pay/cash/{commande}', [PaiementsController::class, 'cashOnDelivery'])->name('pay.cash');
 Route::post('/pay/cmi/{commande}', [PaiementsController::class, 'payByCmi'])->name('pay.cmi');

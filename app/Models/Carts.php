@@ -19,4 +19,8 @@ class Carts extends Model
     {
         return $this->hasMany(CartItems::class, 'cart_id');
     }
+    public function getTotalAfterDiscount()
+{
+    return $this->total_price - $this->discount;
+}
 }

@@ -17,7 +17,9 @@ return new class extends Migration
             $table->string('description')->nullable();
             $table->string('image')->nullable()->default('default_image.jpg')->change();
             $table->decimal('prix',8,2);
+            $table->decimal('old_prix', 8, 2)->nullable();
             $table->integer( 'quantite' )->default(0);
+            $table->enum('status',['normal','new','hot','best'])->default('normal');
             $table->foreignId('categorie_id')->constrained()->onDelete('cascade');
             $table->softDeletes();
             $table->timestamps();

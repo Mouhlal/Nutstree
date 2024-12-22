@@ -24,6 +24,11 @@ Route::controller(FrontEndController::class)->group(function () {
     Route::delete('/dashboard/commandes/{id}','destroy')->name('dash.commandes.destroy')->middleware(['role:superadmin']);
     Route::patch('/dashboard/commandes/update/{id}','updateStatus')->name('dash.commandes.update')->middleware(['role:superadmin']);
 
+    Route::get('/main/index','main')->name('main.index');
+    Route::get('/search', 'search')->name('products.search');
+
+
+
 });
 
 
@@ -80,7 +85,7 @@ Route::controller(CartsController::class)->group(function(){
 
 });
 
- Route::post('/produits/{id}/reviews', [ReviewsController::class, 'storeReview'])->name('reviews.store');
+Route::post('/produits/{id}/reviews', [ReviewsController::class, 'storeReview'])->name('reviews.store');
 
 Route::get('pay/create/{commandeId}', [PaiementsController::class, 'createPayment'])->name('pay.pay');
 Route::get('pay/success/{commandeId}', [PaiementsController::class, 'paymentSuccess'])->name('pay.success');
@@ -88,5 +93,13 @@ Route::get('pay/success/{commandeId}', [PaiementsController::class, 'paymentSucc
 Route::post('/pay/cash/{commande}', [PaiementsController::class, 'cashOnDelivery'])->name('pay.cash');
 Route::post('/pay/cmi/{commande}', [PaiementsController::class, 'payByCmi'])->name('pay.cmi');
 
+
+Route::get('lang/{locale}', function ($locale) {
+    // Vérifier si la locale est valide
+    if (in_array($locale, ['en', 'ar'])) {
+        session(['locale' => $locale]);
+    }
+    return redirect()->back();
+})->name('lang.switch');
 
 

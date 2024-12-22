@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Carts;
 use App\Models\Categorie;
 use App\Models\Commandes;
 use App\Models\Produits;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class FrontEndController extends Controller
 {
@@ -25,18 +28,22 @@ class FrontEndController extends Controller
                     ->limit(5)
                     ->get();
         $categories = Categorie::all();
+        $user = User::all();
         return view('dashboard.home', [
             'produits' => $produits,
-            'categories' => $categories
+            'categories' => $categories,
+            'user' => $user
         ]);
     }
     public function tables(){
         $produits = Produits::with('categories')
                     ->get();
         $categories = Categorie::all();
+        $user = User::all();
         return view('dashboard.tables', [
         'produits' => $produits,
-        'categories' => $categories
+        'categories' => $categories,
+        'user' => $user
     ]);
     }
     public function cat(){
@@ -98,5 +105,37 @@ class FrontEndController extends Controller
         $commande->delete();
         return redirect()->route('dash.commandes')->with('deletedC', 'Commande supprimée avec succès.');
     }
+
+
+    public function main(){
+        $produits = Produits::with('categories')
+                     ->orderByDesc('id')
+                    ->limit(8)
+                    ->get();
+        $categories = Categorie::all();
+        if (Auth::check()) {
+            // Récupérer le panier de l'utilisateur connecté avec les produits et leurs images
+            $cart = Carts::where('user_id', auth()->id())->first();
+            $cartItems = $cart ? $cart->items->load(['product', 'product.firstImage']) : collect();
+        } else {
+            // Panier pour utilisateurs non connectés
+            $cartItems = collect(session()->get('cart', []));
+        }
+
+        return view('main.index',[
+            'produits' => $produits,
+            'categories' => $categories,
+            'cartItems' => $cartItems,
+        ]);
+    }
+    public function search(Request $request){
+        $query = $request->input('query');
+        $products = Produits::where('nom', 'like', '%' . $query . '%')
+                           ->orWhere('description', 'like', '%' . $query . '%')
+                           ->get();
+
+        return view('main.index', compact('products'));
+    }
+
 
 }

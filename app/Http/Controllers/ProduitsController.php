@@ -42,6 +42,7 @@ class ProduitsController extends Controller
             'prix' => 'required|numeric',
             'mesure' => 'required',
             'quantite' => 'required|numeric',
+            'status' => 'nullable',
             'categorie_id' => 'required|exists:categories,id',
         ]);
 
@@ -52,6 +53,7 @@ class ProduitsController extends Controller
             'prix' => $att['prix'],
             'mesure' => $att['mesure'],
             'quantite' => $att['quantite'],
+            'status' => $att['status'],
             'categorie_id' => $att['categorie_id'],
         ]);
 
@@ -87,6 +89,7 @@ class ProduitsController extends Controller
             'prix' => 'nullable',
             'mesure' => 'nullable',
             'quantite' => 'nullable',
+            'status' => 'nullable',
             'categorie_id' => 'required|exists:categories,id'
         ]);
         if($request->hasFile('image')){

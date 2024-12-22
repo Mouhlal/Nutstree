@@ -46,7 +46,8 @@ class UserController extends Controller
             'adresse'=>'nullable',
             'tel' => 'nullable|unique:users' ,
             'email' => 'required|unique:users' ,
-            'password' => 'required|confirmed|min:5|string|max:25'
+            'password' => 'required|confirmed|min:5|string|max:25',
+            'status' => 'nullable'
         ]);
         //$att['image'] = $request->file('image')->store('users','public');
         $att['password'] = Hash::make($request->password);
@@ -74,7 +75,8 @@ class UserController extends Controller
             'adresse' => 'nullable',
             'tel' => 'nullable|unique:users,tel,' . $id,
             'email' => 'nullable|unique:users,email,' . $id,
-            'password' => 'nullable|confirmed|min:5|string|max:25'
+            'password' => 'nullable|confirmed|min:5|string|max:25',
+            'status' => 'nullable'
         ]);
         if ($request->hasFile('image')) {
             $att['image'] = $request->file('image')->store('users', 'public');

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\CartItems;
 use App\Models\Carts;
+use App\Models\Code_Promo;
 use App\Models\Produits;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -166,5 +167,43 @@ public function removeSessionItem($id)
     }
     return redirect()->back()->with('delP', 'Produit supprimé du panier avec succès.');
 }
+
+
+public function applyPromo(Request $request)
+{
+    // Vérifier si le code promo existe et est valide
+    $promoCode = Code_Promo::where('code', $request->promo_code)->first();
+
+    if (!$promoCode || !$promoCode->isValid()) {
+        return redirect()->back()->withErrors(['promo_code' => 'Code promo invalide ou expiré.']);
+    }
+
+    // Calculer le montant de la réduction
+    $discountAmount = $promoCode->discount;
+
+    // Trouver le panier de l'utilisateur
+    $cart = Carts::where('user_id', auth()->id())->first();
+
+    if (!$cart) {
+        return redirect()->back()->withErrors(['cart' => 'Panier introuvable.']);
+    }
+
+    // Appliquer la réduction sur le total du panier
+    $cart->discount = $discountAmount;
+    $cart->save();
+
+    // Calculer le nouveau total après réduction
+    $totalPrice = $cart->total_price - $discountAmount; // total_price est le prix avant réduction
+
+    // Mettre à jour le total du panier
+    $cart->total_price = $totalPrice;
+    $cart->save();
+
+    return redirect()->route('cart.show')->with('success', 'Le code promo a été appliqué avec succès!');
+}
+
+
+
+
 }
 

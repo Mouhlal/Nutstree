@@ -6,6 +6,9 @@
         "dev": "vite"
     },
     "devDependencies": {
+        "@tailwindcss/aspect-ratio": "^0.4.2",
+        "@tailwindcss/forms": "^0.5.9",
+        "@tailwindcss/typography": "^0.5.15",
         "autoprefixer": "^10.4.20",
         "axios": "^1.7.4",
         "concurrently": "^9.0.1",
@@ -16,6 +19,19 @@
         "vite-plugin-laravel": "^0.3.1"
     },
     "dependencies": {
-        "sweetalert2": "^11.14.5"
+        "@popperjs/core": "^2.11.8",
+        "bootstrap": "^5.3.3",
+        "easing": "^1.2.1",
+        "fancybox": "^3.0.1",
+        "flexslider": "^2.7.2",
+        "jquery": "^3.7.1",
+        "jquery-ui": "^1.14.1",
+        "magnific-popup": "^1.2.0",
+        "owl.carousel": "^2.3.4",
+        "popper.js": "^1.16.1",
+        "scrollup": "^1.0.1",
+        "slicknav": "^1.0.8",
+        "sweetalert2": "^11.14.5",
+        "waypoints": "^4.0.1"
     }
 }

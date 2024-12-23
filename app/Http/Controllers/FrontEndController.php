@@ -106,35 +106,42 @@ class FrontEndController extends Controller
         return redirect()->route('dash.commandes')->with('deletedC', 'Commande supprimée avec succès.');
     }
 
-
-    public function main(){
-        $produits = Produits::with('categories')
-                     ->orderByDesc('id')
-                    ->limit(8)
-                    ->get();
+    public function test(){
         $categories = Categorie::all();
-        if (Auth::check()) {
-            // Récupérer le panier de l'utilisateur connecté avec les produits et leurs images
-            $cart = Carts::where('user_id', auth()->id())->first();
-            $cartItems = $cart ? $cart->items->load(['product', 'product.firstImage']) : collect();
-        } else {
-            // Panier pour utilisateurs non connectés
-            $cartItems = collect(session()->get('cart', []));
-        }
-
-        return view('main.index',[
-            'produits' => $produits,
+        $produits = Produits::with('categories')->get();
+        $latestProduits = Produits::where('status', 'new')->get();
+        $topRatedProduits = Produits::where('status', 'best')->get();
+        $reviewProduits = Produits::where('status', 'normal')->get();
+        $cart = Carts::where('user_id', auth()->id())->first();
+        $cartItems = $cart ? $cart->items->load(['product', 'product.firstImage']) : collect();
+        return view('temp.index',[
             'categories' => $categories,
+            'produits' => $produits,
+            'latestProduits' => $latestProduits,
+            'topRatedProduits' => $topRatedProduits,
+            'reviewProduits' => $reviewProduits,
+            'cart' => $cart,
             'cartItems' => $cartItems,
         ]);
     }
-    public function search(Request $request){
-        $query = $request->input('query');
-        $products = Produits::where('nom', 'like', '%' . $query . '%')
-                           ->orWhere('description', 'like', '%' . $query . '%')
-                           ->get();
 
-        return view('main.index', compact('products'));
+    public function shop(){
+        $categories = Categorie::all();
+        $produits = Produits::with('categories')->get();
+        $latestProduits = Produits::where('status', 'new')->get();
+        $topRatedProduits = Produits::where('status', 'best')->get();
+        $reviewProduits = Produits::where('status', 'normal')->get();
+        $cart = Carts::where('user_id', auth()->id())->first();
+        $cartItems = $cart ? $cart->items->load(['product', 'product.firstImage']) : collect();
+        return view('temp.shop',[
+            'categories' => $categories,
+            'produits' => $produits,
+            'latestProduits' => $latestProduits,
+            'topRatedProduits' => $topRatedProduits,
+            'reviewProduits' => $reviewProduits,
+            'cart' => $cart,
+            'cartItems' => $cartItems,
+        ]);
     }
 
 

@@ -96,6 +96,18 @@
                 </div>
             </div>
 
+            <div class="mt-6">
+                <label for="status" class="block text-lg font-medium text-gray-700">Status</label>
+                <select name="status" id="status" class="w-full p-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    <option value="" selected disabled>Choisissez le statut</option>
+                    <option value="normal">Normal</option>
+                    <option value="new">Nouveau</option>
+                    <option value="hot">Chaud</option>
+                    <option value="best">Meilleur</option>
+                </select>
+            </div>
+
+
             <!-- Description -->
             <div class="mt-6">
                 <label for="description" class="block text-lg font-medium text-gray-700">Description</label>

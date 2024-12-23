@@ -24,8 +24,8 @@ Route::controller(FrontEndController::class)->group(function () {
     Route::delete('/dashboard/commandes/{id}','destroy')->name('dash.commandes.destroy')->middleware(['role:superadmin']);
     Route::patch('/dashboard/commandes/update/{id}','updateStatus')->name('dash.commandes.update')->middleware(['role:superadmin']);
 
-    Route::get('/main/index','main')->name('main.index');
-    Route::get('/search', 'search')->name('products.search');
+    Route::get('/test/index','test')->name('test.index');
+    Route::get('/test/shop','shop')->name('test.shop');
 
 
 

@@ -148,7 +148,7 @@
             <main class="w-full flex-grow p-6">
                 <h1 class="text-3xl text-gray-800 font-bold pb-6">Gestion des Categories</h1>
 
-                <form action="{{ route('cat.store') }}" method="POST" class="mb-6 bg-white p-6 rounded-lg shadow-md border border-gray-200">
+                <form action="{{ route('cat.store') }}" enctype="multipart/form-data" method="POST" class="mb-6 bg-white p-6 rounded-lg shadow-md border border-gray-200">
                     @csrf
                     <h2 class="text-xl font-semibold text-gray-800 mb-4">Ajouter une catégorie</h2>
                     <div class="flex flex-wrap space-y-4 md:space-y-0 md:space-x-4">
@@ -164,6 +164,16 @@
                                 required>
                         </div>
 
+                        <div class="w-full md:w-2/3">
+                            <label for="type" class="block text-gray-700 font-medium mb-2">Image de catégorie</label>
+                            <input
+                                type="file"
+                                name="image"
+                                id="image"
+                                placeholder="Entrez l'image de la catégorie"
+                                class="w-full p-3 border border-gray-300 rounded-md focus:ring focus:ring-green-300 focus:outline-none"
+                                required>
+                        </div>
 
                         <!-- Submit Button -->
                         <div class="w-full relative top-4  md:w-1/3 flex items-end">

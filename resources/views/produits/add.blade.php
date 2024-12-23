@@ -65,9 +65,20 @@
                     @enderror
                 </div>
             </div>
-
             <div class="form-group">
-                <label for="measurement" class="form-label">Unité de mesure</label>
+                <label for="status" class="block text-gray-700 font-semibold">Statut du Produit</label>
+                <select name="status" id="status" class="w-full p-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    <option value="" selected disabled>Choisissez le statut</option>
+                    <option value="normal">Normal</option>
+                    <option value="new">Nouveau</option>
+                    <option value="hot">Chaud</option>
+                    <option value="best">Meilleur</option>
+                </select>
+            </div>
+
+<br>
+            <div class="form-group">
+                <label for="measurement" class="block text-gray-700 font-semibold">Unité de mesure</label>
                 <select name="mesure" id="mesure" class="w-full p-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
                     <option value="kg" {{ old('measurement', $produit->mesure ?? 'kg') == 'kg' ? 'selected' : '' }}>Kg</option>
                     <option value="g" {{ old('measurement', $produit->mesure ?? 'kg') == 'g' ? 'selected' : '' }}>Gramme</option>

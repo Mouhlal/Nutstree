@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Carts;
+use App\Models\Categorie;
+use App\Models\Commandes;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -11,7 +14,10 @@ use Illuminate\Support\Facades\Session;
 class UserController extends Controller
 {
     public function showLogin(){
-        return view('auth.login');
+        $categories = Categorie::all();
+        return view('temp.auth.login',[
+            'categories' => $categories
+        ]);
     }
     public function login(Request $request){
         // $credentials = $request->only('email','password');
@@ -36,7 +42,8 @@ class UserController extends Controller
         return redirect()->route('layouts.home')->with('logout','Déconnexion avec succées');
     }
     public function RegisterForm(){
-        return view('auth.register');
+        $categories = Categorie::all();
+        return view('temp.auth.register',compact('categories'));
     }
     public function Register(Request $request){
         $att = $request->validate([
@@ -58,17 +65,29 @@ class UserController extends Controller
         return redirect()->route('auth.showLogin')->with('register','Création du compte avec succes');
     }
 
-    public function profile($id){
+    public function profile($id)
+    {
         $user = User::find($id);
-        return view('auth.profile',compact('user'));
+        $categories = Categorie::all();
+        $cart = Carts::where('user_id', auth()->id())->first();
+        $orders = auth()->user()->Commandes;
+        $commande = Commandes::with(['products', 'User'])->findOrFail($id);
+        $products = $commande->produits;
+
+        $cartItems = $cart ? $cart->items->load(['product', 'product.firstImage']) : collect();
+        return view('temp.auth.profile', compact('user', 'categories', 'cart', 'cartItems','commande','products', 'orders'));
     }
 
+
     public function editp($id) {
+        $categories = Categorie::all();
         $user = User::find($id);
+        $cart = Carts::where('user_id', auth()->id())->first();
+        $cartItems = $cart ? $cart->items->load(['product', 'product.firstImage']) : collect();
         if (!$user) {
             return redirect()->route('auth.profile', $id)->with('error', 'Utilisateur non trouvé');
         }
-        return view('auth.editp', compact('user'));
+        return view('temp.auth.editp', compact('user','categories','cart','cartItems'));
     }
     public function updatep(Request $request, $id) {
         $att = $request->validate([
@@ -76,7 +95,7 @@ class UserController extends Controller
             'image' => 'nullable|image',
             'cin' => 'nullable',
             'adresse' => 'nullable',
-            'tel' => 'nullable|unique:users,tel,' . $id,
+            'tel' => 'required|unique:users,tel,' . $id,
             'email' => 'nullable|unique:users,email,' . $id,
             'password' => 'nullable|confirmed|min:5|string|max:25',
             'status' => 'nullable',

@@ -22,10 +22,9 @@ class Commandes extends Model
         return $this->hasOne(Paiements::class);
     }
     public function products()
-{
+    {
     return $this->belongsToMany(Produits::class, 'commandes_produits', 'commande_id', 'produit_id')
                 ->withPivot('quantity', 'prix')  ->withTimestamps();;
-}
-
-
+    }
+   
 }

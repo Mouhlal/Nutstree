@@ -16,15 +16,18 @@ use Illuminate\Support\Facades\Route;
 Route::controller(FrontEndController::class)->group(function () {
     Route::get('/', 'home')->name('layouts.home');
     Route::get('/about', 'About')->name('layouts.about');
-    Route::get('/contact', 'Contact')->name('layouts.contact');
+    Route::get('/contact', 'contact')->name('layouts.contact');
     Route::get('/dashboard/home','Dash')->name('dash.home')->middleware(['role:admin,superadmin']);
     Route::get('/dashboard/produit','tables')->name('dash.tables')->middleware(['role:admin,superadmin']);
     Route::get('/dashboard/categories','cat')->name('dash.cat')->middleware(['role:admin,superadmin']);
     Route::get('/dashboard/forms','forms')->name('dash.forms')->middleware(['role:admin,superadmin']);
     Route::get('/dashboard/calendar','calendar')->name('dash.calendar')->middleware(['role:admin,superadmin']);
     Route::get('/dashboard/commandes','index')->name('dash.commandes')->middleware(['role:superadmin']);
+    Route::get('/dashboard/clients','clients')->name('dash.clients')->middleware(['role:superadmin']);
     Route::delete('/dashboard/commandes/{id}','destroy')->name('dash.commandes.destroy')->middleware(['role:superadmin']);
     Route::patch('/dashboard/commandes/update/{id}','updateStatus')->name('dash.commandes.update')->middleware(['role:superadmin']);
+    Route::delete('/dashboard/client/{id}','destroyUser')->name('dash.client.destroy')->middleware(['role:superadmin']);
+    Route::patch('/dashboard/client/update/{id}','updateStatusClient')->name('dash.client.update')->middleware(['role:superadmin']);
 
 
 });

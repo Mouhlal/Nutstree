@@ -59,9 +59,9 @@
                         <li><a href="#">Pages</a>
                             <ul class="header__menu__dropdown">
                                 <li><a href="{{route('cart.show')}}">Panier</a></li>
-                                <li><a href="./checkout.html">Paiement</a></li>
-                                <li><a href="./blog-details.html">Détails du blog</a></li>
-                                <li><a href="./contact.html">Contact</a></li>
+                                <li><a href="#">Paiement</a></li>
+                                <li><a href="#">Détails du blog</a></li>
+                                <li><a href="{{route('layouts.contact')}}">Contact</a></li>
                             </ul>
                         </li>
                         <li><a href="./blog.html">Blog</a></li>
@@ -76,6 +76,7 @@
                 <div class="header__cart">
                     <ul>
                         <li>
+                            <!-- Cart Icon and Link -->
                             <a href="{{ route('cart.show') }}">
                                 <i class="fa fa-shopping-bag"></i>
                                 <span>
@@ -86,24 +87,34 @@
                                 </span>
                             </a>
                         </li>
+                        <li>
+                            <!-- User Icon and Link -->
+                            <a href="{{ auth()->check() ? route('auth.profile', auth()->user()->id) : route('auth.showLogin') }}">
+                                <i class="fa fa-user text-gray-500 text-xl"></i>
+                            </a>
+                        </li>
                     </ul>
 
-                    <div class="header__cart__price">item: <span>
-                        {{ number_format(
-                            (auth()->check()
-                                ? $cartItems->sum(function($item) {
-                                    return $item->product ? $item->quantity * $item->product->prix : 0;
-                                })
-                                : (is_array(session('cart')) ? array_sum(array_map(function($item) {
-                                    return $item['quantity'] * $item['price'];
-                                }, session('cart'))) : 0)
-                            ), 2) }} MAD
-                    </span></div>
+                    <!-- Total Cart Price -->
+                    <div class="header__cart__price">
+                        Item:
+                        <span>
+                            {{ number_format(
+                                (auth()->check()
+                                    ? $cartItems->sum(function($item) {
+                                        return $item->product ? $item->quantity * $item->product->prix : 0;
+                                    })
+                                    : (is_array(session('cart')) ? array_sum(array_map(function($item) {
+                                        return $item['quantity'] * $item['price'];
+                                    }, session('cart'))) : 0)
+                                ), 2)
+                            }} MAD
+                        </span>
+                    </div>
                 </div>
             </div>
+            <div class="humberger__open">
+                <i class="fa fa-bars"></i>
+            </div>
         </div>
-        <div class="humberger__open">
-            <i class="fa fa-bars"></i>
-        </div>
-    </div>
 </header>

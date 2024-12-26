@@ -40,9 +40,9 @@
                 <i class="fas fa-tachometer-alt mr-3"></i>
                 Dashboard
             </a>
-            <a href="{{route('dash.commandes')}}" class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item">
+            <a href="{{route('dash.clients')}}" class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item">
                 <i class="fas fa-shopping-cart mr-3"></i>
-                Commandes
+                clients
             </a>
             <a href="{{route('dash.tables')}}" class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item">
                 <i class="fas fa-table mr-3"></i>
@@ -111,9 +111,9 @@
                     <i class="fas fa-tachometer-alt mr-3"></i>
                     Dashboard
                 </a>
-                <a href="{{route('dash.commandes')}}" class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item">
+                <a href="{{route('dash.clients')}}" class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item">
                     <i class="fas fa-shopping-cart mr-3"></i>
-                    Commandes
+                    clients
                 </a>
                 <a href="{{route('dash.tables')}}" class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item">
                     <i class="fas fa-table mr-3"></i>
@@ -156,7 +156,7 @@
         <div class="w-full h-screen overflow-x-hidden border-t flex flex-col">
             <main class="w-full flex-grow p-6">
                 <div class="container mx-auto py-8">
-                    <h1 class="text-2xl font-bold text-center text-gray-800 mb-6">Gestion des Commandes</h1>
+                    <h1 class="text-2xl font-bold text-center text-gray-800 mb-6">Gestion des Clients</h1>
 
                     @if(session('deletedC'))
                         <div class="p-4 mb-6 text-red-600 bg-red-100 rounded-md text-center">
@@ -172,10 +172,10 @@
 
                     <!-- Formulaire de recherche et filtre -->
                     <div class="mb-6">
-                        <form action="{{ route('dash.commandes') }}" method="GET" class="flex items-center justify-between bg-white shadow-md rounded-lg p-6">
-                            <!-- Recherche par nom ou numéro de commande -->
+                        <form action="{{ route('dash.clients') }}" method="GET" class="flex items-center justify-between bg-white shadow-md rounded-lg p-6">
+                            <!-- Recherche par nom ou numéro de client -->
                             <div class="flex items-center w-full md:w-2/3">
-                                <input type="text" name="search" placeholder="Rechercher par nom ou numéro de commande"
+                                <input type="text" name="search" placeholder="Rechercher par le nom ou numéro de telephone"
                                        class="w-full p-2 border rounded-lg text-gray-700"
                                        value="{{ request('search') }}">
                             </div>
@@ -184,12 +184,11 @@
                             <div class="ml-4">
                                 <select name="status" class="p-2 border rounded-lg text-gray-700">
                                     <option value="">-- Filtrer par statut --</option>
-                                    <option value="pending" {{ request('status') === 'pending' ? 'selected' : '' }}>En cours</option>
-                                    <option value="pending-cash" {{ request('status') === 'pending-cash' ? 'selected' : '' }}>En attente de paiement</option>
-                                    <option value="completed" {{ request('status') === 'completed' ? 'selected' : '' }}>Livrée</option>
-                                    <option value="cancelled" {{ request('status') === 'cancelled' ? 'selected' : '' }}>Annulée</option>
+                                    <option value="0" {{ request('status') === '0' ? 'selected' : '' }}>Bon client</option>
+                                    <option value="1" {{ request('status') === '1' ? 'selected' : '' }}>Mauvais Client</option>
                                 </select>
                             </div>
+
 
                             <!-- Bouton de recherche -->
                             <button type="submit" class="ml-4 bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600">
@@ -198,52 +197,49 @@
                         </form>
                     </div>
 
-                    <!-- Table des commandes -->
+                    <!-- Table des clients -->
                     <div class="bg-white shadow-md rounded-lg overflow-x-auto">
                         <div>
-                            <h2 class="text-lg p-5 font-bold text-gray-800 mb-4">Liste des Commandes</h2>
+                            <h2 class="text-lg p-5 font-bold text-gray-800 mb-4">Liste des Clients</h2>
                             <table class="min-w-full bg-white table-auto overflow-x-auto">
                                 <thead>
                                     <tr class="w-full bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
-                                        <th class="py-3 px-6 text-left">N°Commande</th>
-                                        <th class="py-3 px-6 text-left">Client</th>
-                                        <th class="py-3 px-6 text-center">Total</th>
-                                        <th class="py-3 px-6 text-center">Statut</th>
-                                        <th class="py-3 px-6 text-center">Tel Client</th>
-                                        <th class="py-3 px-6 text-center">Localisation</th>
-                                        <th class="py-3 px-6 text-center">Actions</th>
+                                        <th class="py-3 px-6 text-left">N°Client</th>
+                                        <th class="py-3 px-6 text-left">Nom Complet</th>
+                                        <th class="py-3 px-6 text-center">Ville</th>
+                                        <th class="py-3 px-6 text-center">Adresse</th>
+                                        <th class="py-3 px-6 text-center">Tel</th>
+                                        <th class="py-3 px-6 text-center">Status</th>
+                                        <th class="py-3 px-6 text-left">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody class="text-gray-600 text-sm font-light">
-                                    @foreach($commandes as $commande)
+                                    @foreach($users as $client)
                                         <tr class="border-b border-gray-200 hover:bg-gray-100">
-                                            <td class="py-3 px-6 text-left whitespace-nowrap">{{ $commande->numCom }}</td>
-                                            <td class="py-3 px-6 text-left">{{ $commande->user->name }}</td>
-                                            <td class="py-3 px-6 text-center">{{ number_format($commande->totalPrix, 2) }} MAD</td>
+                                            <td class="py-3 px-6 text-left whitespace-nowrap">{{ $client->id }}</td>
+                                            <td class="py-3 px-6 text-left">{{ $client->name }}</td>
+                                            <td class="py-3 px-6 text-center">{{ $client->ville }}</td>
+                                            <td class="py-3 px-6 text-center">{{ $client->adresse}}</td>
+                                            <td class="py-3 px-6 text-center">{{ $client->tel }}</td>
                                             <td class="py-3 px-6 text-center">
                                                 <span class="px-3 py-1 rounded-full text-white
-                                                    {{ $commande->status === 'pending' ? 'bg-yellow-500' :
-                                                    ($commande->status === 'completed' ? 'bg-green-500' :
-                                                    ($commande->status === 'failed' ? 'bg-red-500' :
-                                                    ($commande->status === 'pending-cash' ? 'bg-blue-500 text-nowrap truncate' : 'bg-gray-500'))) }}">
-                                                    {{ ucfirst(str_replace('-', ' ', $commande->status)) }}
+                                                    {{ $client->status === 0 ? 'bg-green-500' :
+                                                    ($client->status === 1 ? 'bg-red-500' : 'bg-gray-500') }}">
+                                                    {{ $client->status === 0 ? 'Bon client' : 'Drop' }}
                                                 </span>
+
                                             </td>
-                                            <td class="py-3 px-6 text-center">{{ $commande->user->tel }}</td>
-                                            <td class="py-3 px-6 text-center">{{ $commande->user->adresse }}</td>
                                             <td class="py-3 px-6 text-center">
-                                                <form action="{{ route('dash.commandes.update', $commande->id) }}" method="POST" class="inline-block">
+                                                <form action="{{ route('dash.client.update', $client->id) }}" method="POST" class="inline-block">
                                                     @csrf
                                                     @method('PATCH')
-                                                    <select name="status" class="bg-gray-50 border text-gray-600 py-1 px-2 rounded">
-                                                        <option value="pending" {{ $commande->status === 'pending' ? 'selected' : '' }}>En cours</option>
-                                                        <option value="pending-cash" {{ $commande->status === 'pending-cash' ? 'selected' : '' }}>En attente de paiement</option>
-                                                        <option value="completed" {{ $commande->status === 'completed' ? 'selected' : '' }}>Livrée</option>
-                                                        <option value="cancelled" {{ $commande->status === 'cancelled' ? 'selected' : '' }}>Annulée</option>
+                                                    <select name="status" class="ml-2 bg-gray-50 border text-gray-600 py-1 px-2 rounded">
+                                                        <option value="0" {{ $client->status === 0 ? 'selected' : '' }}>Bon client</option>
+                                                        <option value="1" {{ $client->status === 1 ? 'selected' : '' }}>Mauvais client</option>
                                                     </select>
                                                     <button type="submit" class="ml-2 bg-blue-500 relative top-1 text-white py-1 px-2 rounded">Mettre à jour</button>
                                                 </form>
-                                                <form action="{{ route('dash.commandes.destroy', $commande->id) }}" class="inline-block p-2" method="POST">
+                                                <form action="{{ route('dash.client.destroy', $client->id) }}" class="inline-block p-2" method="POST">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="ml-2 bg-red-500 text-white py-1 px-2 rounded">Supprimer</button>
@@ -258,7 +254,7 @@
 
                     <!-- Pagination -->
                     <div class="mt-6">
-                        {{ $commandes->links() }}
+                        {{ $users->links() }}
                     </div>
                 </div>
             </main>
@@ -276,7 +272,7 @@
         const menu = document.getElementById('menu');
         menu.classList.toggle('hidden');
     });
-    function confirmDelete(commandeId) {
+    function confirmDelete(clientId) {
         // Show SweetAlert confirmation dialog
         Swal.fire({
             title: 'Êtes-vous sûr?',
@@ -290,7 +286,7 @@
         }).then((result) => {
             if (result.isConfirmed) {
                 // Submit the form if the user confirms
-                document.getElementById('delete-form-' + commandeId).submit();
+                document.getElementById('delete-form-' + clientId).submit();
             }
         });
     }

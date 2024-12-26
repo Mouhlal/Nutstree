@@ -161,7 +161,7 @@
                         <p><strong>Adresse :</strong> {{ $commande->location }}</p>
                         <p><strong>Méthode de Paiement :</strong> {{ $billingInfo['payment_method'] }}</p>
                         <p><strong>Status de Paiement :</strong> {{ $billingInfo['payment_status'] }}</p>
-                        <p><strong>Total :</strong> ${{ number_format($billingInfo['total'], 2) }}</p>
+                        <p><strong>Total :</strong> {{ number_format($billingInfo['total'], 2) }} MAD</p>
                     </div>
                 </div>
             </div>

@@ -30,9 +30,6 @@ class FrontEndController extends Controller
             'cartItems' => $cartItems,
         ]);
     }
-    public function Contact(){
-        return view('layouts.contact');
-    }
     public function About(){
         return view('layouts.about');
     }
@@ -114,11 +111,80 @@ class FrontEndController extends Controller
         $commande->save();
         return redirect()->route('dash.commandes')->with('success', 'Statut de la commande mis à jour avec succès.');
     }
+
+    public function clients(Request $request)
+{
+    $search = $request->input('search');
+    $status = $request->query('status');
+
+    $userQuery = User::query();
+
+    if ($status !== null) {
+        $userQuery->where('status', $status);
+    }
+
+    // Recherche par nom ou par téléphone dans la relation (si elle existe)
+    if ($search) {
+        $userQuery->where(function ($query) use ($search) {
+            $query->where('name', 'like', "%$search%")
+            ->orWhere('tel', 'like', "%$search%");
+        });
+    }
+
+    // Récupérer les utilisateurs avec pagination
+    $users = $userQuery->paginate(10);
+
+    return view('dashboard.client', [
+        'users' => $users,
+        'status' => $status,
+        'search' => $search,
+    ]);
+}
+
+    public function updateStatusClient(Request $request, $id)
+    {
+        $request->validate([
+            'status' => 'required|string',
+        ]);
+        $user = User::findOrFail($id);
+        $user->status = $request->input('status');
+        $user->save();
+        return redirect()->route('dash.clients')->with('success', 'Statut de client mis à jour avec succès.');
+    }
+    public function destroyUser($id)
+    {
+        $user = User::findOrFail($id);
+        $user->delete();
+        return redirect()->route('dash.clients')->with('deletedC', 'Client supprimée avec succès.');
+    }
+
+
+
     public function destroy($id)
     {
         $commande = Commandes::findOrFail($id);
         $commande->delete();
         return redirect()->route('dash.commandes')->with('deletedC', 'Commande supprimée avec succès.');
+    }
+
+
+    public function contact(){
+        $categories = Categorie::all();
+        $produits = Produits::with('categories')->get();
+        $latestProduits = Produits::where('status', 'new')->get();
+        $topRatedProduits = Produits::where('status', 'best')->get();
+        $reviewProduits = Produits::where('status', 'normal')->get();
+        $cart = Carts::where('user_id', auth()->id())->first();
+        $cartItems = $cart ? $cart->items->load(['product', 'product.firstImage']) : collect();
+        return view('temp.layouts.contact',[
+            'categories' => $categories,
+            'produits' => $produits,
+            'latestProduits' => $latestProduits,
+            'topRatedProduits' => $topRatedProduits,
+            'reviewProduits' => $reviewProduits,
+            'cart' => $cart,
+            'cartItems' => $cartItems,
+        ]);
     }
 
 

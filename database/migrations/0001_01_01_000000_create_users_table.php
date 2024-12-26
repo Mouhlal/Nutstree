@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name')->nullable();
             $table->string('image')->nullable();
             $table->string('cin')->nullable();
-            $table->string('adresse')->default('Casa')->nullable();
+            $table->string('adresse')->nullable();
             $table->string('pays')->default('maroc')->nullable();
             $table->string('ville')->nullable();
 

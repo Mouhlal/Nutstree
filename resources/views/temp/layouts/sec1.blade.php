@@ -41,7 +41,7 @@
                         <span>Fruits Secs</span>
                         <h2>Produits <br />100% Naturels</h2>
                         <p>Livraison rapide et gratuite</p>
-                        <a href="#" class="primary-btn">ACHETER MAINTENANT</a>
+                        <a href="{{route('prod.index')}}" class="primary-btn">ACHETER MAINTENANT</a>
                     </div>
                 </div>
             </div>

@@ -14,20 +14,13 @@ return new class extends Migration
         Schema::create('paiements', function (Blueprint $table) {
             $table->id();
             $table->foreignId('commande_id')->constrained()->cascadeOnDelete();
-            $table->enum('paymentMethod', ['Cash on Delivery', 'Credit Card', 'PayPal'])->default('Cash on Delivery');
-            $table->string('transaction_id')->unique();
-            $table->string('payment_intent_id');
+            $table->enum('payment_method', ['Cash on Delivery', 'Credit Card', 'PayPal'])->default('Cash on Delivery');  // Utilisation de snake_case ici
+            $table->string('transaction_id')->unique()->nullable();
+            $table->string('payment_intent_id')->nullable();
             $table->decimal('amount', 10, 2);
             $table->enum('status', ['succeeded', 'failed', 'pending']);
             $table->softDeletes();
             $table->timestamps();
-            /*
-            pending : Le paiement a été créé mais n'est pas encore finalisé ou confirmé.
-            completed : Le paiement a été réalisé avec succès et l'argent a été reçu.
-            failed : Le paiement a échoué pour une raison quelconque (ex. erreur de transaction, fonds insuffisants, etc.).
-            refunded : Le paiement a été remboursé à l'utilisateur.
-            cancelled : Le paiement a été annulé avant ou après avoir été initié.
-            */
         });
     }
 

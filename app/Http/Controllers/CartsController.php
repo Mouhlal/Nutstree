@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\CartItems;
 use App\Models\Carts;
+use App\Models\Categorie;
 use App\Models\Code_Promo;
+use App\Models\DeliveryFee;
 use App\Models\Produits;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -13,114 +15,145 @@ class CartsController extends Controller
 {
 
     public function addToCart($productId, Request $request)
-{
-    $product = Produits::findOrFail($productId);
-
-    // Vérifier si le produit est en stock
-    if ($product->quantite <= 0) {
-        return response()->json(['message' => 'Ce produit est en rupture de stock.'], 400);
-    }
-
-    if (Auth::check()) {
-        // Utilisateur authentifié - Enregistrer dans la base de données
-        $cart = Carts::firstOrCreate(['user_id' => auth()->id()]);
-
-        $cartItem = CartItems::where('cart_id', $cart->id)
-                             ->where('produit_id', $product->id)
-                             ->first();
-
-        if ($cartItem) {
-            // Vérifier si l'incrément dépasse le stock disponible
-            if ($cartItem->quantity + 1 > $product->quantite) {
-                return response()->json(['message' => 'Stock insuffisant pour ce produit.'], 400);
-            }
-
-            $cartItem->increment('quantity');
-        } else {
-            CartItems::create([
-                'cart_id' => $cart->id,
-                'produit_id' => $product->id,
-                'quantity' => 1,
-            ]);
-        }
-    } else {
-        // Utilisateur non authentifié - Stocker dans la session
-        $cart = session()->get('cart', []);
-
-        if (isset($cart[$productId])) {
-            // Vérifier si l'incrément dépasse le stock disponible
-            if ($cart[$productId]['quantity'] + 1 > $product->quantite) {
-                return response()->json(['message' => 'Stock insuffisant pour ce produit.'], 400);
-            }
-
-            $cart[$productId]['quantity']++;
-        } else {
-            $cart[$productId] = [
-                'id' => $product->id,
-                'name' => $product->nom,
-                'price' => $product->prix,
-                'image' => $product->images->first() ?? 'default-image.jpg',
-                'quantity' => 1,
-            ];
-        }
-
-        session()->put('cart', $cart);
-    }
-
-    // Décrémenter le stock après ajout au panier
-    $product->decrement('quantite', 1);
-
-    return response()->json(['message' => 'Produit ajouté au panier avec succès!','success' => true,]);
-}
-
-public function showCart()
-{
-    if (Auth::check()) {
-        // Récupérer le panier de l'utilisateur connecté avec les produits et leurs images
-        $cart = Carts::where('user_id', auth()->id())->first();
-        $cartItems = $cart ? $cart->items->load(['product', 'product.firstImage']) : collect();
-    } else {
-        // Panier pour utilisateurs non connectés
-        $cartItems = collect(session()->get('cart', []));
-    }
-
-    return view('cart.panier', compact('cartItems'));
-}
-
-
-
-
-public function removeFromCart($id)
     {
-        // Trouver l'élément du panier
-        $cartItem = CartItems::findOrFail($id);
+        // Valider la quantité envoyée par la requête
+        $quantity = $request->input('quantity', 1);
+        if ($quantity < 1) {
+            return response()->json(['message' => 'La quantité doit être supérieure à zéro.'], 400);
+        }
 
-        // Supprimer l'élément du panier
+        $product = Produits::findOrFail($productId);
+
+        if ($product->quantite <= 0) {
+            return response()->json(['message' => 'Ce produit est en rupture de stock.'], 400);
+        }
+
+        // Vérifier si la quantité demandée est disponible en stock
+        if ($quantity > $product->quantite) {
+            return response()->json(['message' => 'Quantité demandée supérieure au stock disponible.'], 400);
+        }
+
+        if (Auth::check()) {
+            // Utilisateur authentifié - Enregistrer dans la base de données
+            $cart = Carts::firstOrCreate(['user_id' => auth()->id()]);
+
+            $cartItem = CartItems::where('cart_id', $cart->id)
+                                 ->where('produit_id', $product->id)
+                                 ->first();
+
+            if ($cartItem) {
+                // Vérifier si l'incrément dépasse le stock disponible
+                if ($cartItem->quantity + $quantity > $product->quantite) {
+                    return response()->json(['message' => 'Stock insuffisant pour ce produit.'], 400);
+                }
+
+                $cartItem->increment('quantity', $quantity);
+            } else {
+                CartItems::create([
+                    'cart_id' => $cart->id,
+                    'produit_id' => $product->id,
+                    'quantity' => $quantity,
+                ]);
+            }
+        } else {
+            // Utilisateur non authentifié - Stocker dans la session
+            $cart = session()->get('cart', []);
+
+            if (isset($cart[$productId])) {
+                if ($cart[$productId]['quantity'] + $quantity > $product->quantite) {
+                    return response()->json(['message' => 'Stock insuffisant pour ce produit.'], 400);
+                }
+
+                $cart[$productId]['quantity'] += $quantity;
+            } else {
+                $cart[$productId] = [
+                    'id' => $product->id,
+                    'name' => $product->nom,
+                    'price' => $product->prix,
+                    'image' => $product->images->first() ?? 'default-image.jpg',
+                    'quantity' => $quantity,
+                ];
+            }
+
+            session()->put('cart', $cart);
+
+        }
+
+
+        // Décrémenter le stock après ajout au panier
+        $product->decrement('quantite', $quantity);
+
+        return response()->json(['message' => 'Produit ajouté au panier avec succès!', 'success' => true]);
+    }
+
+    public function showCart()
+    {
+        $categories = Categorie::all();
+        $deliveryFee = 0;
+        $cartItems = collect();
+        $subtotal = 0;
+        if (Auth::check()) {
+            $city = auth()->user()->ville ?? 'casa';
+            $deliveryFee = DeliveryFee::where('city', $city)->value('fee') ?? 0;
+            $cart = Carts::where('user_id', auth()->id())->with('items.product.firstImage')->first();
+            $cartItems = $cart ? $cart->items : collect();
+            $subtotal = $cartItems->sum(fn($item) => $item->product ? $item->quantity * $item->product->prix : 0);
+        }
+        $total = $subtotal + $deliveryFee;
+        $allCities = DeliveryFee::pluck('city')->toArray();
+        $currentCity = Auth::check() ? auth()->user()->adresse : session('city', 'casa');
+
+        return view('temp.panier-auth', compact('cartItems', 'categories', 'subtotal', 'deliveryFee', 'total', 'allCities', 'currentCity'));
+    }
+
+    public function removeFromCart($id)
+    {
+        $cartItem = CartItems::findOrFail($id);
         $cartItem->delete();
-        // Rediriger avec un message de succès
         return redirect()->back()->with('delP', 'Produit supprimé du panier avec succès.');
     }
-    public function updateQuantity(Request $request, $id)
-{
-    // Valider la nouvelle quantité
-    $validated = $request->validate([
-        'quantity' => 'required|integer|min:1',
-    ]);
-    // Trouver l'élément du panier
-    $cartItem = CartItems::findOrFail($id);
-    // Vérifiez si l'élément appartient à l'utilisateur connecté
-    if ($cartItem->cart->user_id !== auth()->id()) {
-        return redirect()->back()->withErrors('Action non autorisée.');
+
+    public function updateMultiple(Request $request)
+    {
+        // Valider les quantités reçues dans le formulaire
+        $validated = $request->validate([
+            'quantity' => 'required|array',
+            'quantity.*' => 'required|integer|min:1',
+        ]);
+
+        foreach ($validated['quantity'] as $itemId => $quantity) {
+            $cartItem = CartItems::findOrFail($itemId);
+            if ($cartItem->cart->user_id !== auth()->id()) {
+                return redirect()->back()->withErrors('Action non autorisée.');
+            }
+
+            $cartItem->quantity = $quantity;
+            $cartItem->save();
+        }
+
+        // Rediriger avec un message de succès
+        return redirect()->back()->with('success', 'Quantités mises à jour avec succès.');
     }
 
-    // Mettre à jour la quantité
-    $cartItem->quantity = $validated['quantity'];
-    $cartItem->save();
-    // Rediriger avec un message de succès
-    return redirect()->back()->with('success', 'Quantité mise à jour avec succès.');
+public function updateCity(Request $request)
+{
+    $request->validate([
+        'city' => 'required|string|exists:delivery_fees,city',
+    ]);
+
+    if (Auth::check()) {
+        $user = auth()->user();
+        $user->ville = $request->city;
+        $user->save();
+        session(['selected_city' => $user->ville]);
+    } else {
+        session(['selected_city' => $request->city]);
+    }
+
+    return redirect()->back()->with('success', 'City updated successfully!');
 }
 
-// Pour les Sessions
+
 public function syncSessionCart()
 {
     $sessionCart = session()->get('cart', []);
@@ -149,24 +182,50 @@ public function syncSessionCart()
     }
 }
 
-public function updateSessionQuantity(Request $request, $id)
+public function showCartSession()
 {
-    $cart = session()->get('cart', []);
-    if (isset($cart[$id])) {
-        $cart[$id]['quantity'] = $request->input('quantity');
-        session()->put('cart', $cart);
-    }
-    return redirect()->back()->with('success', 'Quantité mise à jour avec succès.');
+    $categories = Categorie::all();
+    $cartItems = collect(session()->get('cart', []));
+    $subtotal = collect($cartItems)->sum(fn($item) => $item['price'] * $item['quantity']);
+    $deliveryFee = session('city') ? DeliveryFee::where('city', session('city'))->value('fee') ?? 0 : 0;
+    $total = $subtotal + $deliveryFee;
+
+    $allCities = DeliveryFee::pluck('city')->toArray();
+    $currentCity = session('city', 'casa');
+
+    return view('temp.panier-session', compact('cartItems', 'categories', 'subtotal', 'deliveryFee', 'total', 'allCities', 'currentCity'));
 }
-public function removeSessionItem($id)
+
+
+public function updateQuantitySession(Request $request)
 {
-    $cart = session()->get('cart', []);
+    $cart = session('cart', []);
+
+    foreach ($request->quantity as $id => $quantity) {
+        if (isset($cart[$id])) {
+            $cart[$id]['quantity'] = max(1, (int) $quantity); // Assurez-vous que la quantité est au moins 1
+        }
+    }
+
+    session(['cart' => $cart]);
+
+    return redirect()->route('cart.show')->with('success', 'Quantité mise à jour avec succès.');
+}
+
+
+public function supprimerItems($id)
+{
+    $cart = session('cart', []);
+
     if (isset($cart[$id])) {
         unset($cart[$id]);
-        session()->put('cart', $cart);
+        session(['cart' => $cart]); // Mettre à jour la session
     }
-    return redirect()->back()->with('delP', 'Produit supprimé du panier avec succès.');
+
+    // Rediriger vers la page du panier
+    return redirect()->route('cart.show')->with('delP', 'Produit supprimé du panier avec succès.');
 }
+
 
 
 public function applyPromo(Request $request)

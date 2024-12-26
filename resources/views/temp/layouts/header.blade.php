@@ -6,7 +6,8 @@
                     <div class="header__top__left">
                         <ul>
                             <li><i class="fa fa-envelope"></i> hello@colorlib.com</li>
-                            <li>Free Shipping for all Order of $99</li>
+                            <li>Livraison gratuite pour toute commande de 99 MAD</li>
+
                         </ul>
                     </div>
                 </div>
@@ -19,16 +20,20 @@
                             <a href="#"><i class="fa fa-pinterest-p"></i></a>
                         </div>
                         <div class="header__top__right__language">
-                            <img src="/images/language.png" alt="">
-                            <div>English</div>
+                            <div>Français</div>
                             <span class="arrow_carrot-down"></span>
                             <ul>
-                                <li><a href="#">Spanis</a></li>
+                                <li><a href="#">Arabe</a></li>
                                 <li><a href="#">English</a></li>
                             </ul>
                         </div>
                         <div class="header__top__right__auth">
-                            <a href="#"><i class="fa fa-user"></i> Login</a>
+                            @guest
+                            <a href="{{route('auth.showLogin')}}"><i class="fa fa-user"></i> Login</a>
+                            @endguest
+                            @auth
+                            <a href="{{route('auth.logout')}}"><i class="fa fa-sign-out"></i> Deconnexion</a>
+                            @endauth
                         </div>
                     </div>
                 </div>
@@ -39,7 +44,7 @@
         <div class="row">
             <div class="col-lg-3">
                 <div class="header__logo">
-                    <a href="{{route('test.index')}}">
+                    <a href="{{route('layouts.home')}}">
                        {{--  <img src="/images/logo.png" alt=""> --}}
                        <h4><strong>NUTSTREE</strong> </h4>
 
@@ -49,27 +54,40 @@
             <div class="col-lg-6">
                 <nav class="header__menu">
                     <ul>
-                        <li class="active"><a href="./index.html">Home</a></li>
-                        <li><a href="{{route('test.shop')}}">Shop</a></li>
+                        <li class="active"><a href="{{route('layouts.home')}}">Accueil</a></li>
+                        <li><a href="{{route('prod.index')}}">Boutique</a></li>
                         <li><a href="#">Pages</a>
                             <ul class="header__menu__dropdown">
-                                <li><a href="./shop-details.html">Shop Details</a></li>
-                                <li><a href="./shoping-cart.html">Shoping Cart</a></li>
-                                <li><a href="./checkout.html">Check Out</a></li>
-                                <li><a href="./blog-details.html">Blog Details</a></li>
+                                <li><a href="{{route('cart.show')}}">Panier</a></li>
+                                <li><a href="./checkout.html">Paiement</a></li>
+                                <li><a href="./blog-details.html">Détails du blog</a></li>
+                                <li><a href="./contact.html">Contact</a></li>
                             </ul>
                         </li>
                         <li><a href="./blog.html">Blog</a></li>
-                        <li><a href="./contact.html">Contact</a></li>
+                        @if(auth()->check() && (auth()->user()->isAdmin() || auth()->user()->isSuperAdmin()))
+                        <li><a href="{{ route('dash.home') }}">Dashboard</a>
+                        </li>
+                         @endif
                     </ul>
                 </nav>
             </div>
             <div class="col-lg-3">
                 <div class="header__cart">
                     <ul>
-                        <li><a href="#"><i class="fa fa-heart"></i> <span>1</span></a></li>
-                        <li><a href="#"><i class="fa fa-shopping-bag"></i> <span> {{$cartItems->count()}} </span></a></li>
+                        <li>
+                            <a href="{{ route('cart.show') }}">
+                                <i class="fa fa-shopping-bag"></i>
+                                <span>
+                                    {{ auth()->check()
+                                        ? collect($cartItems)->count()
+                                        : collect(session('cart', []))->count()
+                                    }}
+                                </span>
+                            </a>
+                        </li>
                     </ul>
+
                     <div class="header__cart__price">item: <span>
                         {{ number_format(
                             (auth()->check()

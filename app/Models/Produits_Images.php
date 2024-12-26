@@ -13,4 +13,9 @@ class Produits_Images extends Model
     public function products(){
         return $this->belongsTo(Produits::class,'produit_id');
     }
+    public function getUrlAttribute()
+{
+    return asset('storage/' . $this->file_path);
+}
+
 }

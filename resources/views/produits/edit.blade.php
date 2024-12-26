@@ -42,7 +42,7 @@
                         value="{{ $produit->prix }}"
                         class="w-full mt-2 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none"
                         placeholder="Entrez le prix"
-                        required>
+                        >
                 </div>
 
                 <!-- Catégorie -->
@@ -82,8 +82,22 @@
                         value="{{ $produit->quantite }}"
                         class="w-full mt-2 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none"
                         placeholder="Entrez la quantité"
-                        required>
+                        >
                 </div>
+
+                <div>
+                    <label for="quantite" class="block text-lg font-medium text-gray-700">Rabais (%)</label>
+                    <input
+                        type="number"
+                        id="discount"
+                        name="discount"
+                        value="{{ $produit->discount }}"
+                        step="0.01" min="0" max="100"
+                        class="w-full mt-2 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none"
+                        placeholder="Entrez la quantité"
+                        >
+                </div>
+
 
                 <!-- Image -->
                 <div class="col-span-1 md:col-span-2">

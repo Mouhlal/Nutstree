@@ -96,6 +96,15 @@
             @enderror
             </div>
 
+            <div class="form-group mt-6">
+                <label class="block text-gray-700 font-semibold" for="discount">Rabais (%)</label>
+                <input type="number" name="discount" class="w-full p-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" step="0.01" min="0" max="100" required>
+                @error('discount')
+                <span class="text-red-500 text-sm">{{ $message }}</span>
+            @enderror
+            </div>
+
+
             <div id="image-preview" class="mt-4 flex flex-wrap gap-2"></div>
 
 <script>

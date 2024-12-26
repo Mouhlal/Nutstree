@@ -4,15 +4,17 @@ use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\CartsController;
 use App\Http\Controllers\CategorieController;
 use App\Http\Controllers\CommandesController;
+use App\Http\Controllers\DeliveryFeeController;
 use App\Http\Controllers\FrontEndController;
 use App\Http\Controllers\PaiementsController;
 use App\Http\Controllers\ProduitsController;
 use App\Http\Controllers\ReviewsController;
 use App\Http\Controllers\UserController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Route::controller(FrontEndController::class)->group(function () {
-    Route::get('/', 'Home')->name('layouts.home');
+    Route::get('/', 'home')->name('layouts.home');
     Route::get('/about', 'About')->name('layouts.about');
     Route::get('/contact', 'Contact')->name('layouts.contact');
     Route::get('/dashboard/home','Dash')->name('dash.home')->middleware(['role:admin,superadmin']);
@@ -24,21 +26,29 @@ Route::controller(FrontEndController::class)->group(function () {
     Route::delete('/dashboard/commandes/{id}','destroy')->name('dash.commandes.destroy')->middleware(['role:superadmin']);
     Route::patch('/dashboard/commandes/update/{id}','updateStatus')->name('dash.commandes.update')->middleware(['role:superadmin']);
 
-    Route::get('/test/index','test')->name('test.index');
-    Route::get('/test/shop','shop')->name('test.shop');
 
+});
 
-
+Route::controller(PaiementsController::class)->group(function(){
 });
 
 
 Route::controller(CommandesController::class)->group(function(){
+    Route::get('/checkout', 'checkout')->name('pay.check');
     Route::post('/commande', 'store')->name('commande.store');
     Route::get('/commandes', 'index')->name('commandes.index');
     Route::post('/commandes/{commande}/cancel', 'cancel')->name('commandes.cancel');
     Route::delete('/orders/{id}',  'deleteOrder')->name('orders.delete');
 
 });
+Route::get('/commande/{order}/details', [CommandesController::class, 'details'])->name('commande.details');
+Route::get('/cmi/payment/{order}', [CommandesController::class, 'index'])->name('cmi.payment');
+Route::get('/commande/{id}/pdf', [CommandesController::class, 'generatePdf'])->name('commande.pdf');
+
+
+
+
+
 
 Route::controller(UserController::class)->group(function(){
     Route::get('/login', 'showLogin')->name('auth.showLogin');
@@ -77,29 +87,44 @@ Route::controller(ProduitsController::class)->group(function(){
 
 Route::controller(CartsController::class)->group(function(){
     Route::post('/cart/add/{productId}','addToCart')->name('cart.add');
-    Route::get('/cart','showCart')->name('cart.show');
-    Route::delete('/cart/remove/{id}','removeFromCart')->name('cart.remove');
-    Route::patch('/cart/update/{id}','updateQuantity')->name('cart.update');
-    Route::post('/cart/update-session/{id}', 'updateSessionQuantity')->name('cart.updateSession');
-    Route::post('/cart/remove-session/{id}',  'removeSessionItem')->name('cart.removeSession');
+    Route::patch('/cart/update-multiple',  'updateMultiple')->name('cart.updateMultiple');
+    Route::get('/cart/remove/{id}','removeFromCart')->name('cart.remove');
+    Route::post('/update-city',  'updateCity')->name('update.city');
+    Route::post('/cart/session/update',  'updateQuantitySession')->name('cart.updateSession');
+    Route::get('/cart/session/remove/{id}',  'supprimerItems')->name('cart.dropsession');
 
+});
+
+Route::get('/cart', function () {
+    if (Auth::check()) {
+        return app(CartsController::class)->showCart();
+    } else {
+        return app(CartsController::class)->showCartSession();
+    }
+})->name('cart.show');
+
+Route::get('/debug-cart', function () {
+    dd(session('cart', []));
 });
 
 Route::post('/produits/{id}/reviews', [ReviewsController::class, 'storeReview'])->name('reviews.store');
 
+
 Route::get('pay/create/{commandeId}', [PaiementsController::class, 'createPayment'])->name('pay.pay');
 Route::get('pay/success/{commandeId}', [PaiementsController::class, 'paymentSuccess'])->name('pay.success');
-
 Route::post('/pay/cash/{commande}', [PaiementsController::class, 'cashOnDelivery'])->name('pay.cash');
 Route::post('/pay/cmi/{commande}', [PaiementsController::class, 'payByCmi'])->name('pay.cmi');
 
 
-Route::get('lang/{locale}', function ($locale) {
-    // Vérifier si la locale est valide
-    if (in_array($locale, ['en', 'ar'])) {
-        session(['locale' => $locale]);
-    }
-    return redirect()->back();
-})->name('lang.switch');
+
+Route::get('/delivery-fees', [DeliveryFeeController::class, 'index'])->name('delivery_fees.index');
+Route::get('/delivery-fees/create', [DeliveryFeeController::class, 'create'])->name('delivery_fees.create');
+Route::post('/delivery-fees', [DeliveryFeeController::class, 'store'])->name('delivery_fees.store');
+Route::get('/delivery-fees/{id}/edit', [DeliveryFeeController::class, 'edit'])->name('delivery_fees.edit');
+Route::put('/delivery-fees/{id}', [DeliveryFeeController::class, 'update'])->name('delivery_fees.update');
+Route::delete('/delivery-fees/{id}', [DeliveryFeeController::class, 'destroy'])->name('delivery_fees.destroy');
+
+
+
 
 

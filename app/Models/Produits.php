@@ -13,7 +13,7 @@ class Produits extends Model
     protected $guarded = [] ;
 
     public function Categories(){
-        return $this->belongsTo(Categorie::class);
+        return $this->belongsTo(Categorie::class,'categorie_id');
     }
     public function CartItems(){
         return $this->hasMany(CartItems::class);
@@ -31,4 +31,10 @@ class Produits extends Model
     public function firstImage() {
         return $this->hasOne(Produits_Images::class, 'produit_id')->oldest();
     }
+    public function getImageUrlAttribute()
+{
+    return asset('storage/' . $this->image); 
+}
+
+
 }

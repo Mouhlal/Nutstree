@@ -27,7 +27,10 @@ class User extends Authenticatable
         'password',
         'role',
         'google_id',
-        'status'
+        'status',
+        'pays','
+        ville',
+        'codepostal'
     ];
 
     public function isAdmin()

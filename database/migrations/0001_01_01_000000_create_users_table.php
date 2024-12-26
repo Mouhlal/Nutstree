@@ -16,8 +16,12 @@ return new class extends Migration
             $table->string('name')->nullable();
             $table->string('image')->nullable();
             $table->string('cin')->nullable();
-            $table->string('adresse')->default('casa')->nullable();
+            $table->string('adresse')->default('Casa')->nullable();
+            $table->string('pays')->default('maroc')->nullable();
+            $table->string('ville')->nullable();
+
             $table->string( 'tel')->unique()->nullable();
+            $table->string('codepostal')->nullable()->unique();
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password')->nullable();

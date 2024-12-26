@@ -2,7 +2,7 @@
 <div class="humberger__menu__overlay"></div>
 <div class="humberger__menu__wrapper">
     <div class="humberger__menu__logo">
-        <a href="#">
+        <a href="/">
         <h5>NUTSTREE </h5>
         </a>
     </div>
@@ -16,11 +16,11 @@
     <div class="humberger__menu__widget">
         <div class="header__top__right__language">
             <img src="/images/language.png" alt="">
-            <div>English</div>
+            <div>Maroc</div>
             <span class="arrow_carrot-down"></span>
             <ul>
-                <li><a href="#">Spanis</a></li>
                 <li><a href="#">English</a></li>
+                <li><a href="#">Français</a></li>
             </ul>
         </div>
         <div class="header__top__right__auth">
@@ -29,12 +29,11 @@
     </div>
     <nav class="humberger__menu__nav mobile-menu">
         <ul>
-            <li class="active"><a href="./index.html">Home</a></li>
-            <li><a href="./shop-grid.html">Shop</a></li>
+            <li class="active"><a href="{{route('layouts.home')}}">Home</a></li>
+            <li><a href="{{route('prod.index')}}">Shop</a></li>
             <li><a href="#">Pages</a>
                 <ul class="header__menu__dropdown">
-                    <li><a href="./shop-details.html">Shop Details</a></li>
-                    <li><a href="./shoping-cart.html">Shoping Cart</a></li>
+                    <li><a href="{{route('cart.show')}}">Panier</a></li>
                     <li><a href="./checkout.html">Check Out</a></li>
                     <li><a href="./blog-details.html">Blog Details</a></li>
                 </ul>

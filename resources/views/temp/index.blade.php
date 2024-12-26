@@ -21,6 +21,9 @@
     <link rel="stylesheet" href="/home/css/slicknav.min.css" type="text/css">
     <link rel="stylesheet" href="/home/css/style.css" type="text/css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.theme.default.min.css">
+
 
 </head>
 <body>
@@ -82,10 +85,8 @@
                     <div class="featured__item">
                                 <div class="featured__item__pic set-bg" data-setbg="{{ $produit->firstImage ? asset('storage/' . $produit->firstImage->images) : asset('storage/default.jpg') }}">
                                     <ul class="featured__item__pic__hover">
-                                        <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                                        <li><a href="#"><i class="fa fa-retweet"></i></a></li>
                                         @if ($produit->quantite > 0)
-                                        <li><a onclick="addToCart({{ $produit->id }})" href="#" title="Ajouter en panier">
+                                        <li><a onclick="addToCart({{ $produit->id }})" style="cursor: pointer" title="Ajouter en panier">
                                             <i class="fa fa-shopping-cart"></i>
                                         </a></li>
                                         @else
@@ -134,7 +135,6 @@
         }
     </script>
 
-
         </div>
     </section>
     <!-- Featured Section End -->
@@ -167,9 +167,9 @@
                         <div class="latest-product__slider owl-carousel">
                             @foreach ($latestProduits as $produit)
                                 <div class="latest-prdouct__slider__item">
-                                    <a href="{{route('prod.details',$produit->id)}}" class="latest-product__item">
+                                    <a href="{{ route('prod.details', $produit->id) }}" class="latest-product__item">
                                         <div class="latest-product__item__pic">
-                                            <img src="{{ $produit->firstImage ? asset('storage/' . $produit->firstImage->images) : asset('storage/default.jpg') }}" alt="{{$produit->nom}}">
+                                            <img src="{{ $produit->firstImage ? asset('storage/' . $produit->firstImage->images) : asset('storage/default.jpg') }}" alt="{{ $produit->nom }}">
                                         </div>
                                         <div class="latest-product__item__text">
                                             <h6>{{ $produit->nom }}</h6>
@@ -189,9 +189,9 @@
                         <div class="latest-product__slider owl-carousel">
                             @foreach ($topRatedProduits as $produit)
                                 <div class="latest-prdouct__slider__item">
-                                    <a href="{{route('prod.details',$produit->id)}}" class="latest-product__item">
+                                    <a href="{{ route('prod.details', $produit->id) }}" class="latest-product__item">
                                         <div class="latest-product__item__pic">
-                                            <img src="{{ $produit->firstImage ? asset('storage/' . $produit->firstImage->images) : asset('storage/default.jpg') }}" alt="{{$produit->nom}}">
+                                            <img src="{{ $produit->firstImage ? asset('storage/' . $produit->firstImage->images) : asset('storage/default.jpg') }}" alt="{{ $produit->nom }}">
                                         </div>
                                         <div class="latest-product__item__text">
                                             <h6>{{ $produit->nom }}</h6>
@@ -207,13 +207,13 @@
                 <!-- Review Products -->
                 <div class="col-lg-4 col-md-6">
                     <div class="latest-product__text">
-                        <h4>Nutstree Products</h4>
+                        <h4>Review Products</h4>
                         <div class="latest-product__slider owl-carousel">
                             @foreach ($reviewProduits as $produit)
                                 <div class="latest-prdouct__slider__item">
-                                    <a href="{{route('prod.details',$produit->id)}}" class="latest-product__item">
+                                    <a href="{{ route('prod.details', $produit->id) }}" class="latest-product__item">
                                         <div class="latest-product__item__pic">
-                                            <img src="{{ $produit->firstImage ? asset('storage/' . $produit->firstImage->images) : asset('storage/default.jpg') }}" alt="{{$produit->nom}}">
+                                            <img src="{{ $produit->firstImage ? asset('storage/' . $produit->firstImage->images) : asset('storage/default.jpg') }}" alt="{{ $produit->nom }}">
                                         </div>
                                         <div class="latest-product__item__text">
                                             <h6>{{ $produit->nom }}</h6>
@@ -304,5 +304,21 @@
     <script src="/home/js/mixitup.min.js"></script>
     <script src="/home/js/owl.carousel.min.js"></script>
     <script src="/home/js/main.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $(".latest-product__slider").owlCarousel({
+                items: 1,
+                loop: true,
+                nav: true,
+                dots: true,
+                autoplay: true,
+                autoplayTimeout: 3000,
+                autoplayHoverPause: true
+            });
+        });
+    </script>
+
 </body>
 </html>

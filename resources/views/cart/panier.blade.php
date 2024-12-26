@@ -133,6 +133,7 @@
                                 ), 2) }} MAD
                         </span>
                     </p>
+                    
                 </div>
 
                 <form action="{{ route('commande.store') }}" method="POST" class="mt-4 sm:mt-0">

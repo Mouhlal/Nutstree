@@ -140,7 +140,7 @@
                 <h1 class="text-2xl font-bold text-gray-800 mb-6">Modifier une catégorie</h1>
 
                     <!-- Formulaire -->
-                    <form action="{{ route('cat.update', $cat->id) }}" method="POST" class="space-y-6">
+                    <form action="{{ route('cat.update', $cat->id) }}" enctype="multipart/form-data" method="POST" class="space-y-6">
                         @csrf
 
                         <!-- Nom de la catégorie -->
@@ -156,6 +156,17 @@
                                 required>
                         </div>
 
+                          <!-- Nom de la catégorie -->
+                          <div>
+                            <label for="file" class="block text-gray-700 font-medium mb-2">Image de la catégorie</label>
+                            <input
+                                type="file"
+                                name="image"
+                                value="{{ $cat->image }}"
+                                placeholder="Entrez le nom de la catégorie"
+                                class="w-full p-3 border border-gray-300 rounded-md focus:ring focus:ring-blue-300 focus:outline-none"
+                                required>
+                        </div>
                         <!-- Boutons d'action -->
                         <div class="flex items-center justify-end space-x-4">
                             <!-- Bouton Annuler -->

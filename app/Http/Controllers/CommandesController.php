@@ -99,12 +99,15 @@ class CommandesController extends Controller
             return redirect()->back()->with('error', 'Le panier est vide.');
         }
 
-        // Calcul des frais de livraison
-        $deliveryFee = 0;
-        $totalPrix = $subtotal + $deliveryFee;
+        // Récupérer le sous-total après réduction
+        $newSubtotal = session()->get('newSubtotal', $subtotal); // Utiliser la valeur après réduction de la session
+        $deliveryFee = session()->get('deliveryFee', 0); // Frais de livraison depuis la session
+
+        // Calcul du total avec la réduction et les frais de livraison
+        $totalPrix = $newSubtotal + $deliveryFee;
 
         // Vérifier si le prix total est valide
-        if (!$totalPrix) {
+        if ($totalPrix === 0) {
             return redirect()->back()->with('error', 'Le prix total n\'est pas valide.');
         }
 
@@ -121,7 +124,8 @@ class CommandesController extends Controller
             'payment_intent_id' => null, // L'intent est à ajouter pour CMI si nécessaire
             'status' => 'pending',
             'payment_method' => $request->payment_method,
-            'totalPrix' => $totalPrix, // Ajoutez le totalPrix ici
+            'totalPrix' => $totalPrix, // Utiliser le total avec réduction ici
+            'tel' => $request->tel,
         ]);
 
         // Attacher les produits à la commande
@@ -131,10 +135,11 @@ class CommandesController extends Controller
                 'prix' => isset($item['product']) ? $item['product']['prix'] : $item['prix'],
             ]);
         }
+
+        // Supprimer les éléments du panier après la commande (si l'utilisateur est connecté)
         if (Auth::check()) {
             Carts::where('user_id', Auth::id())->first()->items()->delete();
         } else {
-            // Supprimer les éléments du panier de la session
             session()->forget('cart');
         }
 
@@ -143,28 +148,21 @@ class CommandesController extends Controller
             return redirect()->route('cmi.payment', ['order' => $order->id]);
         }
 
-         // Si le paiement est par carte, rediriger vers la page CMI pour le paiement
-    if ($request->payment_method == 'Credit Card') {
-        return redirect()->route('cmi.payment', ['order' => $order->id]);
-    }
+        // Si paiement à la livraison, enregistrer le paiement dans la table 'paiements' avec le statut 'completed' après le paiement
+        if ($request->payment_method == 'Cash on Delivery') {
+            Paiements::create([
+                'commande_id' => $order->id,
+                'amount' => $totalPrix,
+                'payment_method' => 'Cash on Delivery',
+                'transaction_id' => null,  // Pas de transaction ID pour Cash on Delivery
+                'payment_intent_id' => null, // Pas d'intention de paiement pour Cash on Delivery
+                'status' => 'pending',  // Le paiement est "pending" tant qu'il n'est pas effectué
+                'tel' => $request->tel,
+            ]);
+        }
 
-    // Si paiement à la livraison, enregistrer le paiement dans la table 'paiements' avec le statut 'completed' après le paiement
-    // Enregistrer un paiement pour la commande
-if ($request->payment_method == 'Cash on Delivery') {
-    Paiements::create([
-        'commande_id' => $order->id,
-        'amount' => $totalPrix,
-        'payment_method' => 'Cash on Delivery',
-        'transaction_id' => null,  // Pas de transaction ID pour Cash on Delivery
-        'payment_intent_id' => null, // Pas d'intention de paiement pour Cash on Delivery
-        'status' => 'pending',  // Le paiement est "pending" tant qu'il n'est pas effectué
-    ]);
-}
-
-Mail::to($request->email)->send(new CommandeMail($order));
-
-
-
+        // Envoyer un e-mail de confirmation de commande
+        Mail::to($request->email)->send(new CommandeMail($order));
 
         // Si paiement à la livraison, rediriger vers la page des détails de la commande
         return redirect()->route('commande.details', ['order' => $order->id])
@@ -185,6 +183,7 @@ Mail::to($request->email)->send(new CommandeMail($order));
         'payment_method' => $commande->payment_method,
         'payment_status' => $commande->status,
         'total' => $commande->totalPrix,
+        'tel' => $commande->tel,
     ];
 
     return view('temp.check.commande',[
@@ -207,6 +206,7 @@ public function generatePdf($id)
         'payment_method' => $commande->payment_method,
         'payment_status' => $commande->status,
         'total' => $commande->total,
+        'tel' => $commande->tel,
     ];
 
     $html = view('pdf.commande', compact('commande', 'billingInfo'))->render();

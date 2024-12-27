@@ -109,6 +109,10 @@
                                     <td>{{ $commande->User->name }}</td>
                                 </tr>
                                 <tr>
+                                    <th scope="row">Télephone</th>
+                                    <td>{{ $commande->tel }}</td>
+                                </tr>
+                                <tr>
                                     <th scope="row">Statut</th>
                                     <td>{{ ucfirst($commande->status) }}</td>
                                 </tr>
@@ -160,6 +164,7 @@
                     <div class="card-body">
                         <p><strong>Nom :</strong> {{ $billingInfo['name'] }}</p>
                         <p><strong>Adresse :</strong> {{ $commande->location }}</p>
+                        <p><strong>Télephone :</strong> {{ $commande->tel }}</p>
                         <p><strong>Méthode de Paiement :</strong> {{ $billingInfo['payment_method'] }}</p>
                         <p><strong>Status de Paiement :</strong> {{ $billingInfo['payment_status'] }}</p>
                         <p><strong>Total :</strong> {{ number_format($billingInfo['total'], 2) }} MAD</p>

@@ -80,11 +80,6 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="phone">Téléphone</label>
-                            <input type="text" id="phone" name="tel" class="form-control" value="{{$user->tel}}" required>
-                        </div>
-
-                        <div class="form-group">
                             <label for="image">Image de Profil</label>
                             <input type="file" id="image" name="image" class="form-control">
                             @if(auth()->user()->image)

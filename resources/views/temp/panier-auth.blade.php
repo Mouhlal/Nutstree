@@ -198,6 +198,11 @@
                             <form action="{{ route('apply.promo') }}" method="POST">
                                 @csrf
                                 <input type="text" name="code" placeholder="Entrez votre code promo">
+                                @error('code')
+        <div class="text-red-500 text-sm mt-2">
+            {{ $message }}
+        </div>
+    @enderror
                                 <button type="submit" class="site-btn">APPLIQUER LE CODE</button>
                             </form>
                         </div>
@@ -210,33 +215,34 @@
                         <ul class="mb-6 text-gray-700">
                             <li class="flex justify-between py-2 border-b">
                                 <span class="font-medium">Sous-total</span>
-                                <span>{{ number_format($subtotal, 2) }} MAD</span>
+                                <span>{{ number_format(session('subtotal', $subtotal), 2) }} MAD</span>
                             </li>
-                            {{-- @if(session('discountAmount') && session('discountAmount') > 0)
-                            <li class="flex justify-between py-2 border-b">
-                                <span class="font-medium text-green-600">Réduction appliquée</span>
-                                <span>-{{ number_format(session('discountAmount'), 2) }} MAD</span>
-                            </li>
-                        @endif --}}
-                       {{--  <li class="flex justify-between py-2 border-b">
-                            <span class="font-medium">Sous-total après réduction</span>
-                            <span>{{ number_format($newSubtotal, 2) }} MAD</span>
-                        </li> --}}
+
+                            @if(session('promo_code'))
+                                @if(session('discountAmount') > 0)
+                                    <li class="flex justify-between py-2 border-b">
+                                        <span class="font-medium text-green-600">Réduction appliquée</span>
+                                        <span>-{{ number_format(session('discountAmount'), 2) }} MAD</span>
+                                    </li>
+
+                                    <li class="flex justify-between py-2 border-b">
+                                        <span class="font-medium">Sous-total après réduction</span>
+                                        <span>{{ number_format(session('newSubtotal', $subtotal), 2) }} MAD</span>
+                                    </li>
+                                @endif
+                            @endif
+
                             <li class="flex justify-between py-2 border-b">
                                 <span class="font-medium">Frais de Livraison</span>
-                                <span>{{ number_format($deliveryFee, 2) }} MAD</span>
+                                <span>{{ number_format(session('deliveryFee', $deliveryFee), 2) }} MAD</span>
                             </li>
+
                             <li class="flex justify-between py-2 font-semibold text-lg text-green-600">
                                 <span>Total</span>
-                                <span>{{ number_format($total, 2) }} MAD</span>
+                                <span>{{ number_format(session('total', $total), 2) }} MAD</span>
                             </li>
-                            @if(session('discountAmount'))
-                            <li class="flex justify-between py-2 border-b">
-                                <span class="font-medium text-green-600">Réduction appliquée</span>
-                                <span>-{{ number_format(session('discountAmount'), 2) }} MAD</span>
-                            </li>
-                        @endif
                         </ul>
+
                         <form action="{{ route('update.city') }}" method="POST" class="mb-4">
                             @csrf
                             <label for="city" class="block text-gray-700 font-medium mb-2">Ajustez votre ville</label>

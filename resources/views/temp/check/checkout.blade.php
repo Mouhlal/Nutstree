@@ -119,6 +119,15 @@
                 <h4>Détails de Facturation</h4>
                 <form action="{{ route('commande.store') }}" method="POST">
                     @csrf
+                                            @if ($errors->any())
+                            <div class="alert alert-danger">
+                                <ul>
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
                     <div class="row">
                         <div class="col-lg-8 col-md-6">
                             <input type="hidden" name="cart_items" value="{{ json_encode($cartItems) }}">
@@ -151,13 +160,6 @@
                                 <p>Ville<span>*</span></p>
                                 <input type="text" name="ville" required>
                             </div>
-
-                         {{--    <script>
-                                document.getElementById('ville').addEventListener('input', function(e) {
-                                    e.target.value = e.target.value.replace(/(?:^|\s)\S/g, function(a) { return a.toUpperCase(); });
-                                });
-                            </script> --}}
-
                             <div class="checkout__input">
                                 <p>Code Postal<span>*</span></p>
                                 <input type="text" name="codepostal" required>
@@ -191,14 +193,15 @@
                                     @endforeach
                                 </ul>
                                 <div class="checkout__order__subtotal">
-                                    Sous-total <span>${{ number_format($subtotal, 2) }}</span>
+                                    Sous-total <span>${{ number_format(session('newSubtotal', $subtotal), 2) }}</span>
                                 </div>
                                 <div class="checkout__order__subtotal">
                                     Frais Livraison <span>${{ number_format($deliveryFee, 2) }}</span>
                                 </div>
                                 <div class="checkout__order__total">
-                                    Total <span>${{ number_format($total, 2) }}</span>
+                                    Total <span>${{ number_format(session('total', $subtotal + $deliveryFee), 2) }}</span>
                                 </div>
+
                                 <div class="checkout__input__radio">
                                     <label for="payment_cash">
                                         Paiement à la livraison

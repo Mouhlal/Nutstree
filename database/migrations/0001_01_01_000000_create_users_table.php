@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('pays')->default('maroc')->nullable();
             $table->string('ville')->nullable();
 
-            $table->string( 'tel')->unique()->nullable();
+            //$table->string( 'tel')->unique()->nullable();
             $table->string('codepostal')->nullable()->unique();
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();

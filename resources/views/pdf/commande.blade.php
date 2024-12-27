@@ -28,6 +28,10 @@
             <td>{{ $commande->User->name }}</td>
         </tr>
         <tr>
+            <th>Telephone</th>
+            <td>{{ $commande->tel }}</td>
+        </tr>
+        <tr>
             <th>Statut</th>
             <td>{{ ucfirst($commande->status) }}</td>
         </tr>

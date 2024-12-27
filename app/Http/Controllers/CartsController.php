@@ -95,19 +95,32 @@ class CartsController extends Controller
         $deliveryFee = 0;
         $cartItems = collect();
         $subtotal = 0;
+
         if (Auth::check()) {
             $city = auth()->user()->ville ?? 'casa';
             $deliveryFee = DeliveryFee::where('city', $city)->value('fee') ?? 0;
             $cart = Carts::where('user_id', auth()->id())->with('items.product.firstImage')->first();
             $cartItems = $cart ? $cart->items : collect();
             $subtotal = $cartItems->sum(fn($item) => $item->product ? $item->quantity * $item->product->prix : 0);
-        }
-        $total = $subtotal + $deliveryFee;
-        $allCities = DeliveryFee::pluck('city')->toArray();
-        $currentCity = Auth::check() ? auth()->user()->adresse : session('city', 'casa');
 
-        return view('temp.panier-auth', compact('cartItems', 'categories', 'subtotal', 'deliveryFee', 'total', 'allCities', 'currentCity'));
+            // Mise à jour des sessions
+            session()->put('subtotal', $subtotal);
+            session()->put('deliveryFee', $deliveryFee);
+        }
+        $allCities = DeliveryFee::pluck('city')->toArray();
+        $currentCity = session('selected_city', 'casa');
+
+        $newSubtotal = session('newSubtotal', $subtotal);
+        $discountAmount = session('discountAmount', 0);
+        $total = $newSubtotal + $deliveryFee; // Ajout des frais de livraison
+        session()->put('total', $total);
+
+        return view('temp.panier-auth', compact(
+            'cartItems',
+             'categories','allCities','currentCity',
+             'subtotal', 'deliveryFee', 'total', 'discountAmount', 'newSubtotal'));
     }
+
 
     public function removeFromCart($id)
     {

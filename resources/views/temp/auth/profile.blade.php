@@ -61,14 +61,6 @@
                                 <td>{{ auth()->user()->email }}</td>
                             </tr>
                             <tr>
-                                <th>Téléphone</th>
-                                @if(!empty(auth()->user()->tel))
-                                <td>{{ auth()->user()->tel }}</td>
-                                @else
-                                <td>Non renseigné</td>
-                                @endif
-                            </tr>
-                            <tr>
                                 <th>Ville</th>
                                 @if(!empty(auth()->user()->ville))
                                 <td>{{ auth()->user()->ville }}</td>
@@ -111,9 +103,7 @@
                             <tr>
                                 <td>{{ $order->id }}</td>
                                 <td>{{ $order->created_at->format('d/m/Y') }}</td>
-                                @foreach($commande->products as $product)
-                                <td>{{ number_format($product->pivot->quantity * $product->pivot->prix, 2) }}MAD</td>
-                                @endforeach
+                                <td>{{ number_format($order->totalPrix, 2) }}MAD</td>
                                 <td>
                                     <span class="badge badge-{{ $order->status === 'livrée' ? 'success' : 'warning' }}">
                                         {{ ucfirst($order->status) }}

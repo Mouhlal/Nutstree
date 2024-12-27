@@ -245,7 +245,7 @@
                                                     {{ ucfirst(str_replace('-', ' ', $commande->status)) }}
                                                 </span>
                                             </td>
-                                            <td class="py-3 px-6 text-center">{{ $commande->user->tel }}</td>
+                                            <td class="py-3 px-6 text-center">{{ $commande->tel }}</td>
                                             <td class="py-3 px-6 text-center">{{ $commande->user->adresse }}</td>
                                             <td class="py-3 px-6 text-center">
                                                 <form action="{{ route('dash.commandes.update', $commande->id) }}" method="POST" class="inline-block">

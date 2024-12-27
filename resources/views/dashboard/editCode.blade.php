@@ -198,6 +198,11 @@
                                 <label for="usage_limit" class="block text-gray-700 font-semibold mb-2">Limite d'Utilisation</label>
                                 <input type="number" id="usage_limit" name="usage_limit" value="{{ old('usage_limit', $code->usage_limit) }}" min="1" class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
                             </div>
+
+                            <div class="mb-4">
+                                <label for="usage_limit" class="block text-gray-700 font-semibold mb-2">Minimum d'Achats</label>
+                                <input type="number" id="usage_limit" name="min_order_value" value="{{ old('min_order_value', $code->min_order_value) }}" min="1" class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                            </div>
                         </div>
 
                         <div class="flex justify-between mt-6">

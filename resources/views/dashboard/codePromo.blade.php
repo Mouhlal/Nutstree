@@ -197,6 +197,11 @@
                                 <label for="usage_limit" class="block text-gray-700 font-semibold mb-2">Limite d'Utilisation</label>
                                 <input type="number" id="usage_limit" name="usage_limit" min="1" class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
                             </div>
+
+                            <div class="mb-4">
+                                <label for="usage_limit" class="block text-gray-700 font-semibold mb-2">Minimum D'achats</label>
+                                <input type="number" id="min_order_value" name="min_order_value" min="1" class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                            </div>
                         </div>
 
                         <div class="flex justify-between mt-6">
@@ -211,6 +216,19 @@
                 <div class="w-full mt-6">
                     <div class="w-full mb-8 overflow-hidden rounded-lg shadow-lg bg-white">
                         <div class="w-full overflow-x-auto">
+
+                        @if(session('success'))
+                        <div class="p-4 mb-6 text-green-600 bg-green-100 rounded-md text-center">
+                            {{ session('success') }}
+                        </div>
+                    @endif
+
+
+                    @if(session('catAdd'))
+                    <div class="p-4 mb-6 text-green-600 bg-green-100 rounded-md text-center">
+                        {{ session('catAdd') }}
+                    </div>
+                @endif
                             <table class="w-full table-auto">
                                 <thead class="bg-gray-100 text-gray-900">
                                     <tr class="text-sm font-semibold uppercase tracking-wide border-b border-gray-300">
@@ -219,6 +237,7 @@
                                         <th class="px-6 py-3 text-left">Date Début</th>
                                         <th class="px-6 py-3 text-left">Date Fin</th>
                                         <th class="px-6 py-3 text-left">Limite d'Utilisation</th>
+                                        <th class="px-6 py-3 text-left">Minimum D'achats</th>
                                         <th class="px-6 py-3 text-left">Actions</th>
                                     </tr>
                                 </thead>
@@ -230,6 +249,7 @@
                                         <td class="px-6 py-4 border-t">{{ $code->valid_from }}</td>
                                         <td class="px-6 py-4 border-t">{{ $code->valid_until }}</td>
                                         <td class="px-6 py-4 border-t">{{ $code->usage_limit }}</td>
+                                        <td class="px-6 py-4 border-t">{{ $code->min_order_value }}</td>
                                         <td class="px-6 py-4 border-t flex space-x-4">
                                             <a href="{{ route('codepromo.edit', $code->id) }}" class="text-blue-600 hover:text-blue-900 font-semibold">Modifier</a>
                                             <form action="{{ route('codepromo.destroy', $code->id) }}" method="POST" class="inline">

@@ -8,6 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Produits | NUTSTREE</title>
+    <link rel="shortcut icon" href="{{asset('storage/layouts/logo.jpeg')}}" type="image/x-icon">
 
     <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;900&display=swap" rel="stylesheet">
@@ -219,13 +220,13 @@
                     <div class="filter__item">
                         <div class="row">
                             <div class="col-lg-4 col-md-5">
-                                <div class="filter__sort">
+                               {{--  <div class="filter__sort">
                                     <span>Sort By</span>
                                     <select>
                                         <option value="0">Default</option>
                                         <option value="0">Default</option>
                                     </select>
-                                </div>
+                                </div> --}}
                             </div>
                             <div class="col-lg-4 col-md-4">
                                 <div class="filter__found">

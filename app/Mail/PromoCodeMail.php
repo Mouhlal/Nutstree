@@ -1,10 +1,12 @@
 <?php
 namespace App\Mail;
 
-use App\Models\Code_Promo;
-use App\Models\PromoCode;
+use App\Models\Code_Promo; // Assurez-vous que le modèle est correctement importé
+use App\Models\CodePromo;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Content;
+use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
 class PromoCodeMail extends Mailable
@@ -13,15 +15,46 @@ class PromoCodeMail extends Mailable
 
     public $promoCode;
 
-    public function __construct(Code_Promo $promoCode)
+    /**
+     * Créer une nouvelle instance de message.
+     *
+     * @param CodePromo $promoCode
+     */
+    public function __construct(CodePromo $promoCode)
     {
         $this->promoCode = $promoCode;
     }
 
-    public function build()
+    public function envelope(): Envelope
     {
-        return $this->subject('Votre code promo!')
-                    ->view('emails.promo_code')
-                    ->with(['promoCode' => $this->promoCode->code]);
+        return new Envelope(
+            subject: 'Code Promo Mail',
+        );
+    }
+
+
+    public function content(): Content
+    {
+        $code = $this->promoCode->code;
+        $discount = $this->promoCode->discount;
+        $expiration = $this->promoCode->expires_at;
+        return new Content(
+            view: 'emails.promoCode',
+            with: [
+                'code' => $code,
+                'discount' => $discount,
+                'expiration' => $expiration,
+            ],
+        );
+
+    }
+
+    /**
+     * Construire le message.
+     *
+     */
+    public function attachments(): array
+    {
+        return [];
     }
 }

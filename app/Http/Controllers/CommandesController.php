@@ -161,6 +161,11 @@ if ($request->payment_method == 'Cash on Delivery') {
     ]);
 }
 
+Mail::to($request->email)->send(new CommandeMail($order));
+
+
+
+
         // Si paiement à la livraison, rediriger vers la page des détails de la commande
         return redirect()->route('commande.details', ['order' => $order->id])
                          ->with('success', 'Commande passée avec succès!');

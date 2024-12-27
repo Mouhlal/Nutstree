@@ -59,6 +59,10 @@
                 <i class="fas fa-truck mr-3"></i>
                 Frais Livrasion
             </a>
+            <a href="{{route('codepromo.index')}}" class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item">
+                <i class="fas fa-tag mr-3"></i>
+                Code Promo
+            </a>
             <a href="{{route('dash.forms')}}" class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item">
                 <i class="fas fa-align-left mr-3"></i>
                 Forms
@@ -133,6 +137,10 @@
                 <a href="{{route('delivery_fees.index')}}" class="flex items-center active-nav-link text-white py-4 pl-6 nav-item">
                     <i class="fas fa-truck mr-3"></i>
                     Frais Livrasion
+                </a>
+                <a href="{{route('codepromo.index')}}" class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item">
+                    <i class="fas fa-tag mr-3"></i>
+                    Code Promo
                 </a>
                 <a href="{{route('dash.forms')}}" class="flex items-center text-white opacity-75 hover:opacity-100 py-2 pl-4 nav-item">
                     <i class="fas fa-align-left mr-3"></i>

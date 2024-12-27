@@ -9,6 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     @vite('resources/css/app.css')
+    <link rel="shortcut icon" href="{{asset('storage/layouts/logo.jpeg')}}" type="image/x-icon">
 
     <title>Modifier Profil</title>
 
@@ -61,11 +62,6 @@
                         <div class="form-group">
                             <label for="cin">CIN</label>
                             <input type="text" id="cin" name="cin" class="form-control" value="{{$user->cin}}" >
-                        </div>
-
-                        <div class="form-group">
-                            <label for="address">Adresse</label>
-                            <input type="text" id="address" name="addresse" class="form-control" value="{{$user->adresse}}" >
                         </div>
 
                         <div class="form-group">

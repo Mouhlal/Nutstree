@@ -56,6 +56,10 @@
                 <i class="fas fa-tachometer-alt mr-3"></i>
                 Frais Livrasion
             </a>
+            <a href="{{route('codepromo.index')}}" class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item">
+                <i class="fas fa-tag mr-3"></i>
+                Code Promo
+            </a>
             <a href="{{route('dash.forms')}}" class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item">
                 <i class="fas fa-align-left mr-3"></i>
                 Forms
@@ -127,6 +131,10 @@
                     <i class="fas fa-truck mr-3"></i>
                     Frais Livrasion
                 </a>
+                <a href="{{route('codepromo.index')}}" class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item">
+                    <i class="fas fa-tag mr-3"></i>
+                    Code Promo
+                </a>
                 <a href="{{route('dash.forms')}}" class="flex items-center text-white opacity-75 hover:opacity-100 py-2 pl-4 nav-item">
                     <i class="fas fa-align-left mr-3"></i>
                     Forms
@@ -170,66 +178,102 @@
                         </div>
                     @endif
 
-                    <!-- Formulaire de recherche et filtre -->
+                    @if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
                     <div class="mb-6">
-                        <form action="{{ route('dash.clients') }}" method="GET" class="flex items-center justify-between bg-white shadow-md rounded-lg p-6">
-                            <!-- Recherche par nom ou numéro de client -->
-                            <div class="flex items-center w-full md:w-2/3">
-                                <input type="text" name="search" placeholder="Rechercher par le nom ou numéro de telephone"
+                        <form action="{{ route('dash.clients') }}" method="GET" class="flex flex-wrap items-center bg-white shadow-md rounded-lg p-6 space-y-4 md:space-y-0">
+                            <!-- Input de recherche -->
+                            <div class="w-full md:w-2/3">
+                                <input type="text" name="search" placeholder="Rechercher par le nom ou numéro de téléphone"
                                        class="w-full p-2 border rounded-lg text-gray-700"
                                        value="{{ request('search') }}">
                             </div>
 
-                            <!-- Filtre par statut -->
-                            <div class="ml-4">
-                                <select name="status" class="p-2 border rounded-lg text-gray-700">
+                            <!-- Select pour le filtre -->
+                            <div class="w-full md:w-auto md:ml-4">
+                                <select name="status" class="w-full md:w-auto p-2 border rounded-lg text-gray-700">
                                     <option value="">-- Filtrer par statut --</option>
                                     <option value="0" {{ request('status') === '0' ? 'selected' : '' }}>Bon client</option>
                                     <option value="1" {{ request('status') === '1' ? 'selected' : '' }}>Mauvais Client</option>
                                 </select>
                             </div>
 
-
                             <!-- Bouton de recherche -->
-                            <button type="submit" class="ml-4 bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600">
-                                Rechercher
-                            </button>
+                            <div class="w-full md:w-auto md:ml-4">
+                                <button type="submit" class="w-full md:w-auto bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600">
+                                    Rechercher
+                                </button>
+                            </div>
                         </form>
                     </div>
 
-                    <!-- Table des clients -->
+
                     <div class="bg-white shadow-md rounded-lg overflow-x-auto">
                         <div>
                             <h2 class="text-lg p-5 font-bold text-gray-800 mb-4">Liste des Clients</h2>
-                            <table class="min-w-full bg-white table-auto overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
                                 <thead>
-                                    <tr class="w-full bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
-                                        <th class="py-3 px-6 text-left">N°Client</th>
-                                        <th class="py-3 px-6 text-left">Nom Complet</th>
-                                        <th class="py-3 px-6 text-center">Ville</th>
-                                        <th class="py-3 px-6 text-center">Adresse</th>
-                                        <th class="py-3 px-6 text-center">Tel</th>
-                                        <th class="py-3 px-6 text-center">Status</th>
-                                        <th class="py-3 px-6 text-left">Actions</th>
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            N°Client
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Nom Complet
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Ville
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Tel
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Status
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Modifier Status
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Role
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Modifier Role
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                           Actions
+                                        </th>
                                     </tr>
                                 </thead>
-                                <tbody class="text-gray-600 text-sm font-light">
+                                <tbody class="bg-white divide-y divide-gray-200">
                                     @foreach($users as $client)
-                                        <tr class="border-b border-gray-200 hover:bg-gray-100">
-                                            <td class="py-3 px-6 text-left whitespace-nowrap">{{ $client->id }}</td>
-                                            <td class="py-3 px-6 text-left">{{ $client->name }}</td>
-                                            <td class="py-3 px-6 text-center">{{ $client->ville }}</td>
-                                            <td class="py-3 px-6 text-center">{{ $client->adresse}}</td>
-                                            <td class="py-3 px-6 text-center">{{ $client->tel }}</td>
-                                            <td class="py-3 px-6 text-center">
+                                        <tr>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                {{ $client->id }}
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                {{ $client->name }}
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                {{ $client->ville }}
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                {{ $client->tel }}
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
                                                 <span class="px-3 py-1 rounded-full text-white
                                                     {{ $client->status === 0 ? 'bg-green-500' :
                                                     ($client->status === 1 ? 'bg-red-500' : 'bg-gray-500') }}">
-                                                    {{ $client->status === 0 ? 'Bon client' : 'Drop' }}
+                                                    {{ $client->status === 0 ? 'Bon client' : 'Mauvaix Client' }}
                                                 </span>
-
                                             </td>
-                                            <td class="py-3 px-6 text-center">
+                                            <td class="px-6 py-4 whitespace-nowrap">
                                                 <form action="{{ route('dash.client.update', $client->id) }}" method="POST" class="inline-block">
                                                     @csrf
                                                     @method('PATCH')
@@ -239,6 +283,30 @@
                                                     </select>
                                                     <button type="submit" class="ml-2 bg-blue-500 relative top-1 text-white py-1 px-2 rounded">Mettre à jour</button>
                                                 </form>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <span class="px-3 py-1 rounded-full text-white
+                                                    {{ $client->role == 'user' ? 'bg-green-500' :
+                                                    ($client->role == 'admin' ? 'bg-red-500' :
+                                                    ($client->role == 'superadmin' ? 'bg-blue-500' : 'bg-gray-500')) }}">
+                                                    {{ $client->role == 'user' ? 'Client' :
+                                                    ($client->role == 'admin' ? 'Admin' :
+                                                    ($client->role == 'superadmin' ? 'Super Admin' : 'Inconnu')) }}
+                                                </span>
+                                            </td>
+
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <form action="{{ route('dash.client.role', $client->id) }}" method="POST" class="inline-block">
+                                                    @csrf
+                                                    @method('PATCH')
+                                                    <select name="role" class="ml-2 bg-gray-50 border text-gray-600 py-1 px-2 rounded">
+                                                        <option value="user" {{ $client->role == 'user' ? 'selected' : '' }}>client</option>
+                                                        <option value="admin" {{ $client->role == 'admin' ? 'selected' : '' }}>admin</option>
+                                                    </select>
+                                                    <button type="submit" class="ml-2 bg-blue-500 relative top-1 text-white py-1 px-2 rounded">Mettre à jour</button>
+                                                </form>
+                                            </td>
+                                            <td>
                                                 <form action="{{ route('dash.client.destroy', $client->id) }}" class="inline-block p-2" method="POST">
                                                     @csrf
                                                     @method('DELETE')
@@ -252,7 +320,6 @@
                         </div>
                     </div>
 
-                    <!-- Pagination -->
                     <div class="mt-6">
                         {{ $users->links() }}
                     </div>

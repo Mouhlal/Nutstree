@@ -9,7 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     @vite('resources/css/app.css')
-
+    <link rel="shortcut icon" href="{{asset('storage/layouts/logo.jpeg')}}" type="image/x-icon">
     <title>Mon Profil</title>
 
     <!-- Google Font -->
@@ -72,14 +72,6 @@
                                 <th>Ville</th>
                                 @if(!empty(auth()->user()->ville))
                                 <td>{{ auth()->user()->ville }}</td>
-                                @else
-                                <td>Non renseigné</td>
-                                @endif
-                            </tr>
-                            <tr>
-                                <th>Adresse</th>
-                                @if(!empty(auth()->user()->adresse))
-                                <td>{{ auth()->user()->adresse }}</td>
                                 @else
                                 <td>Non renseigné</td>
                                 @endif

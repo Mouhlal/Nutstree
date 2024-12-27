@@ -11,14 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('code_promos', function (Blueprint $table) {
+        Schema::create('code_promo', function (Blueprint $table) {
             $table->id();
-            $table->string('code')->unique(); // Le code promo
-            $table->decimal('discount', 8, 2); // Le pourcentage de réduction
-            $table->softDeletes();
-            $table->timestamp('expires_at')->nullable(); // Date d'expiration (facultatif)
+            $table->string('code')->unique();
+            $table->decimal('discount', 8, 2);
+            $table->dateTime('valid_from');
+            $table->dateTime('valid_until');
+            $table->integer('usage_limit')->nullable();
+            $table->integer('used_count')->default(0);
+            $table->decimal('min_order_value', 10, 2)->nullable();
+            $table->boolean('status')->default(1);
             $table->timestamps();
         });
+
     }
 
     /**

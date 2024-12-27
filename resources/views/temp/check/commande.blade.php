@@ -8,6 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title> Commande {{$commande->numCom}} </title>
+    <link rel="shortcut icon" href="{{asset('storage/layouts/logo.jpeg')}}" type="image/x-icon">
 
     <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;900&display=swap" rel="stylesheet">
@@ -104,7 +105,7 @@
                                     <td>{{ $commande->created_at }}</td>
                                 </tr>
                                 <tr>
-                                    <th scope="row">Utilisateur</th>
+                                    <th scope="row">Client</th>
                                     <td>{{ $commande->User->name }}</td>
                                 </tr>
                                 <tr>
@@ -165,10 +166,11 @@
                     </div>
                 </div>
             </div>
+            @if (Auth::user()->role == 'admin' || Auth::user()->role =='superadmin')
             <div class="col-lg-12 mt-4">
                 <a href="{{ route('commande.pdf', $commande->id) }}" class="btn btn-primary">Télécharger la Commande</a>
             </div>
-
+            @endif
 
         </div>
     </div>

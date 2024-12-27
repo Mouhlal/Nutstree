@@ -13,6 +13,7 @@
 
     <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;900&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" href="{{asset('storage/layouts/logo.jpeg')}}" type="image/x-icon">
 
     <!-- Css Styles -->
     <link rel="stylesheet" href="/home/css/bootstrap.min.css" type="text/css">
@@ -99,6 +100,15 @@
     {{ session('error') }}
     </div>
     @endif
+    @if ($errors->any())
+    <div class="alert alert-danger text-center">
+        <ul class="list-unstyled">
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
     <!-- Breadcrumb Section Begin -->
     <section class="breadcrumb-section set-bg" data-setbg="https://media.istockphoto.com/id/523458571/fr/photo/des-assortiments-de-fruits-secs-bio.jpg?s=612x612&w=0&k=20&c=QTJNyWYJSaUnU4hqmxr7BTjRdjaj4QblLQyx2UuAplM=">
         <div class="container">
@@ -125,7 +135,6 @@
                     <div class="shoping__cart__table">
                         <form action="{{ route('cart.updateMultiple') }}" method="POST">
                             @csrf
-                            @method('PATCH')
                             <table>
                                 <thead>
                                     <tr>
@@ -186,12 +195,14 @@
                     <div class="shoping__continue">
                         <div class="shoping__discount">
                             <h5>Codes de réduction</h5>
-                            <form action="#">
-                                <input type="text" placeholder="Entrez votre code promo">
+                            <form action="{{ route('apply.promo') }}" method="POST">
+                                @csrf
+                                <input type="text" name="code" placeholder="Entrez votre code promo">
                                 <button type="submit" class="site-btn">APPLIQUER LE CODE</button>
                             </form>
                         </div>
                     </div>
+
                 </div>
                 <div class="col-lg-6">
                     <div class="shoping__checkout bg-white p-6 rounded-lg shadow-md border border-gray-200">
@@ -201,6 +212,16 @@
                                 <span class="font-medium">Sous-total</span>
                                 <span>{{ number_format($subtotal, 2) }} MAD</span>
                             </li>
+                            {{-- @if(session('discountAmount') && session('discountAmount') > 0)
+                            <li class="flex justify-between py-2 border-b">
+                                <span class="font-medium text-green-600">Réduction appliquée</span>
+                                <span>-{{ number_format(session('discountAmount'), 2) }} MAD</span>
+                            </li>
+                        @endif --}}
+                       {{--  <li class="flex justify-between py-2 border-b">
+                            <span class="font-medium">Sous-total après réduction</span>
+                            <span>{{ number_format($newSubtotal, 2) }} MAD</span>
+                        </li> --}}
                             <li class="flex justify-between py-2 border-b">
                                 <span class="font-medium">Frais de Livraison</span>
                                 <span>{{ number_format($deliveryFee, 2) }} MAD</span>
@@ -209,6 +230,12 @@
                                 <span>Total</span>
                                 <span>{{ number_format($total, 2) }} MAD</span>
                             </li>
+                            @if(session('discountAmount'))
+                            <li class="flex justify-between py-2 border-b">
+                                <span class="font-medium text-green-600">Réduction appliquée</span>
+                                <span>-{{ number_format(session('discountAmount'), 2) }} MAD</span>
+                            </li>
+                        @endif
                         </ul>
                         <form action="{{ route('update.city') }}" method="POST" class="mb-4">
                             @csrf

@@ -36,9 +36,13 @@ class ProduitsController extends Controller
     }
 
     public function add(){
-        $categ = Categorie::all();
+        $categories = Categorie::all();
+        $cart = Carts::where('user_id', auth()->id())->first();
+        $cartItems = $cart ? $cart->items->load(['product', 'product.firstImage']) : collect();
         return view('produits.add',[
-            'categ' => $categ
+            'categories' => $categories,
+            'cart' => $cart,
+            'cartItems' => $cartItems,
         ]);
     }
     public function store(Request $request) {
@@ -89,9 +93,15 @@ class ProduitsController extends Controller
     public function edit($id){
         $produit = Produits::findOrFail($id);
         $categ = Categorie::all();
+        $categories = Categorie::all();
+        $cart = Carts::where('user_id', auth()->id())->first();
+        $cartItems = $cart ? $cart->items->load(['product', 'product.firstImage']) : collect();
         return view('produits.edit',[
             'produit' => $produit,
-            'categ' => $categ
+            'categ' => $categ,
+            'categories' => $categories,
+            'cart' => $cart,
+            'cartItems' => $cartItems,
             ]);
     }
     public function update(Request $request, $id)

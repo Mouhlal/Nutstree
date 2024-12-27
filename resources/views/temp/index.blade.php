@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>NUTSTREE </title>
-
+    <link rel="shortcut icon" href="{{asset('storage/layouts/logo.jpeg')}}" type="image/x-icon">
     <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;900&display=swap" rel="stylesheet">
     <!-- Css Styles -->
@@ -145,8 +145,11 @@
             <div class="row">
                 <div class="col-lg-6 col-md-6 col-sm-6">
                     <div class="banner__pic">
-                        <img src="https://img.freepik.com/photos-gratuite/vue-gros-plan-noix-cinq-bols-bruns-noix-au-centre-du-tableau-blanc_140725-111442.jpg?t=st=1734928465~exp=1734932065~hmac=54c27401d948a200bdd672321d5322be7319eda9feef29b3014dbeb5b2ff8dd2&w=1800" alt="">
+                        <a href="{{ route('cart.sendPromo') }}">
+                            <img src="https://img.freepik.com/photos-gratuite/vue-gros-plan-noix-cinq-bols-bruns-noix-au-centre-du-tableau-blanc_140725-111442.jpg?t=st=1734928465~exp=1734932065~hmac=54c27401d948a200bdd672321d5322be7319eda9feef29b3014dbeb5b2ff8dd2&w=1800" alt="">
+                        </a>
                     </div>
+
                 </div>
                 <div class="col-lg-6 col-md-6 col-sm-6">
                     <div class="banner__pic">

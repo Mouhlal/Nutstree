@@ -19,6 +19,7 @@ class CommandeMail extends Mailable
      */
     public function __construct(private Commandes $commandes)
     {
+        $this->commandes = $commandes;
     }
 
     /**
@@ -39,12 +40,14 @@ class CommandeMail extends Mailable
         $numCom = $this->commandes->numCom ;
         $dateCom = $this->commandes->dateCom;
         $total = $this->commandes->totalPrix;
+        $location = $this->commandes->location;
         return new Content(
             view: 'emails.commandes',
             with: [
                 'numCom' => $numCom,
                 'dateCom' => $dateCom,
                 'total' => $total,
+                'location' => $location,
                 ],
         );
     }

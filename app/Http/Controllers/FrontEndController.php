@@ -140,6 +140,19 @@ class FrontEndController extends Controller
         'search' => $search,
     ]);
 }
+public function update(Request $request,$id)
+{
+
+    $request->validate([
+        'role' => 'required|in:user,admin',
+    ]);
+
+    $user = User::findOrFail($id);
+        $user->role = $request->input('role');
+        $user->save();
+
+    return redirect()->back()->with('success', 'Role updated successfully.');
+}
 
     public function updateStatusClient(Request $request, $id)
     {

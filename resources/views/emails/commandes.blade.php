@@ -13,7 +13,7 @@
     <ul>
         <li>Commande : #{{$numCom}}</li>
         <li>Date : {{ $dateCom }}</li>
-        <li>Total Prix : {{ $total }}</li>
+        <li>Total Prix : {{ $total }} MAD</li>
         </ul>
         <p>Vous allez être redirigé vers la page d'accueil dans quelques
             secondes.</p>

@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\CartsController;
 use App\Http\Controllers\CategorieController;
+use App\Http\Controllers\CodePromoController;
 use App\Http\Controllers\CommandesController;
 use App\Http\Controllers\DeliveryFeeController;
 use App\Http\Controllers\FrontEndController;
@@ -10,6 +11,8 @@ use App\Http\Controllers\PaiementsController;
 use App\Http\Controllers\ProduitsController;
 use App\Http\Controllers\ReviewsController;
 use App\Http\Controllers\UserController;
+use App\Models\Code_Promo;
+use App\Models\CodePromo;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -29,6 +32,7 @@ Route::controller(FrontEndController::class)->group(function () {
     Route::delete('/dashboard/client/{id}','destroyUser')->name('dash.client.destroy')->middleware(['role:superadmin']);
     Route::patch('/dashboard/client/update/{id}','updateStatusClient')->name('dash.client.update')->middleware(['role:superadmin']);
 
+    Route::patch('/dashboard/client/role/{id}','update')->name('dash.client.role')->middleware(['role:superadmin']);
 
 });
 
@@ -39,16 +43,24 @@ Route::controller(PaiementsController::class)->group(function(){
 Route::controller(CommandesController::class)->group(function(){
     Route::get('/checkout', 'checkout')->name('pay.check');
     Route::post('/commande', 'store')->name('commande.store');
-    Route::get('/commandes', 'index')->name('commandes.index');
     Route::post('/commandes/{commande}/cancel', 'cancel')->name('commandes.cancel');
     Route::delete('/orders/{id}',  'deleteOrder')->name('orders.delete');
 
 });
 Route::get('/commande/{order}/details', [CommandesController::class, 'details'])->name('commande.details');
 Route::get('/cmi/payment/{order}', [CommandesController::class, 'index'])->name('cmi.payment');
-Route::get('/commande/{id}/pdf', [CommandesController::class, 'generatePdf'])->name('commande.pdf');
+Route::get('/commande/{id}/pdf', [CommandesController::class, 'generatePdf'])->name('commande.pdf')->middleware(['role:admin,superadmin']);
 
 
+
+Route::get('/CodePromo', [CodePromoController::class, 'index'])->name('codepromo.index');
+Route::get('/CodePromo/create', [CodePromoController::class, 'create'])->name('codepromo.create');
+Route::post('/CodePromo/store', [CodePromoController::class, 'store'])->name('codepromo.store');
+Route::get('/CodePromo/{id}/edit', [CodePromoController::class, 'edit'])->name('codepromo.edit');
+Route::post('/CodePromo/{id}', [CodePromoController::class, 'update'])->name('codepromo.update');
+Route::delete('/CodePromo/{id}', [CodePromoController::class, 'destroy'])->name('codepromo.destroy');
+Route::get('/cart/send-promo', [CodePromoController::class, 'sendPromo'])->name('cart.sendPromo');
+Route::post('/cart/apply-promo', [CodePromoController::class, 'applyPromo'])->name('apply.promo');
 
 
 
@@ -59,9 +71,9 @@ Route::controller(UserController::class)->group(function(){
     Route::get('/register','RegisterForm')->name('auth.showRegister');
     Route::post('/register','Register')->name('auth.register');
     Route::get('/logout','logout')->name('auth.logout');
-    Route::get('/profile/{id}','profile')->name('auth.profile');
-    Route::get('/profile/edit/{id}','editp')->name('auth.editp');
-    Route::post('/profile/edit/{id}','updatep')->name('auth.updatep');
+    Route::get('/profile/{id}','profile')->name('auth.profile')->middleware('auth');
+    Route::get('/profile/edit/{id}','editp')->name('auth.editp')->middleware('auth');
+    Route::post('/profile/edit/{id}','updatep')->name('auth.updatep')->middleware('auth');
 });
 
 Route::get('auth/google', [GoogleController::class, 'redirectToGoogle'])->name('auth.google');
@@ -90,25 +102,25 @@ Route::controller(ProduitsController::class)->group(function(){
 
 Route::controller(CartsController::class)->group(function(){
     Route::post('/cart/add/{productId}','addToCart')->name('cart.add');
-    Route::patch('/cart/update-multiple',  'updateMultiple')->name('cart.updateMultiple');
+    Route::post('/cart/update-multiple',  'updateMultiple')->name('cart.updateMultiple');
     Route::get('/cart/remove/{id}','removeFromCart')->name('cart.remove');
     Route::post('/update-city',  'updateCity')->name('update.city');
     Route::post('/cart/session/update',  'updateQuantitySession')->name('cart.updateSession');
     Route::get('/cart/session/remove/{id}',  'supprimerItems')->name('cart.dropsession');
-
 });
+
+
+
 
 Route::get('/cart', function () {
     if (Auth::check()) {
         return app(CartsController::class)->showCart();
     } else {
-        return app(CartsController::class)->showCartSession();
+        return app(CartsController::class)->syncSessionCart();
     }
 })->name('cart.show');
 
-Route::get('/debug-cart', function () {
-    dd(session('cart', []));
-});
+
 
 Route::post('/produits/{id}/reviews', [ReviewsController::class, 'storeReview'])->name('reviews.store');
 

@@ -6,10 +6,26 @@
         <title>Modifier {{ $produit->nom }} - Nutstree</title>
         @vite('resources/css/app.css')
         <link rel="shortcut icon" href="{{ asset('storage/layouts/logo.jpeg') }}" type="image/x-icon">
-    </head>
-<body class="bg-gray-50 text-gray-800 font-sans">
+        <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;900&display=swap" rel="stylesheet">
+        <!-- Css Styles -->
+        <link rel="stylesheet" href="/home/css/bootstrap.min.css" type="text/css">
+        <link rel="stylesheet" href="/home/css/font-awesome.min.css" type="text/css">
+        <link rel="stylesheet" href="/home/css/elegant-icons.css" type="text/css">
+        <link rel="stylesheet" href="/home/css/nice-select.css" type="text/css">
+        <link rel="stylesheet" href="/home/css/jquery-ui.min.css" type="text/css">
+        <link rel="stylesheet" href="/home/css/owl.carousel.min.css" type="text/css">
+        <link rel="stylesheet" href="/home/css/slicknav.min.css" type="text/css">
+        <link rel="stylesheet" href="/home/css/style.css" type="text/css">
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.theme.default.min.css">
 
-    @include('layouts.nav')
+    </head>
+<body>
+
+    @include('temp.layouts.Humberger')
+
+    @include('temp.layouts.header')
 
     <main class="container mx-auto p-6">
         <h1 class="text-4xl font-bold text-green-700 mb-6">Modifier le Produit</h1>
@@ -51,7 +67,7 @@
                     <select
                         id="categorie_id"
                         name="categorie_id"
-                        class="w-full mt-2 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none"
+                        class="w-full mt-2  border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none"
                         required>
                         @foreach($categ as $categorie)
                             <option
@@ -62,9 +78,10 @@
                         @endforeach
                     </select>
                 </div>
+
                 <div>
                     <label for="mesure" class="block text-lg font-medium text-gray-700">Mesure</label>
-                    <select name="mesure" id="mesure" class="w-full p-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    <select name="mesure" id="mesure" class="w-full  border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
                         <option value="kg" {{ old('mesure', $produit->mesure ?? 'kg') == 'kg' ? 'selected' : '' }}>Kg</option>
                         <option value="g" {{ old('mesure', $produit->mesure ?? 'kg') == 'g' ? 'selected' : '' }}>Gramme</option>
                         <option value="L" {{ old('mesure', $produit->mesure ?? 'kg') == 'L' ? 'selected' : '' }}>Litre</option>
@@ -94,10 +111,9 @@
                         value="{{ $produit->discount }}"
                         step="0.01" min="0" max="100"
                         class="w-full mt-2 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none"
-                        placeholder="Entrez la quantité"
+                        placeholder="Entrez le rabais"
                         >
                 </div>
-
 
                 <!-- Image -->
                 <div class="col-span-1 md:col-span-2">
@@ -112,16 +128,14 @@
 
             <div class="mt-6">
                 <label for="status" class="block text-lg font-medium text-gray-700">Status</label>
-                <select name="status" id="status" class="w-full p-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-                    <option value="" selected disabled>Choisissez le statut</option>
-                    <option value="normal">Normal</option>
-                    <option value="new">Nouveau</option>
-                    <option value="hot">Chaud</option>
-                    <option value="best">Meilleur</option>
+                <select name="status" id="status" class="w-full  border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    <option value="normal" {{ old('status', $produit->status) == 'normal' ? 'selected' : '' }}>Normal</option>
+                    <option value="new" {{ old('status', $produit->status) == 'new' ? 'selected' : '' }}>Nouveau</option>
+                    <option value="hot" {{ old('status', $produit->status) == 'hot' ? 'selected' : '' }}>Chaud</option>
+                    <option value="best" {{ old('status', $produit->status) == 'best' ? 'selected' : '' }}>Meilleur</option>
                 </select>
             </div>
-
-
+<br>
             <!-- Description -->
             <div class="mt-6">
                 <label for="description" class="block text-lg font-medium text-gray-700">Description</label>
@@ -133,7 +147,7 @@
                     placeholder="Entrez une description">{{ $produit->description }}</textarea>
             </div>
 
-            <!-- Boutons d'action -->
+            <!-- Action Buttons -->
             <div class="mt-8 flex justify-between items-center">
                 <a href="{{ route('dash.tables') }}" class="px-6 py-3 bg-gray-300 text-gray-700 rounded-lg shadow hover:bg-gray-400 transition duration-300">
                     Annuler
@@ -145,13 +159,19 @@
         </form>
     </main>
 
-    @include('layouts.footer')
+    @include('temp.layouts.footer')
 
 </body>
-<script>
-    document.getElementById('menu-toggle').addEventListener('click', () => {
-        const menu = document.getElementById('menu');
-        menu.classList.toggle('hidden');
-    });
-</script>
+
+<script src="/home/js/jquery-3.3.1.min.js"></script>
+<script src="/home/js/bootstrap.min.js"></script>
+<script src="/home/js/jquery.nice-select.min.js"></script>
+<script src="/home/js/jquery-ui.min.js"></script>
+<script src="/home/js/jquery.slicknav.js"></script>
+<script src="/home/js/mixitup.min.js"></script>
+<script src="/home/js/owl.carousel.min.js"></script>
+<script src="/home/js/main.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.min.js"></script>
+
 </html>

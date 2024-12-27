@@ -11,7 +11,7 @@
     </style>
 </head>
 <body>
-    <h1>Détails de la Commande N°{{ $commande->numCom }}</h1>
+    <h1>Commande N°{{ $commande->numCom }}</h1>
 
     <h3>Informations Commande</h3>
     <table>
@@ -24,7 +24,7 @@
             <td>{{ $commande->created_at }}</td>
         </tr>
         <tr>
-            <th>Utilisateur</th>
+            <th>Client</th>
             <td>{{ $commande->User->name }}</td>
         </tr>
         <tr>

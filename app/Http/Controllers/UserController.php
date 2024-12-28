@@ -61,7 +61,7 @@ class UserController extends Controller
         //$att['image'] = $request->file('image')->store('users','public');
         $att['password'] = Hash::make($request->password);
         User::create($att);
-        return redirect()->route('auth.showLogin')->with('register','Création du compte avec succes');
+        return redirect()->route('login')->with('register','Création du compte avec succes');
     }
 
     public function profile($id)

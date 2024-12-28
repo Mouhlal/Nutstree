@@ -45,7 +45,7 @@
         </div>
         <div class="header__top__right__auth">
             @guest
-            <a href="{{route('auth.showLogin')}}"><i class="fa fa-user"></i> Login</a>
+            <a href="{{route('login')}}"><i class="fa fa-user"></i> Login</a>
             @endguest
             @auth
             <a href="{{route('auth.logout')}}"><i class="fa fa-sign-out"></i> Deconnexion</a>

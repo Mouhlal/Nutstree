@@ -29,7 +29,7 @@
                         </div>
                         <div class="header__top__right__auth">
                             @guest
-                            <a href="{{route('auth.showLogin')}}"><i class="fa fa-user"></i> Login</a>
+                            <a href="{{route('login')}}"><i class="fa fa-user"></i> Login</a>
                             @endguest
                             @auth
                             <a href="{{route('auth.logout')}}"><i class="fa fa-sign-out"></i> Deconnexion</a>
@@ -89,7 +89,7 @@
                         </li>
                         <li>
                             <!-- User Icon and Link -->
-                            <a href="{{ auth()->check() ? route('auth.profile', auth()->user()->id) : route('auth.showLogin') }}">
+                            <a href="{{ auth()->check() ? route('auth.profile', auth()->user()->id) : route('login') }}">
                                 <i class="fa fa-user text-gray-500 text-xl"></i>
                             </a>
                         </li>

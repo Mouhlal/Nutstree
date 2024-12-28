@@ -11,8 +11,6 @@ use App\Http\Controllers\PaiementsController;
 use App\Http\Controllers\ProduitsController;
 use App\Http\Controllers\ReviewsController;
 use App\Http\Controllers\UserController;
-use App\Models\Code_Promo;
-use App\Models\CodePromo;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -41,8 +39,8 @@ Route::controller(PaiementsController::class)->group(function(){
 
 
 Route::controller(CommandesController::class)->group(function(){
-    Route::get('/checkout', 'checkout')->name('pay.check');
-    Route::post('/commande', 'store')->name('commande.store');
+    Route::get('/checkout', 'checkout')->name('pay.check')->middleware('auth');
+    Route::post('/commande', 'store')->name('commande.store')->middleware('auth');
     Route::post('/commandes/{commande}/cancel', 'cancel')->name('commandes.cancel');
     Route::delete('/orders/{id}',  'deleteOrder')->name('orders.delete');
 
@@ -66,7 +64,7 @@ Route::post('/cart/apply-promo', [CodePromoController::class, 'applyPromo'])->na
 
 
 Route::controller(UserController::class)->group(function(){
-    Route::get('/login', 'showLogin')->name('auth.showLogin');
+    Route::get('/login', 'showLogin')->name('login');
     Route::post('/login','login')->name('auth.login');
     Route::get('/register','RegisterForm')->name('auth.showRegister');
     Route::post('/register','Register')->name('auth.register');
@@ -107,19 +105,9 @@ Route::controller(CartsController::class)->group(function(){
     Route::post('/update-city',  'updateCity')->name('update.city');
     Route::post('/cart/session/update',  'updateQuantitySession')->name('cart.updateSession');
     Route::get('/cart/session/remove/{id}',  'supprimerItems')->name('cart.dropsession');
+    Route::get('/cart','showCart' )->name('cart.show');
+
 });
-
-
-
-
-Route::get('/cart', function () {
-    if (Auth::check()) {
-        return app(CartsController::class)->showCart();
-    } else {
-        return app(CartsController::class)->syncSessionCart();
-    }
-})->name('cart.show');
-
 
 
 Route::post('/produits/{id}/reviews', [ReviewsController::class, 'storeReview'])->name('reviews.store');

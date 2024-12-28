@@ -1,4 +1,3 @@
-@auth
 <!DOCTYPE html>
 <html lang="en">
 
@@ -146,37 +145,78 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @forelse($cartItems as $item)
-                                        <tr>
-                                            <td class="shoping__cart__item md:flex md:flex-nowrap">
-                                                <img src="{{ asset('storage/' . ($item->product->firstImage?->images ?? 'default-image.jpg')) }}" class="rounded-md w-48 shadow-md">
-                                                <h4 class="text-gray-800 font-bold">{{ $item['name'] ?? $item->product->nom }}</h4>
-                                            </td>
-                                            <td class="shoping__cart__price">
-                                                {{ number_format($item['price'] ?? $item->product->prix, 2) }} DH
-                                            </td>
-                                            <td class="shoping__cart__quantity">
-                                                <div class="quantity">
-                                                    <div class="pro-qty">
-                                                        <input type="number" name="quantity[{{ $item->id }}]" value="{{ $item['quantity'] ?? $item->quantity }}" min="1" class="update-quantity">
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td class="shoping__cart__total">
-                                                {{ number_format(($item['price'] ?? $item->product->prix) * ($item['quantity'] ?? $item->quantity), 2) }} DH
-                                            </td>
-                                            <td class="shoping__cart__item__close">
-                                                <a class="remove-item" data-item-id="{{ $item['id'] }}"
-                                                onclick="removeItem(event, '{{ route('cart.remove', $item['id']) }}')">
-                                                    <span class="icon_close"></span>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                    @empty
+                                    {{-- Si l'utilisateur est connecté et a des articles dans le panier --}}
+                                    @if(auth()->check() && $cartItems->count() > 0)
+                                        @foreach($cartItems as $item)
+                                            <tr>
+                                                @if($item->product)
+                                                    <td class="shoping__cart__item md:flex md:flex-nowrap">
+                                                        <img src="{{ asset('storage/' . ($item->product->firstImage?->images ?? 'default-image.jpg')) }}"
+                                                             class="rounded-md w-48 shadow-md">
+                                                        <h4 class="text-gray-800 font-bold">{{ $item['name'] ?? $item->product->nom }}</h4>
+                                                    </td>
+                                                    <td class="shoping__cart__price">
+                                                        {{ number_format($item['price'] ?? $item->product->prix, 2) }} DH
+                                                    </td>
+                                                    <td class="shoping__cart__quantity">
+                                                        <div class="quantity">
+                                                            <div class="pro-qty">
+                                                                <input type="number" name="quantity[{{ $item->id }}]"
+                                                                       value="{{ $item['quantity'] ?? $item->quantity }}" min="1" class="update-quantity">
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td class="shoping__cart__total">
+                                                        {{ number_format(($item['price'] ?? $item->product->prix) * ($item['quantity'] ?? $item->quantity), 2) }} DH
+                                                    </td>
+                                                    <td class="shoping__cart__item__close">
+                                                        <a class="remove-item" data-item-id="{{ $item['id'] }}"
+                                                           onclick="removeItem(event, '{{ route('cart.remove', $item['id']) }}')">
+                                                            <span class="icon_close"></span>
+                                                        </a>
+                                                    </td>
+                                                @else
+                                                    <td colspan="5" class="text-center">Votre panier est vide !</td>
+                                                @endif
+                                            </tr>
+                                        @endforeach
+                                    @elseif(!auth()->check() && session('cart'))
+                                        {{-- Si l'utilisateur n'est pas connecté mais utilise une session pour le panier --}}
+                                        @foreach(session('cart') as $item)
+                                            <tr>
+                                                    <td class="shoping__cart__item md:flex md:flex-nowrap">
+                                                        <img src="{{ asset('storage/' . ($item['image']->images ?? 'default-image.jpg')) }}"
+                                                        alt="{{ $item['name'] }}" class="rounded-md w-48 shadow-md">
+                                                        <h4 class="text-gray-800 font-bold">{{ $item['name'] ?? $item->product->nom }}</h4>
+                                                    </td>
+                                                    <td class="shoping__cart__price">
+                                                        {{ number_format($item['price'] ?? $item->product->prix, 2) }} DH
+                                                    </td>
+                                                    <td class="shoping__cart__quantity">
+                                                        <div class="quantity">
+                                                            <div class="pro-qty">
+                                                                <input type="number" name="quantity[{{ $item['id'] }}]" value="{{ $item['quantity'] }}" min="1" class="update-quantity">
+
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td class="shoping__cart__total">
+                                                        {{ number_format(($item['price'] ?? $item->product->prix) * ($item['quantity'] ?? $item->quantity), 2) }} DH
+                                                    </td>
+                                                    <td class="shoping__cart__item__close">
+                                                        <a class="remove-item" data-item-id="{{ $item['id'] }}"
+                                                           onclick="removeItem(event, '{{ route('cart.remove', $item['id']) }}')">
+                                                            <span class="icon_close"></span>
+                                                        </a>
+                                                    </td>
+
+                                            </tr>
+                                        @endforeach
+                                    @else
                                         <tr>
                                             <td colspan="5" class="text-center">Votre panier est vide !</td>
                                         </tr>
-                                    @endforelse
+                                    @endif
                                 </tbody>
                             </table>
 
@@ -198,11 +238,6 @@
                             <form action="{{ route('apply.promo') }}" method="POST">
                                 @csrf
                                 <input type="text" name="code" placeholder="Entrez votre code promo">
-                                @error('code')
-        <div class="text-red-500 text-sm mt-2">
-            {{ $message }}
-        </div>
-    @enderror
                                 <button type="submit" class="site-btn">APPLIQUER LE CODE</button>
                             </form>
                         </div>
@@ -213,10 +248,26 @@
                     <div class="shoping__checkout bg-white p-6 rounded-lg shadow-md border border-gray-200">
                         <h5 class="text-2xl font-bold text-gray-800 mb-6">Total du Panier</h5>
                         <ul class="mb-6 text-gray-700">
-                            <li class="flex justify-between py-2 border-b">
-                                <span class="font-medium">Sous-total</span>
-                                <span>{{ number_format(session('subtotal', $subtotal), 2) }} MAD</span>
-                            </li>
+                            @php
+                            $subtotal = 0;
+
+                            if (auth()->check()) {
+                                // Authenticated user: Calculate subtotal from the database cart
+                                $subtotal = auth()->user()->cartItems->sum(function ($item) {
+                                    return $item->quantity * $item->product->prix;
+                                });
+                            } elseif (session('cart')) {
+                                // Guest user: Calculate subtotal from the session cart
+                                foreach (session('cart') as $item) {
+                                    $subtotal += ($item['quantity'] ?? 1) * ($item['price'] ?? 0);
+                                }
+                            }
+                        @endphp
+
+                        <li class="flex justify-between py-2 border-b">
+                            <span class="font-medium">Sous-total</span>
+                            <span>{{ number_format($subtotal, 2) }} MAD</span>
+                        </li>
 
                             @if(session('promo_code'))
                                 @if(session('discountAmount') > 0)
@@ -250,9 +301,9 @@
                                 <select name="city" id="city" class="appearance-none w-full border border-gray-300 rounded-md focus:ring focus:ring-green-300 focus:outline-none bg-white text-gray-700" required>
                                     <option value="" disabled selected>Veuillez sélectionner une ville</option>
                                     @foreach($allCities as $availableCity)
-                                        <option value="{{ $availableCity }}" {{ $availableCity === $currentCity ? 'selected' : '' }}>
-                                            {{ ucfirst($availableCity) }}
-                                        </option>
+                                    <option value="{{ $availableCity }}" {{ $availableCity == $currentCity ? 'selected' : '' }}>
+                                        {{ ucfirst($availableCity) }}
+                                    </option>
                                     @endforeach
                                 </select>
                                 <button type="submit" class="px-4 py-3 bg-green-600 text-white font-semibold rounded-md shadow hover:bg-green-700 transition duration-200">Ajuster</button>
@@ -314,4 +365,4 @@
 
 </html>
 
-@endauth
+

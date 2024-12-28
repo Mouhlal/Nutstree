@@ -93,50 +93,102 @@ class CartsController extends Controller
     {
         $categories = Categorie::all();
         $deliveryFee = 0;
-        $cartItems = collect();
-        $subtotal = 0;
+        $cartItems = collect(); // For authenticated users
+        $sessionCartItems = collect(); // For unauthenticated users
+        $subtotal = 0; // Subtotal for authenticated users
+        $sessionSubtotal = 0; // Subtotal for unauthenticated users
 
+        // Check if the user is authenticated
         if (Auth::check()) {
-            $city = auth()->user()->ville ?? 'casa';
-            $deliveryFee = DeliveryFee::where('city', $city)->value('fee') ?? 0;
-            $cart = Carts::where('user_id', auth()->id())->with('items.product.firstImage')->first();
-            $cartItems = $cart ? $cart->items : collect();
-            $subtotal = $cartItems->sum(fn($item) => $item->product ? $item->quantity * $item->product->prix : 0);
+            $city = auth()->user()->ville ?? 'casa'; // User's city, default to 'casa'
+            $deliveryFee = DeliveryFee::where('city', $city)->value('fee') ?? 0; // Get delivery fee based on the city
 
-            // Mise à jour des sessions
+            // Get the user's cart (if any)
+            $cart = Carts::where('user_id', auth()->id())->with('items.product.firstImage')->first();
+            $cartItems = $cart ? $cart->items : collect(); // Get items in the authenticated user's cart
+            $subtotal = $cartItems->sum(fn($item) => $item->product ? $item->quantity * $item->product->prix : 0); // Calculate the subtotal
+
+            // Save the subtotal and delivery fee to session for future use
             session()->put('subtotal', $subtotal);
             session()->put('deliveryFee', $deliveryFee);
         }
-        $allCities = DeliveryFee::pluck('city')->toArray();
-        $currentCity = session('selected_city', 'casa');
 
-        $newSubtotal = session('newSubtotal', $subtotal);
-        $discountAmount = session('discountAmount', 0);
-        $total = $newSubtotal + $deliveryFee; // Ajout des frais de livraison
+        // For unauthenticated users, handle cart stored in session
+        $sessionCart = session('cart', []);
+        if (!empty($sessionCart)) {
+            $sessionCartItems = collect($sessionCart); // Cart items stored in session
+            $sessionSubtotal = $sessionCartItems->sum(fn($item) => $item['price'] * $item['quantity']); // Calculate subtotal for session cart
+        }
+
+        // Get the list of all available cities and the current selected city
+        $allCities = DeliveryFee::pluck('city')->toArray();
+        $currentCity = session('selected_city', 'casa'); // Get the current selected city from session or default to 'casa'
+
+        // Calculate the new subtotal for authenticated users only (do not include session subtotal here)
+        $newSubtotal = $subtotal; // Use only the authenticated user's subtotal
+        $discountAmount = session('discountAmount', 0); // Get any discount amount if applicable
+        $total = $newSubtotal + $deliveryFee; // Calculate the total for authenticated users only
+
+        // Save the total to the session
         session()->put('total', $total);
 
+        // Debugging output (you can remove this later)
+       
+
+        // Return the view with all necessary data
         return view('temp.panier-auth', compact(
             'cartItems',
-             'categories','allCities','currentCity',
-             'subtotal', 'deliveryFee', 'total', 'discountAmount', 'newSubtotal'));
+            'sessionCartItems',
+            'categories',
+            'allCities',
+            'currentCity',
+            'subtotal',
+            'sessionSubtotal',
+            'deliveryFee',
+            'total',
+            'discountAmount',
+            'newSubtotal'
+        ));
     }
-
 
     public function removeFromCart($id)
-    {
+{
+    if (auth()->check()) {
+        // Authenticated user: Remove from database cart
         $cartItem = CartItems::findOrFail($id);
+
+        if ($cartItem->cart->user_id !== auth()->id()) {
+            return redirect()->back()->withErrors('Action non autorisée.');
+        }
+
         $cartItem->delete();
-        return redirect()->back()->with('delP', 'Produit supprimé du panier avec succès.');
+    } else {
+        // Guest user: Remove from session cart
+        $cart = session('cart', []);
+
+        // Find and remove the item by ID
+        if (isset($cart[$id])) {
+            unset($cart[$id]);
+        }
+
+        // Update the session
+        session(['cart' => $cart]);
     }
 
-    public function updateMultiple(Request $request)
-    {
-        // Valider les quantités reçues dans le formulaire
-        $validated = $request->validate([
-            'quantity' => 'required|array',
-            'quantity.*' => 'required|integer|min:1',
-        ]);
+    return redirect()->back()->with('delP', 'Produit supprimé du panier avec succès.');
+}
 
+
+    public function updateMultiple(Request $request)
+{
+    // Valider les quantités reçues dans le formulaire
+    $validated = $request->validate([
+        'quantity' => 'required|array',
+        'quantity.*' => 'required|integer|min:1',
+    ]);
+
+    if (auth()->check()) {
+        // Si l'utilisateur est connecté
         foreach ($validated['quantity'] as $itemId => $quantity) {
             $cartItem = CartItems::findOrFail($itemId);
             if ($cartItem->cart->user_id !== auth()->id()) {
@@ -146,10 +198,21 @@ class CartsController extends Controller
             $cartItem->quantity = $quantity;
             $cartItem->save();
         }
-
-        // Rediriger avec un message de succès
-        return redirect()->back()->with('success', 'Quantités mises à jour avec succès.');
+    } else {
+        // Si l'utilisateur n'est pas connecté (utilise une session)
+        $sessionCart = session('cart', []);
+        foreach ($validated['quantity'] as $itemId => $quantity) {
+            if (isset($sessionCart[$itemId])) {
+                $sessionCart[$itemId]['quantity'] = $quantity;
+            }
+        }
+        session(['cart' => $sessionCart]); // Mettre à jour la session
     }
+
+    // Rediriger avec un message de succès
+    return redirect()->back()->with('success', 'Quantités mises à jour avec succès.');
+}
+
 
 public function updateCity(Request $request)
 {
@@ -199,7 +262,7 @@ public function syncSessionCart()
     }
 }
 
-/* public function showCartSession()
+/*  public function showCartSession()
 {
     $categories = Categorie::all();
     $cartItems = collect(session()->get('cart', []));
@@ -214,7 +277,7 @@ public function syncSessionCart()
 }
  */
 
-public function updateQuantitySession(Request $request)
+/* public function updateQuantitySession(Request $request)
 {
     $cart = session('cart', []);
 
@@ -228,7 +291,7 @@ public function updateQuantitySession(Request $request)
 
     return redirect()->route('cart.show')->with('success', 'Quantité mise à jour avec succès.');
 }
-
+ */
 
 public function supprimerItems($id)
 {

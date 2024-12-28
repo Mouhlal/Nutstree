@@ -189,17 +189,17 @@
                                 <div class="checkout__order__products">Produits <span>Total</span></div>
                                 <ul>
                                     @foreach ($cartItems as $item)
-                                        <li>{{ $item->product->nom }} (x{{ $item->quantity }})<span>${{ number_format($item->product->prix , 2) }}</span></li>
+                                        <li>{{ $item->product->nom }} (x{{ $item->quantity }})<span>{{ number_format($item->product->prix , 2) }}MAD</span></li>
                                     @endforeach
                                 </ul>
                                 <div class="checkout__order__subtotal">
-                                    Sous-total <span>${{ number_format(session('newSubtotal', $subtotal), 2) }}</span>
+                                    Sous-total <span>{{ number_format(session('newSubtotal', $subtotal), 2) }} MAD</span>
                                 </div>
                                 <div class="checkout__order__subtotal">
-                                    Frais Livraison <span>${{ number_format($deliveryFee, 2) }}</span>
+                                    Frais Livraison <span>MAD{{ number_format($deliveryFee, 2) }}</span>
                                 </div>
                                 <div class="checkout__order__total">
-                                    Total <span>${{ number_format(session('total', $subtotal + $deliveryFee), 2) }}</span>
+                                    Total <span>{{ number_format(session('total', $subtotal + $deliveryFee), 2) }} MAD</span>
                                 </div>
 
                                 <div class="checkout__input__radio">

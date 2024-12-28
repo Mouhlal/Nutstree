@@ -86,18 +86,18 @@
     <!-- Hero Section End -->
     @if(session('success'))
     <div class="p-4 mb-6 text-green-800 bg-green-100 rounded-md text-center">
-        {{ session('success') }}
+        <strong>{{ session('success') }}</strong>
     </div>
     @endif
 
     @if(session('delP'))
         <div class="p-4 mb-6 text-red-700 bg-red-100 rounded-md text-center">
-            {{ session('delP') }}
+            <strong>{{ session('delP') }}</strong>
         </div>
     @endif
     @if(session('error'))
     <div class="p-4 mb-6 text-red-700 bg-red-100 rounded-md text-center">
-    {{ session('error') }}
+    <strong>{{ session('error') }}</strong>
     </div>
     @endif
     @if ($errors->any())

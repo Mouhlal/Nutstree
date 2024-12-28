@@ -12,24 +12,45 @@ use Illuminate\Support\Facades\Auth;
 
 class FrontEndController extends Controller
 {
-    public function home(){
-        $categories = Categorie::all();
-        $produits = Produits::with('categories')->get();
-        $latestProduits = Produits::where('status', 'new')->get();
-        $topRatedProduits = Produits::where('status', 'best')->get();
-        $reviewProduits = Produits::where('status', 'normal')->get();
-        $cart = Carts::where('user_id', auth()->id())->first();
-        $cartItems = $cart ? $cart->items->load(['product', 'product.firstImage']) : collect();
-        return view('temp.index',[
-            'categories' => $categories,
-            'produits' => $produits,
-            'latestProduits' => $latestProduits,
-            'topRatedProduits' => $topRatedProduits,
-            'reviewProduits' => $reviewProduits,
-            'cart' => $cart,
-            'cartItems' => $cartItems,
-        ]);
+    public function home(Request $request)
+{
+    $categories = Categorie::all();
+    $produits = Produits::with('categories');
+
+    // Si un terme de recherche est fourni
+    $seq = $request->query('search');
+    if ($seq) {
+        $produits = $produits->where('nom', 'like', "%{$seq}%")
+                             ->orWhere('description', 'like', "%{$seq}%")
+                             ->orWhereHas('categories', function ($query) use ($seq) {
+                                 $query->where('type', 'like', "%{$seq}%");
+                             });
     }
+    // Récupérer tous les produits filtrés ou tous les produits si aucune recherche
+    $produits = $produits->get();
+
+    // Produits selon les statuts
+    $latestProduits = Produits::where('status', 'new')->get();
+    $topRatedProduits = Produits::where('status', 'best')->get();
+    $reviewProduits = Produits::where('status', 'normal')->get();
+
+    // Panier et éléments
+    $cart = Carts::where('user_id', auth()->id())->first();
+    $cartItems = $cart ? $cart->items->load(['product', 'product.firstImage']) : collect();
+
+    // Retourner la vue avec les produits filtrés
+    return view('temp.index', [
+        'categories' => $categories,
+        'produits' => $produits,
+        'latestProduits' => $latestProduits,
+        'topRatedProduits' => $topRatedProduits,
+        'reviewProduits' => $reviewProduits,
+        'cart' => $cart,
+        'cartItems' => $cartItems,
+        'seq' => $seq
+    ]);
+}
+
     public function About(){
         return view('layouts.about');
     }

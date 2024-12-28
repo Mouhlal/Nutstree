@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Votre code promo</title>
+    <title>Code promo</title>
 </head>
 <body>
     <h1>Félicitations ! Voici votre code promo :</h1>

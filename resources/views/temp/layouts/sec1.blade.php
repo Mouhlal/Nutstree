@@ -17,14 +17,15 @@
             <div class="col-lg-9">
                 <div class="hero__search">
                     <div class="hero__search__form">
-                        <form action="#">
+                        <form action="{{ route('prod.index') }}">
                             <div class="hero__search__categories">
                                 Catégories
                                 <span class="arrow_carrot-down"></span>
                             </div>
-                            <input type="text" placeholder="De quoi avez-vous besoin ?">
+                            <input type="text" name="search" placeholder="De quoi avez-vous besoin ?">
                             <button type="submit" class="site-btn">CHERCHER</button>
                         </form>
+
                     </div>
                     <div class="hero__search__phone">
                         <div class="hero__search__phone__icon">

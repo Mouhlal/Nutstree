@@ -59,13 +59,13 @@
                 <div class="col-lg-9">
                     <div class="hero__search">
                         <div class="hero__search__form">
-                            <form action="#">
+                            <form action="{{ route('prod.index') }}">
                                 <div class="hero__search__categories">
-                                    All Categories
+                                    Catégories
                                     <span class="arrow_carrot-down"></span>
                                 </div>
-                                <input type="text" placeholder="What do yo u need?">
-                                <button type="submit" class="site-btn">SEARCH</button>
+                                <input type="text" name="search" placeholder="De quoi avez-vous besoin ?">
+                                <button type="submit" class="site-btn">CHERCHER</button>
                             </form>
                         </div>
                         <div class="hero__search__phone">
@@ -83,6 +83,17 @@
         </div>
     </section>
     <!-- Hero Section End -->
+    @if(session('success'))
+    <div class="alert alert-success mx-auto text-center bg-green-500 text-green-900 p-4 rounded-md shadow-md w-3/4 md:w-1/2">
+        <strong>{{ session('success') }}</strong>
+    </div>
+@endif
+
+@if(session('error'))
+<div class="alert alert-success mx-auto text-center bg-red-500 text-red-900 p-4 rounded-md shadow-md w-3/4 md:w-1/2">
+    <strong>{{ session('error') }}</strong>
+</div>
+@endif
 
     <!-- Breadcrumb Section Begin -->
     <section class="breadcrumb-section set-bg" data-setbg="https://media.istockphoto.com/id/523458571/fr/photo/des-assortiments-de-fruits-secs-bio.jpg?s=612x612&w=0&k=20&c=QTJNyWYJSaUnU4hqmxr7BTjRdjaj4QblLQyx2UuAplM=">

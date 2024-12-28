@@ -54,7 +54,8 @@ class CodePromoController extends Controller
     public function sendPromo()
     {
         if (!Auth::check()) {
-            return response()->json(['error' => 'Vous devez être connecté pour recevoir le code promo.'], 401);
+            return  redirect()->route('prod.index')->with('error', 'Vous devez être connecté pour recevoir le code promo.');
+            //response()->json(['error' => 'Vous devez être connecté pour recevoir le code promo.'], 401);
         }
 
         $email = Auth::user()->email;
@@ -63,11 +64,11 @@ class CodePromoController extends Controller
 
         // Vérifier si un code promo valide a été trouvé
         if (!$promoCode) {
-            return response()->json(['error' => 'Aucun code promo valide disponible.'], 404);
+            return redirect()->route('prod.index')->with('error', 'Aucun code promo valide n\'est disponible pour le moment.');
         }
         Mail::to($email)->send(new PromoCodeMail($promoCode));
 
-        return response()->json(['success' => 'Le code promo a été envoyé avec succès à votre email.'], 200);
+        return redirect()->route('prod.index')->with('success', 'Le code promo a été envoyé à votre adresse e-mail.');
     }
 
 

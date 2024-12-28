@@ -12,18 +12,43 @@ use Illuminate\Support\Facades\Storage;
 class ProduitsController extends Controller
 {
 
-    public function index(){
+    public function index(Request $request)
+    {
         $categories = Categorie::all();
-        $produits = Produits::with('categories')->paginate(12);
+
+        // Requête de base pour les produits
+        $query = Produits::with('categories');
+
+        // Recherche par mot-clé
+        $seq = $request->query('search');
+        if ($seq) {
+            $query->where('nom', 'like', "%{$seq}%")
+                  ->orWhere('description', 'like', "%{$seq}%")
+                  ->orWhereHas('categories', function ($query) use ($seq) {
+                      $query->where('type', 'like', "%{$seq}%");
+                  });
+        }
+
+        // Appliquer la pagination après les filtres
+        $produits = $query->paginate(12);
+
+        // Autres collections spécifiques
         $latestProduits = Produits::where('status', 'new')->get();
         $topRatedProduits = Produits::where('status', 'best')->get();
         $reviewProduits = Produits::where('status', 'normal')->get();
+
+        // Produits avec réduction
+        $produitsDiscount = Produits::with('categories')
+            ->where('discount', '>', 0)
+            ->distinct()
+            ->get();
+
+        // Panier et ses articles
         $cart = Carts::where('user_id', auth()->id())->first();
         $cartItems = $cart ? $cart->items->load(['product', 'product.firstImage']) : collect();
-        $produitsDiscount = Produits::with('categories')
-        ->where('discount', '>', 0)->distinct()
-        ->get();
-        return view('temp.shop',[
+
+        // Retourner la vue avec les données
+        return view('temp.shop', [
             'categories' => $categories,
             'produits' => $produits,
             'latestProduits' => $latestProduits,

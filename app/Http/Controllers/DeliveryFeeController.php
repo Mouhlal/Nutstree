@@ -76,6 +76,8 @@ class DeliveryFeeController extends Controller
         return redirect()->route('delivery_fees.index')->with('success', 'Frais de livraison supprimé avec succès.');
     }
 
+    
+
 
 }
 

@@ -90,66 +90,77 @@ class CartsController extends Controller
     }
 
     public function showCart()
-    {
-        $categories = Categorie::all();
-        $deliveryFee = 0;
-        $cartItems = collect(); // For authenticated users
-        $sessionCartItems = collect(); // For unauthenticated users
-        $subtotal = 0; // Subtotal for authenticated users
-        $sessionSubtotal = 0; // Subtotal for unauthenticated users
+{
+    $categories = Categorie::all();
+    $deliveryFee = 0;
+    $cartItems = collect(); // Articles pour les utilisateurs connectés
+    $sessionCartItems = collect(); // Articles pour les utilisateurs non connectés
+    $subtotal = 0; // Sous-total pour utilisateurs connectés
+    $sessionSubtotal = 0; // Sous-total pour utilisateurs non connectés
+    $discountAmount = session('discountAmount', 0); // Réduction par défaut
+    $total = 0; 
 
-        // Check if the user is authenticated
-        if (Auth::check()) {
-            $city = auth()->user()->ville ?? 'casa'; // User's city, default to 'casa'
-            $deliveryFee = DeliveryFee::where('city', $city)->value('fee') ?? 0; // Get delivery fee based on the city
+    // Vérifier si l'utilisateur est connecté
+    if (Auth::check()) {
+        $city = auth()->user()->ville ?? 'casa'; // Ville de l'utilisateur (par défaut 'casa')
+        $deliveryFee = DeliveryFee::where('city', $city)->value('fee') ?? 0; // Frais de livraison basés sur la ville
 
-            // Get the user's cart (if any)
-            $cart = Carts::where('user_id', auth()->id())->with('items.product.firstImage')->first();
-            $cartItems = $cart ? $cart->items : collect(); // Get items in the authenticated user's cart
-            $subtotal = $cartItems->sum(fn($item) => $item->product ? $item->quantity * $item->product->prix : 0); // Calculate the subtotal
+        // Récupérer le panier de l'utilisateur connecté
+        $cart = Carts::where('user_id', auth()->id())->with('items.product.firstImage')->first();
+        $cartItems = $cart ? $cart->items : collect(); // Articles dans le panier
+        $subtotal = $cartItems->sum(fn($item) => $item->product ? $item->quantity * $item->product->prix : 0); // Calculer le sous-total
 
-            // Save the subtotal and delivery fee to session for future use
-            session()->put('subtotal', $subtotal);
-            session()->put('deliveryFee', $deliveryFee);
-        }
+        // Appliquer la réduction si elle est définie
+        $subtotal -= $discountAmount; // Réduction appliquée uniquement sur le sous-total
+        $subtotal = max($subtotal, 0); // Empêcher un sous-total négatif
 
-        // For unauthenticated users, handle cart stored in session
+        // Calculer le total final (avec livraison)
+        $total = $subtotal + $deliveryFee;
+
+        // Sauvegarder les données dans la session
+        session()->put('subtotal', $subtotal);
+        session()->put('deliveryFee', $deliveryFee);
+        session()->put('total', $total);
+    } else {
+        // Gestion des utilisateurs non connectés (panier en session)
         $sessionCart = session('cart', []);
         if (!empty($sessionCart)) {
-            $sessionCartItems = collect($sessionCart); // Cart items stored in session
-            $sessionSubtotal = $sessionCartItems->sum(fn($item) => $item['price'] * $item['quantity']); // Calculate subtotal for session cart
+            $sessionCartItems = collect($sessionCart); // Articles du panier en session
+            $sessionSubtotal = $sessionCartItems->sum(fn($item) => $item['price'] * $item['quantity']); // Sous-total
+
+            // Appliquer la réduction
+            $sessionSubtotal -= $discountAmount; // Réduction appliquée
+            $sessionSubtotal = max($sessionSubtotal, 0); // Empêcher un sous-total négatif
+
+            // Calculer le total final (avec livraison par défaut pour 'casa')
+            $deliveryFee = DeliveryFee::where('city', 'casa')->value('fee') ?? 0;
+            $total = $sessionSubtotal + $deliveryFee;
+
+            // Sauvegarder les données dans la session
+            session()->put('sessionSubtotal', $sessionSubtotal);
+            session()->put('deliveryFee', $deliveryFee);
+            session()->put('total', $total);
         }
-
-        // Get the list of all available cities and the current selected city
-        $allCities = DeliveryFee::pluck('city')->toArray();
-        $currentCity = session('selected_city', 'casa'); // Get the current selected city from session or default to 'casa'
-
-        // Calculate the new subtotal for authenticated users only (do not include session subtotal here)
-        $newSubtotal = $subtotal; // Use only the authenticated user's subtotal
-        $discountAmount = session('discountAmount', 0); // Get any discount amount if applicable
-        $total = $newSubtotal + $deliveryFee; // Calculate the total for authenticated users only
-
-        // Save the total to the session
-        session()->put('total', $total);
-
-        // Debugging output (you can remove this later)
-       
-
-        // Return the view with all necessary data
-        return view('temp.panier-auth', compact(
-            'cartItems',
-            'sessionCartItems',
-            'categories',
-            'allCities',
-            'currentCity',
-            'subtotal',
-            'sessionSubtotal',
-            'deliveryFee',
-            'total',
-            'discountAmount',
-            'newSubtotal'
-        ));
     }
+
+    // Obtenir les villes disponibles et la ville actuelle sélectionnée
+    $allCities = DeliveryFee::pluck('city')->toArray();
+    $currentCity = session('selected_city', 'casa'); // Ville actuelle sélectionnée
+
+    // Retourner la vue avec toutes les données nécessaires
+    return view('temp.panier-auth', compact(
+        'cartItems',
+        'sessionCartItems',
+        'categories',
+        'allCities',
+        'currentCity',
+        'subtotal',
+        'sessionSubtotal',
+        'deliveryFee',
+        'total',
+        'discountAmount'
+    ));
+}
 
     public function removeFromCart($id)
 {
@@ -230,7 +241,7 @@ public function updateCity(Request $request)
         session(['selected_city' => $request->city]);
     }
 
-    return redirect()->back()->with('success', 'City updated successfully!');
+    return redirect()->back()->with('success', 'Ville mise à jour avec succès.');
 }
 
 

@@ -60,11 +60,10 @@
                             <ul class="header__menu__dropdown">
                                 <li><a href="{{route('cart.show')}}">Panier</a></li>
                                 <li><a href="#">Paiement</a></li>
-                                <li><a href="#">Détails du blog</a></li>
                                 <li><a href="{{route('layouts.contact')}}">Contact</a></li>
                             </ul>
                         </li>
-                        <li><a href="./blog.html">Blog</a></li>
+                        <li><a href="#">Blog</a></li>
                         @if(auth()->check() && (auth()->user()->isAdmin() || auth()->user()->isSuperAdmin()))
                         <li><a href="{{ route('dash.home') }}">Dashboard</a>
                         </li>
@@ -77,7 +76,7 @@
                     <ul>
                         <li>
                             <!-- Cart Icon and Link -->
-                            <a href="{{ route('cart.show') }}">
+                            <a href="{{ route('cart.show') }}" title="Panier">
                                 <i class="fa fa-shopping-bag"></i>
                                 <span>
                                     {{ auth()->check()
@@ -89,7 +88,7 @@
                         </li>
                         <li>
                             <!-- User Icon and Link -->
-                            <a href="{{ auth()->check() ? route('auth.profile', auth()->user()->id) : route('login') }}">
+                            <a href="{{ auth()->check() ? route('auth.profile', auth()->user()->id) : route('login') }}" title="Profile">
                                 <i class="fa fa-user text-gray-500 text-xl"></i>
                             </a>
                         </li>

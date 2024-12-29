@@ -42,6 +42,10 @@ class User extends Authenticatable
     {
         return $this->role === 'superadmin';
     }
+    public function isLivreur()
+    {
+        return $this->role === 'livreur';
+    }
 
     public function cartItems()
     {

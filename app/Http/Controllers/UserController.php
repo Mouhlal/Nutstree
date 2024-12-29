@@ -63,18 +63,20 @@ class UserController extends Controller
         User::create($att);
         return redirect()->route('login')->with('register','Création du compte avec succes');
     }
-
     public function profile($id)
     {
-        $user = User::find($id);
-        $categories = Categorie::all();
-        $cart = Carts::where('user_id', auth()->id())->first();
-        $orders = auth()->user()->Commandes;
-        $commande = Commandes::with(['products', 'User'])->findOrFail($id);
-        $products = $commande->produits;
+        $user = User::findOrFail($id); 
+        $categories = Categorie::all(); // Catégories générales
+        $cart = Carts::where('user_id', $id)->first(); // Panier de cet utilisateur
+        $orders = $user->Commandes; // Commandes de cet utilisateur
+
+        // Si vous voulez charger des produits liés à une commande spécifique :
+        $commande = $orders->first(); // Charge la première commande de l'utilisateur
+        $products = $commande ? $commande->produits : collect(); // Produits liés, si disponible
 
         $cartItems = $cart ? $cart->items->load(['product', 'product.firstImage']) : collect();
-        return view('temp.auth.profile', compact('user', 'categories', 'cart', 'cartItems','commande','products', 'orders'));
+
+        return view('temp.auth.profile', compact('user', 'categories', 'cart', 'cartItems', 'commande', 'products', 'orders'));
     }
 
 

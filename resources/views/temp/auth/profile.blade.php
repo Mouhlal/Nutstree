@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -91,7 +90,7 @@
                     <table class="table table-striped">
                         <thead>
                             <tr>
-                                <th>#</th>
+                                <th>N°COM</th>
                                 <th>Date</th>
                                 <th>Total</th>
                                 <th>Statut</th>
@@ -101,7 +100,7 @@
                         <tbody>
                             @forelse($orders as $order)
                             <tr>
-                                <td>{{ $order->id }}</td>
+                                <td>{{ $order->numCom }}</td>
                                 <td>{{ $order->created_at->format('d/m/Y') }}</td>
                                 <td>{{ number_format($order->totalPrix, 2) }}MAD</td>
                                 <td>

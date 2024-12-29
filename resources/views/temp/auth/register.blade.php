@@ -100,7 +100,7 @@
                 <div class="relative my-6">
                     <div class="text-center">
                         <p class="text-sm text-black dark:text-black">Tu as une compte ?
-                            <a href="{{route('auth.showLogin')}}" class="font-medium text-black hover:underline hover:text-green-700 dark:text-black">Connectez-vous</a>
+                            <a href="{{route('login')}}" class="font-medium text-black hover:underline hover:text-green-700 dark:text-black">Connectez-vous</a>
                         </p>
                     </div>
                     <div class="relative flex justify-center text-sm">

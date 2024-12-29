@@ -133,13 +133,13 @@
                                 <div class="latest-product__slider owl-carousel">
                                     @foreach ($latestProduits as $product)
                                         <div class="latest-prdouct__slider__item">
-                                            <a href="#" class="latest-product__item">
+                                            <a href="{{ route('prod.details', $product->id) }}" class="latest-product__item">
                                                 <div class="latest-product__item__pic">
                                                     <img src="{{ $product->firstImage ? asset('storage/' . $product->firstImage->images) : asset('storage/default.jpg') }}">
                                                 </div>
                                                 <div class="latest-product__item__text">
                                                     <h6>{{ $product->nom }}</h6>
-                                                    <span>${{ number_format($product->prix, 2) }}</span>
+                                                    <span>{{ number_format($product->prix, 2) }} MAD</span>
                                                 </div>
                                             </a>
                                         </div>

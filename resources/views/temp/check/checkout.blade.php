@@ -192,9 +192,9 @@
                                         <li>{{ $item->product->nom }} (x{{ $item->quantity }})<span>{{ number_format($item->product->prix , 2) }}MAD</span></li>
                                     @endforeach
                                 </ul>
-                                <div class="checkout__order__subtotal">
+                              {{--   <div class="checkout__order__subtotal">
                                     Sous-total <span>{{ number_format(session('newSubtotal', $subtotal), 2) }} MAD</span>
-                                </div>
+                                </div> --}}
                                 <div class="checkout__order__subtotal">
                                     Frais Livraison <span>MAD{{ number_format($deliveryFee, 2) }}</span>
                                 </div>

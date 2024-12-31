@@ -164,7 +164,7 @@ class CommandesController extends Controller
         });
 
         // Supprimer les données de session liées à la réduction
-        session()->forget(['newSubtotal', 'deliveryFee']);
+        session()->forget(['newSubtotal', 'deliveryFee', 'promo_code', 'discountAmount']);
 
         // Envoi d'e-mail
         Mail::to($request->email)->send(new CommandeMail($order));

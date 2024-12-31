@@ -275,11 +275,10 @@
                                         <span class="font-medium text-green-600">Réduction appliquée</span>
                                         <span>-{{ number_format(session('discountAmount'), 2) }} MAD</span>
                                     </li>
-
-                                    <li class="flex justify-between py-2 border-b">
+                                   {{--  <li class="flex justify-between py-2 border-b">
                                         <span class="font-medium">Sous-total après réduction</span>
-                                        <span>{{ number_format(session('newSubtotal', $subtotal), 2) }} MAD</span>
-                                    </li>
+                                        <span>{{ number_format(session('newSubtotal', 0), 2) }} MAD</span>
+                                    </li> --}}
                                 @endif
                             @endif
 

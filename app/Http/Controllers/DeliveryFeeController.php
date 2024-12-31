@@ -14,10 +14,7 @@ class DeliveryFeeController extends Controller
         $fees = DeliveryFee::all();
         return view('dashboard.delivery', compact('fees'));
     }
-    // Dans votre contrôleur
 
-
-    // Affiche le formulaire pour ajouter un frais
     public function create()
     {
         return view('dashboard.delivery');

@@ -164,7 +164,7 @@
                                                  data-setbg="{{ $product->firstImage ? asset('storage/' . $product->firstImage->images) : asset('storage/default.jpg') }}" alt="{{ $product->nom }}">
                                                 <div class="product__discount__percent">-{{ $product->discount }}%</div>
                                                 <ul class="product__item__pic__hover">
-                                                    @if ($product->quantite >= 0)
+                                                    @if ($product->quantite > 0)
                                         <li><a onclick="addToCart({{ $product->id }})" style="cursor: pointer" title="Ajouter en panier">
                                             <i class="fa fa-shopping-cart"></i>
                                         </a></li>
@@ -265,7 +265,7 @@
                                                     <li><a onclick="addToCart({{ $product->id }})" href="#" title="Ajouter en panier">
                                                         <i class="fa fa-shopping-cart"></i>
                                                     </a></li>
-                                                    @else
+                                            @else
                                                     <li><a href="#" title="Rupture de Stock"><i class="fa fa-ban"></i></a></li>
                                                     @endif
                                         </ul>

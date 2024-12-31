@@ -98,7 +98,7 @@ class CartsController extends Controller
     $subtotal = 0; // Sous-total pour utilisateurs connectés
     $sessionSubtotal = 0; // Sous-total pour utilisateurs non connectés
     $discountAmount = session('discountAmount', 0); // Réduction par défaut
-    $total = 0; 
+    $total = 0;
 
     // Vérifier si l'utilisateur est connecté
     if (Auth::check()) {
@@ -319,4 +319,3 @@ public function supprimerItems($id)
 
 
 }
-

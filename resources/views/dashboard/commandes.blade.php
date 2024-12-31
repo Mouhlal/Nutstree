@@ -9,6 +9,7 @@
     <meta name="author" content="David Grzyb">
     <meta name="description" content="">
 
+
     <!-- Tailwind -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
     <style>
@@ -273,8 +274,8 @@
                     </div>
 
                     <!-- Pagination -->
-                    <div class="mt-6">
-                        {{ $commandes->links() }}
+                    <div class="mt-4">
+                        {!! $commandes->links() !!} <!-- Génère les liens de pagination -->
                     </div>
                 </div>
             </main>
@@ -311,6 +312,7 @@
         });
     }
     </script>
+
 
 </body>
 </html>

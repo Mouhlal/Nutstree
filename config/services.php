@@ -40,4 +40,13 @@ return [
     'redirect' => 'http://127.0.0.1:8000/auth/google/callback',
 ],
 
+'cmi' => [
+        'client_id' => env('CMI_CLIENT_ID'),
+        'currency' => env('CMI_CURRENCY'),
+        'payment_url' => env('CMI_PAYMENT_URL'),
+        'secret_key' => env('CMI_SECRET_KEY'),
+        'return_url' => env('CMI_RETURN_URL'),
+        'callback_url' => env('CMI_CALLBACK_URL'),
+    ],
+
 ];

@@ -16,6 +16,7 @@ use App\Notifications\CommandeCanceled;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Validation\Rule;
@@ -84,90 +85,94 @@ class CommandesController extends Controller
             'codepostal' => 'required|string',
             'pays' => ['required', 'string', Rule::in(array_values($countries))],
             'payment_method' => 'required|string',
-            'cart_items' => 'required|string',
+            'cart_items' => 'required|json',
         ]);
 
-        // Décoder les éléments du panier depuis JSON
         $cartItems = json_decode($request->cart_items, true);
-
-        // Calcul du sous-total
-        $subtotal = array_sum(array_map(function($item) {
-            return isset($item['product']) ? $item['product']['prix'] * $item['quantity'] : $item['prix'] * $item['quantity'];
-        }, $cartItems));
-
-        if ($subtotal === 0) {
+        if (empty($cartItems)) {
             return redirect()->back()->with('error', 'Le panier est vide.');
         }
 
-        // Récupérer le sous-total après réduction
-        $newSubtotal = session()->get('newSubtotal', $subtotal); // Utiliser la valeur après réduction de la session
-        $deliveryFee = session()->get('deliveryFee', 0); // Frais de livraison depuis la session
-
-        // Calcul du total avec la réduction et les frais de livraison
+        // Calcul des totaux
+        $subtotal = array_sum(array_map(fn($item) => $item['product']['prix'] * $item['quantity'], $cartItems));
+        $newSubtotal = session()->get('newSubtotal', $subtotal);
+        $deliveryFee = session()->get('deliveryFee', 0);
         $totalPrix = $newSubtotal + $deliveryFee;
 
-        // Vérifier si le prix total est valide
-        if ($totalPrix === 0) {
+        if ($totalPrix <= 0) {
             return redirect()->back()->with('error', 'Le prix total n\'est pas valide.');
         }
 
-        // Générer un nouveau numéro de commande
-        $lastOrder = Commandes::orderBy('created_at', 'desc')->first();
-        $newOrderNumber = 'CMD-' . Carbon::now()->year . '-' . str_pad(($lastOrder ? substr($lastOrder->numCom, -5) + 1 : 1), 5, '0', STR_PAD_LEFT);
-
-        // Créer la commande
-        $order = Commandes::create([
-            'numCom' => $newOrderNumber,
-            'dateCom' => Carbon::now(),
-            'user_id' => Auth::id(),
-            'location' => $request->addresse . ', ' . ucfirst(strtolower($request->ville)) . ', ' . $request->pays,
-            'payment_intent_id' => null, // L'intent est à ajouter pour CMI si nécessaire
-            'status' => 'pending',
-            'payment_method' => $request->payment_method,
-            'totalPrix' => $totalPrix, // Utiliser le total avec réduction ici
-            'tel' => $request->tel,
-        ]);
-
-        // Attacher les produits à la commande
+        // Vérifier la disponibilité du stock avant de créer la commande
         foreach ($cartItems as $item) {
-            $order->products()->attach($item['produit_id'], [
-                'quantity' => $item['quantity'],
-                'prix' => isset($item['product']) ? $item['product']['prix'] : $item['prix'],
-            ]);
+            $product = Produits::find($item['produit_id']);
+            if (!$product) {
+                return redirect()->route('cart.show')->with('error', "Le produit avec ID {$item['produit_id']} n'existe pas.");
+            }
+            if ($product->quantite < $item['quantity']) {
+                return redirect()->route('cart.show')->with('error', "Le stock pour le produit '{$product->nom}' est insuffisant.");
+            }
         }
 
-        // Supprimer les éléments du panier après la commande (si l'utilisateur est connecté)
-        if (Auth::check()) {
-            Carts::where('user_id', Auth::id())->first()->items()->delete();
-        } else {
-            session()->forget('cart');
-        }
+        $order = null; // Initialiser $order pour qu'il soit accessible en dehors du bloc
 
-        // Si le paiement est par carte, rediriger vers la page CMI pour le paiement
-        if ($request->payment_method == 'Credit Card') {
-            return redirect()->route('cmi.payment', ['order' => $order->id]);
-        }
+        DB::transaction(function () use ($request, $cartItems, $totalPrix, &$order) {
+            $lastOrder = Commandes::latest('created_at')->first();
+            $newOrderNumber = 'CMD-' . now()->year . '-' . str_pad(($lastOrder ? substr($lastOrder->numCom, -5) + 1 : 1), 5, '0', STR_PAD_LEFT);
 
-        // Si paiement à la livraison, enregistrer le paiement dans la table 'paiements' avec le statut 'completed' après le paiement
-        if ($request->payment_method == 'Cash on Delivery') {
-            Paiements::create([
-                'commande_id' => $order->id,
-                'amount' => $totalPrix,
-                'payment_method' => 'Cash on Delivery',
-                'transaction_id' => null,  // Pas de transaction ID pour Cash on Delivery
-                'payment_intent_id' => null, // Pas d'intention de paiement pour Cash on Delivery
-                'status' => 'pending',  // Le paiement est "pending" tant qu'il n'est pas effectué
+            $order = Commandes::create([
+                'numCom' => $newOrderNumber,
+                'dateCom' => now(),
+                'user_id' => Auth::id(),
+                'location' => "{$request->addresse}, {$request->ville}, {$request->pays}",
+                'payment_method' => $request->payment_method,
+                'totalPrix' => $totalPrix,
                 'tel' => $request->tel,
             ]);
-        }
 
-        // Envoyer un e-mail de confirmation de commande
+            foreach ($cartItems as $item) {
+                $order->products()->attach($item['produit_id'], [
+                    'quantity' => $item['quantity'],
+                    'prix' => $item['product']['prix'],
+                ]);
+
+                // Mise à jour du stock
+                $product = Produits::find($item['produit_id']);
+                $product->decrement('quantite', $item['quantity']);
+            }
+
+            // Supprimer le panier
+            if (Auth::check()) {
+                Carts::where('user_id', Auth::id())->first()->items()->delete();
+            } else {
+                session()->forget('cart');
+            }
+
+            // Gestion du paiement
+            if ($request->payment_method == 'Credit Card') {
+                throw new \Exception("Redirection vers la page de paiement.");
+            }
+
+            if ($request->payment_method == 'Cash on Delivery') {
+                Paiements::create([
+                    'commande_id' => $order->id,
+                    'amount' => $totalPrix,
+                    'payment_method' => 'Cash on Delivery',
+                    'status' => 'pending',
+                ]);
+            }
+        });
+
+        // Supprimer les données de session liées à la réduction
+        session()->forget(['newSubtotal', 'deliveryFee']);
+
+        // Envoi d'e-mail
         Mail::to($request->email)->send(new CommandeMail($order));
 
-        // Si paiement à la livraison, rediriger vers la page des détails de la commande
         return redirect()->route('commande.details', ['order' => $order->id])
                          ->with('success', 'Commande passée avec succès!');
     }
+
 
     public function details($orderId)
 {
@@ -252,4 +257,3 @@ public function generatePdf($id)
     }
 
 }
-

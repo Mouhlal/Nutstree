@@ -70,7 +70,7 @@ class FrontEndController extends Controller
     }
     public function tables(){
         $produits = Produits::with('categories')
-                    ->get();
+                    ->paginate(15);
         $categories = Categorie::all();
         $user = User::all();
         return view('dashboard.tables', [
@@ -80,7 +80,7 @@ class FrontEndController extends Controller
     ]);
     }
     public function cat(){
-        $categories = Categorie::all();
+        $categories = Categorie::paginate(15);
         return view('dashboard.cat', [
         'categories' => $categories
     ]);
@@ -153,7 +153,7 @@ class FrontEndController extends Controller
     }
 
     // Récupérer les utilisateurs avec pagination
-    $users = $userQuery->paginate(10);
+    $users = $userQuery->paginate(16);
 
     return view('dashboard.client', [
         'users' => $users,

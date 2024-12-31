@@ -6,6 +6,7 @@ use App\Mail\PromoCodeMail;
 use App\Models\CodePromo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 
 class CodePromoController extends Controller
@@ -73,57 +74,70 @@ class CodePromoController extends Controller
 
 
     public function applyPromo(Request $request)
-{
-    // Validation du code promo
-    $request->validate([
-        'code' => 'required|string|exists:code_promo,code', // Vérifier que le code promo existe dans la table code_promo
-    ], [
-        'code.required' => 'Veuillez entrer un code promo.',
-        'code.exists' => 'Ce code promo est invalide ou expiré.',
-    ]);
+    {
+        // Validation du code promo
+        $request->validate([
+            'code' => 'required|string|exists:code_promo,code', // Vérifier que le code promo existe dans la table code_promo
+        ], [
+            'code.required' => 'Veuillez entrer un code promo.',
+            'code.exists' => 'Ce code promo est invalide ou expiré.',
+        ]);
 
-    // Vérifier si le sous-total existe dans la session
-    $subtotal = session()->get('subtotal');
-    if ($subtotal === null || $subtotal == 0) {
-        return redirect()->back()->with('error', 'Le sous-total n\'est pas disponible.');
+        // Vérifier si le sous-total existe dans la session
+        $subtotal = session()->get('subtotal');
+        if ($subtotal === null || $subtotal == 0) {
+            return redirect()->back()->with('error', 'Le sous-total n\'est pas disponible.');
+        }
+
+        // Chercher le code promo dans la base de données
+        $promoCode = CodePromo::where('code', $request->code)
+            ->where('valid_until', '>=', now()) // Vérifier si le code est encore valide
+            ->first();
+
+        if (!$promoCode) {
+            return redirect()->back()->with('error', 'Code promo invalide ou expiré.');
+        }
+
+        // Vérifier si le client a déjà utilisé ce code promo
+        $userId = Auth::id();
+        $alreadyUsed = DB::table('promo_code_usages')
+            ->where('user_id', $userId)
+            ->where('promo_code_id', $promoCode->id)
+            ->exists();
+
+        if ($alreadyUsed) {
+            return redirect()->back()->with('error', 'Vous avez déjà utilisé ce code promo.');
+        }
+
+        // Vérifier si le sous-total est supérieur ou égal à la valeur minimale de commande
+        $minOrderValue = $promoCode->min_order_value;
+        if ($subtotal < $minOrderValue) {
+            return redirect()->back()->with('error', 'Le montant de la commande est inférieur au minimum requis pour appliquer ce code promo.');
+        }
+
+        // Appliquer la réduction
+        $discount = $promoCode->discount;
+        $deliveryFee = session()->get('deliveryFee', 0); // Frais de livraison
+
+        // Calcul de la réduction
+        $discountAmount = ($discount / 100) * $subtotal;
+        $newSubtotal = $subtotal - $discountAmount;
+
+        // Enregistrer l'utilisation du code promo
+        DB::table('promo_code_usages')->insert([
+            'user_id' => $userId,
+            'promo_code_id' => $promoCode->id,
+            'used_at' => now(),
+        ]);
+
+        // Stocker les nouvelles valeurs dans la session
+        session()->put('promo_code', $request->code); // Stocker le code promo appliqué
+        session()->put('newSubtotal', $newSubtotal);
+        session()->put('discountAmount', $discountAmount);
+        session()->put('total', $newSubtotal + $deliveryFee); // Calcul du total avec les frais de livraison
+
+        return redirect()->back()->with('success', 'Code promo appliqué avec succès.');
     }
-
-    // Chercher le code promo dans la base de données
-    $promoCode = CodePromo::where('code', $request->code)
-        ->where('valid_until', '>=', now()) // Vérifier si le code est encore valide
-        ->first();
-
-    if (!$promoCode) {
-        return redirect()->back()->with('error', 'Code promo invalide ou expiré.');
-    }
-
-    // Vérifier si un code promo est déjà appliqué
-    if (session()->has('promo_code')) {
-        return redirect()->back()->with('error', 'Un code promo a déjà été appliqué.');
-    }
-
-    // Vérifier si le sous-total est supérieur ou égal à la valeur minimale de commande
-    $minOrderValue = $promoCode->min_order_value;
-    if ($subtotal < $minOrderValue) {
-        return redirect()->back()->with('error', 'Le montant de la commande est inférieur au minimum requis pour appliquer ce code promo.');
-    }
-
-    // Appliquer la réduction
-    $discount = $promoCode->discount;
-    $deliveryFee = session()->get('deliveryFee', 0); // Frais de livraison
-
-    // Calcul de la réduction
-    $discountAmount = ($discount / 100) * $subtotal;
-    $newSubtotal = $subtotal - $discountAmount;
-
-    // Stocker les nouvelles valeurs dans la session
-    session()->put('promo_code', $request->code); // Stocker le code promo appliqué
-    session()->put('newSubtotal', $newSubtotal);
-    session()->put('discountAmount', $discountAmount);
-    session()->put('total', $newSubtotal + $deliveryFee); // Calcul du total avec les frais de livraison
-
-    return redirect()->back()->with('success', 'Code promo appliqué avec succès.');
-}
 
 public function resetPromo()
 {

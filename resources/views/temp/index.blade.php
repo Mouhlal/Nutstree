@@ -150,7 +150,7 @@
                             <img src="https://img.freepik.com/photos-gratuite/vue-gros-plan-noix-cinq-bols-bruns-noix-au-centre-du-tableau-blanc_140725-111442.jpg?t=st=1734928465~exp=1734932065~hmac=54c27401d948a200bdd672321d5322be7319eda9feef29b3014dbeb5b2ff8dd2&w=1800" alt="">
                         </a>
                     </div>
-
+                <br>
                 </div>
                 <div class="col-lg-6 col-md-6 col-sm-6">
                     <div class="banner__pic">

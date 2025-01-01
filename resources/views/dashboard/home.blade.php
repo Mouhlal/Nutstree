@@ -214,7 +214,7 @@
 
                 <!-- Latest Reports -->
                 <div class="w-full mt-12">
-                    <p class="text-xl pb-3 flex items-center text-gray-700">
+                    <p class="text-xl p-4 pb-3 flex items-center text-gray-700">
                         <i class="fas fa-list mr-3 text-green-600"></i> Derniers Rapports
                     </p>
                     <div class="bg-white overflow-auto shadow-md rounded-lg">

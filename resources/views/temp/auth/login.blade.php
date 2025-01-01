@@ -41,9 +41,38 @@
         @include('temp.layouts.header')
     <!-- Header Section End -->
 
+    @if($errors->any())
+    <div class="bg-red-50 border-l-4 border-red-600 text-red-700 p-4 rounded-lg shadow-md relative">
+        <div class="flex items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-red-600 mr-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M10.29 3.86L1.82 12.32a1.41 1.41 0 000 1.99l8.47 8.47a1.41 1.41 0 002 0l8.47-8.47a1.41 1.41 0 000-1.99l-8.47-8.47a1.41 1.41 0 00-2 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v4m0 4h.01" />
+            </svg>
+            <h3 class="text-lg font-medium">Une erreur est survenue :</h3>
+        </div>
+        <ul class="mt-2 space-y-1 text-sm">
+            @foreach ($errors->all() as $error)
+                <li class="flex items-start">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-red-500 mr-2 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M10.29 3.86L1.82 12.32a1.41 1.41 0 000 1.99l8.47 8.47a1.41 1.41 0 002 0l8.47-8.47a1.41 1.41 0 000-1.99l-8.47-8.47a1.41 1.41 0 00-2 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v4m0 4h.01" />
+                    </svg>
+                    <span>{{ $error }}</span>
+                </li>
+            @endforeach
+        </ul>
+        <button type="button" class="absolute top-2 right-2 text-red-600 hover:text-red-800 focus:outline-none" onclick="this.parentElement.remove()">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+        </button>
+    </div>
+@endif
+
+
     <!-- Hero Section Begin -->
-    <div class="flex items-center justify-center min-h-screen px-4 bg-gray-200 dark:bg-gray-200">
-        <div class="w-full max-w-md bg-white rounded-lg shadow-lg dark:bg-gray-800 dark:border-gray-200">
+    <div class="flex items-center justify-center min-h-screen px-4 bg-gray-200">
+        <div class="w-full max-w-md bg-white rounded-lg shadow-lg">
             <div class="p-8 space-y-6">
                 <!-- Logo -->
                 <div class="flex justify-center">
@@ -52,7 +81,7 @@
 
                 <!-- Welcome Text -->
                 <h2 class="text-3xl font-bold text-center text-green-600">Bienvenue sur Nutstree</h2>
-                <p class="text-sm text-center text-gray-500 dark:text-gray-400">Connectez-vous pour continuer vos achats.</p>
+                <p class="text-sm text-center text-gray-500">Connectez-vous pour continuer vos achats.</p>
 
                 <!-- Login Form -->
                 <form action="#" method="POST" class="space-y-6">
@@ -61,7 +90,7 @@
                     <div>
                         <label for="email" class="block mb-2 text-sm font-medium text-black ">Adresse e-mail</label>
                         <input type="email" value="{{ old('email') }}" name="email" required
-                            class="w-full px-4 py-2 text-sm text-gray-900 bg-gray-50 border border-gray-300 rounded-lg dark:border-gray-600 focus:ring-green-500 focus:border-green-500"
+                            class="w-full px-4 py-2 text-sm text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:ring-green-500 focus:border-green-500"
                             placeholder="exemple@nutstree.com">
                     </div>
 
@@ -69,7 +98,7 @@
                     <div class="relative">
                         <label for="password" class="block mb-2 text-sm font-medium text-black ">Mot de passe</label>
                         <input type="password" name="password" id="password" required
-                            class="w-full px-4 py-2 text-sm text-gray-900 bg-gray-50 border dark:border-gray-600 focus:ring-green-500 focus:border-green-500"
+                            class="w-full px-4 py-2 text-sm text-gray-900 bg-gray-50 border focus:ring-green-500 focus:border-green-500"
                             placeholder="••••••••">
                         <button type="button" id="togglePassword" class="absolute inset-y-0 right-0 pr-3 flex items-center hover:text-gray-800 top-6 ">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -85,14 +114,14 @@
                     <div class="flex items-center justify-between">
                         <label class="inline-flex items-center">
                             <input type="checkbox" class="w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500">
-                            <span class="ml-2 text-sm text-black dark:text-gray-400">Se souvenir de moi</span>
+                            <span class="ml-2 text-sm text-black">Se souvenir de moi</span>
                         </label>
                         <a href="#" class="text-sm text-green-600 hover:text-black hover:underline">Mot de passe oublié ?</a>
                     </div>
 
                     <!-- Submit Button -->
                     <button type="submit"
-                        class="w-full px-4 py-2 text-sm font-medium text-white bg-green-300 rounded-lg hover:bg-green-200 focus:ring-4 focus:ring-yellow-300 dark:bg-green-600 dark:hover:bg-green-500 dark:focus:ring-green-800">
+                        class="w-full px-4 py-2 text-sm font-medium text-white bg-green-300 rounded-lg hover:bg-green-200 focus:ring-4 focus:ring-yellow-300">
                         Connexion
                     </button>
                 </form>
@@ -100,18 +129,18 @@
                 <!-- Divider -->
                 <div class="relative my-6">
                     <div class="text-center">
-                        <p class="text-sm text-black dark:text-black">Pas encore de compte ?
-                            <a href="{{route('auth.showRegister')}}" class="font-medium text-black hover:underline hover:text-green-700 dark:text-black">Inscrivez-vous</a>
+                        <p class="text-sm text-black">Pas encore de compte ?
+                            <a href="{{route('auth.showRegister')}}" class="font-medium text-black hover:underline hover:text-green-700">Inscrivez-vous</a>
                         </p>
                     </div>
                     <div class="relative flex justify-center text-sm">
-                        <span class="px-2 bg-white dark:bg-gray-800 dark:text-gray-400">Ou</span>
+                        <span class="px-2 bg-white">Ou</span>
                     </div>
                 </div>
 
                 <!-- Google Login -->
                 <a href="{{ route('auth.google') }}"
-                    class="w-full flex items-center justify-center px-4 py-2 text-sm font-medium text-black bg-gray-100 border border-gray-300 rounded-lg hover:bg-green-400 dark:bg-gray-200 dark:text-black dark:hover:bg-green-600">
+                    class="w-full flex items-center justify-center px-4 py-2 text-sm font-medium text-black bg-gray-100 border border-gray-300 rounded-lg hover:bg-green-400">
                     <svg class="w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                         <path fill="#EA4335"
                             d="M12 11.8v2.8h5.1c-.2 1.4-.8 2.6-1.8 3.4l2.8 2.2c1.7-1.6 2.7-4 2.7-6.6 0-.7-.1-1.4-.3-2H12z" />

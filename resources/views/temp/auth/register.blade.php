@@ -42,8 +42,8 @@
     <!-- Header Section End -->
 
     <!-- Hero Section Begin -->
-    <div class="flex items-center  justify-center min-h-screen px-4 bg-gray-200 dark:bg-gray-200">
-        <div class="w-full max-w-md bg-white md:m-5 m-2 rounded-lg shadow-lg dark:bg-gray-800 dark:border-gray-200">
+    <div class="flex items-center  justify-center min-h-screen px-4 bg-gray-200">
+        <div class="w-full max-w-md bg-white md:m-5 m-2 rounded-lg shadow-lg">
             <div class="p-8 space-y-6">
                 <!-- Logo -->
                 <div class="flex justify-center">
@@ -52,7 +52,7 @@
 
                 <!-- Welcome Text -->
                 <h2 class="text-3xl font-bold text-center text-green-600">Créez un compte Nutstree</h2>
-                <p class="text-sm text-center text-gray-500 dark:text-gray-400">Inscrivez-vous pour commencer vos achats.</p>
+                <p class="text-sm text-center text-gray-500">Inscrivez-vous pour commencer vos achats.</p>
 
                 <!-- Registration Form -->
                 <form action="{{route('auth.register')}}" method="POST" class="space-y-6">
@@ -61,7 +61,7 @@
                     <div>
                         <label for="name" class="block mb-2 text-sm font-medium text-black">Nom</label>
                         <input type="text" name="name" id="name" value="{{ old('name') }}" required
-                            class="w-full px-4 py-2 text-sm text-gray-900 bg-gray-50 border border-gray-300 rounded-lg dark:border-gray-600 focus:ring-green-500 focus:border-green-500"
+                            class="w-full px-4 py-2 text-sm text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:ring-green-500 focus:border-green-500"
                             placeholder="Votre nom">
                     </div>
 
@@ -69,7 +69,7 @@
                     <div>
                         <label for="email" class="block mb-2 text-sm font-medium text-black">Adresse e-mail</label>
                         <input type="email" name="email" id="email" value="{{ old('email') }}" required
-                            class="w-full px-4 py-2 text-sm text-gray-900 bg-gray-50 border border-gray-300 rounded-lg dark:border-gray-600 focus:ring-green-500 focus:border-green-500"
+                            class="w-full px-4 py-2 text-sm text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:ring-green-500 focus:border-green-500"
                             placeholder="exemple@nutstree.com">
                     </div>
 
@@ -77,7 +77,7 @@
                     <div>
                         <label for="password" class="block mb-2 text-sm font-medium text-black">Mot de passe</label>
                         <input type="password" name="password" id="password" required
-                            class="w-full px-4 py-2 text-sm text-gray-900 bg-gray-50 border border-gray-300 rounded-lg dark:border-gray-600 focus:ring-green-500 focus:border-green-500"
+                            class="w-full px-4 py-2 text-sm text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:ring-green-500 focus:border-green-500"
                             placeholder="••••••••">
                     </div>
 
@@ -85,13 +85,13 @@
                     <div>
                         <label for="password_confirmation" class="block mb-2 text-sm font-medium text-black">Confirmer le mot de passe</label>
                         <input type="password" name="password_confirmation" id="password_confirmation" required
-                            class="w-full px-4 py-2 text-sm text-gray-900 bg-gray-50 border border-gray-300 rounded-lg dark:border-gray-600 focus:ring-green-500 focus:border-green-500"
+                            class="w-full px-4 py-2 text-sm text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:ring-green-500 focus:border-green-500"
                             placeholder="••••••••">
                     </div>
 
                     <!-- Submit Button -->
                     <button type="submit"
-                        class="w-full px-4 py-2 text-sm font-medium text-white bg-green-300 rounded-lg hover:bg-green-200 focus:ring-4 focus:ring-yellow-300 dark:bg-green-600 dark:hover:bg-green-500 dark:focus:ring-green-800">
+                        class="w-full px-4 py-2 text-sm font-medium text-white bg-green-300 rounded-lg hover:bg-green-200 focus:ring-4 focus:ring-yellow-300">
                         Inscription
                     </button>
                 </form>
@@ -99,18 +99,18 @@
                 <!-- Divider -->
                 <div class="relative my-6">
                     <div class="text-center">
-                        <p class="text-sm text-black dark:text-black">Tu as une compte ?
-                            <a href="{{route('login')}}" class="font-medium text-black hover:underline hover:text-green-700 dark:text-black">Connectez-vous</a>
+                        <p class="text-sm text-black">Tu as une compte ?
+                            <a href="{{route('login')}}" class="font-medium text-black hover:underline hover:text-green-700">Connectez-vous</a>
                         </p>
                     </div>
                     <div class="relative flex justify-center text-sm">
-                        <span class="px-2 bg-white dark:bg-gray-800 dark:text-gray-400">Ou</span>
+                        <span class="px-2 bg-white">Ou</span>
                     </div>
                 </div>
 
                 <!-- Google Register -->
                 <a href="{{ route('auth.google') }}"
-                    class="w-full flex items-center justify-center px-4 py-2 text-sm font-medium text-black bg-gray-100 border border-gray-300 rounded-lg hover:bg-green-400 dark:bg-gray-200 dark:text-black dark:hover:bg-green-600">
+                    class="w-full flex items-center justify-center px-4 py-2 text-sm font-medium text-black bg-gray-100 border border-gray-300 rounded-lg hover:bg-green-400">
                     <svg class="w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                         <path fill="#EA4335"
                             d="M12 11.8v2.8h5.1c-.2 1.4-.8 2.6-1.8 3.4l2.8 2.2c1.7-1.6 2.7-4 2.7-6.6 0-.7-.1-1.4-.3-2H12z" />

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ADMIN - TABLES</title>
+    <title>ADMIN - COMMANDES</title>
     <link rel="shortcut icon" href="{{ asset('storage/layouts/logo.jpeg') }}" type="image/x-icon">
 
     <meta name="author" content="David Grzyb">
@@ -189,17 +189,16 @@
 
                     <!-- Formulaire de recherche et filtre -->
                     <div class="mb-6">
-                        <form action="{{ route('dash.commandes') }}" method="GET" class="flex items-center justify-between bg-white shadow-md rounded-lg p-6">
-                            <!-- Recherche par nom ou numéro de commande -->
-                            <div class="flex items-center w-full md:w-2/3">
+                        <form action="{{ route('dash.commandes') }}" method="GET" class="flex flex-wrap items-center bg-white shadow-md rounded-lg p-6 space-y-4 md:space-y-0">
+                            <div class="w-full md:w-2/3">
                                 <input type="text" name="search" placeholder="Rechercher par nom ou numéro de commande"
-                                       class="w-full p-2 border rounded-lg text-gray-700"
+                                        class="w-full p-2 border rounded-lg text-gray-700"
                                        value="{{ request('search') }}">
                             </div>
 
                             <!-- Filtre par statut -->
-                            <div class="ml-4">
-                                <select name="status" class="p-2 border rounded-lg text-gray-700">
+                            <div class="w-full md:w-auto md:ml-4">
+                                <select name="status"  class="w-full md:w-auto p-2 border rounded-lg text-gray-700">
                                     <option value="">-- Filtrer par statut --</option>
                                     <option value="pending" {{ request('status') === 'pending' ? 'selected' : '' }}>En cours</option>
                                     <option value="pending-cash" {{ request('status') === 'pending-cash' ? 'selected' : '' }}>En attente de paiement</option>
@@ -209,9 +208,11 @@
                             </div>
 
                             <!-- Bouton de recherche -->
-                            <button type="submit" class="ml-4 bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600">
-                                Rechercher
-                            </button>
+                            <div class="w-full md:w-auto md:ml-4">
+                                <button type="submit" class="w-full md:w-auto bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600">
+                                    Rechercher
+                                </button>
+                            </div>
                         </form>
                     </div>
 
@@ -247,7 +248,7 @@
                                                 </span>
                                             </td>
                                             <td class="py-3 px-6 text-center">{{ $commande->tel }}</td>
-                                            <td class="py-3 px-6 text-center">{{ $commande->user->adresse }}</td>
+                                            <td class="py-3 px-6 text-center">{{ $commande->location }}</td>
                                             <td class="py-3 px-6 text-center">
                                                 <form action="{{ route('dash.commandes.update', $commande->id) }}" method="POST" class="inline-block">
                                                     @csrf

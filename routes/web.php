@@ -13,6 +13,11 @@ use App\Http\Controllers\ReviewsController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\Auth\ResetPasswordController;
+
+
+
 
 Route::controller(FrontEndController::class)->group(function () {
     Route::get('/', 'home')->name('layouts.home');
@@ -34,8 +39,8 @@ Route::controller(FrontEndController::class)->group(function () {
 
 });
 
-Route::controller(PaiementsController::class)->group(function(){
-});
+Route::post('/payment/callback', [PaiementsController::class, 'handleCallback'])->name('payment.callback');
+Route::get('/payment/cancel', [PaiementsController::class, 'handleCancel'])->name('payment.cancel');
 
 
 Route::controller(CommandesController::class)->group(function(){

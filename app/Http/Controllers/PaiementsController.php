@@ -6,62 +6,82 @@ use App\Models\Carts;
 use App\Models\Categorie;
 use App\Models\Commandes;
 use App\Models\Paiements;
-use App\Models\Produits;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Stripe\Checkout\Session as StripeSession;
 
 class PaiementsController extends Controller
 {
-public function redirectToCMI(Request $request)
+    public function initiatePayment(Request $request, Commandes $order)
 {
-    $orderId = uniqid(); // ID unique pour l'identifiant de commande
-    $amount = session('total', 0); // Total du panier
-    $clientId = config('services.cmi.client_id');
-    $currency = config('services.cmi.currency');
-    $returnUrl = config('services.cmi.return_url');
-    $callbackUrl = config('services.cmi.callback_url');
-    $hashKey = config('services.cmi.secret_key');
+    $cmiUrl = config('services.cmi.url');
+    $merchantId = config('services.cmi.merchant_id');
+    $hashKey = config('services.cmi.hash_key');
+    $returnUrl = route('payment.callback');
+    $cancelUrl = route('payment.cancel');
 
-    // Formater le montant pour CMI (sans virgule)
-    $formattedAmount = number_format($amount, 2, '', '');
+    // Données à envoyer au CMI
+    $data = [
+        'clientid' => $merchantId,
+        'oid' => $order->numCom, // Numéro de commande
+        'amount' => number_format($order->totalPrix, 2, '.', ''), // Format requis
+        'okUrl' => $returnUrl, // URL en cas de succès
+        'failUrl' => $cancelUrl, // URL en cas d’échec
+        'currency' => config('services.cmi.currency'),
+        'rnd' => microtime(),
+        'storetype' => '3d_pay_hosting',
+        'lang' => 'fr', // Langue : 'fr' ou 'en'
+    ];
 
-    // Générer le hachage
-    $hashString = "$clientId|$orderId|$formattedAmount|$currency|$callbackUrl|$hashKey";
-    $hash = hash('sha256', $hashString);
+    // Création de la signature
+    $data['hash'] = base64_encode(
+        pack('H*', hash('sha512', implode('', array_values($data)) . $hashKey))
+    );
 
-    // Rediriger vers la page de paiement
-    return view('payment.cmi', [
-        'clientId' => $clientId,
-        'orderId' => $orderId,
-        'amount' => $formattedAmount,
-        'currency' => $currency,
-        'returnUrl' => $returnUrl,
-        'callbackUrl' => $callbackUrl,
-        'hash' => $hash,
-    ]);
-}
-
-public function handleReturn(Request $request)
-{
-    {
-        // Handle the response from CMI here
-        $paymentStatus = $request->input('status');
-
-        if ($paymentStatus === 'APPROVED') {
-            // Payment was successful
-            return view('payment.success');
-        } else {
-            // Payment failed
-            return view('payment.failed');
-        }
-    }
+    // Affichage du formulaire pour redirection automatique
+    return view('payment.redirect', compact('cmiUrl', 'data'));
 }
 
 public function handleCallback(Request $request)
 {
-    // Traitez la notification de CMI (si nécessaire)
-    // Par exemple : mise à jour de l'état de la commande
+    $hashKey = config('services.cmi.hash_key');
+    $data = $request->except('HASH');
+
+    // Validation de la signature
+    $calculatedHash = base64_encode(
+        pack('H*', hash('sha512', implode('', array_values($data)) . $hashKey))
+    );
+
+    if ($request->HASH !== $calculatedHash) {
+        return redirect()->route('cart.show')->with('error', 'Signature invalide.');
+    }
+
+    $order = Commandes::where('numCom', $request->oid)->first();
+    if (!$order) {
+        return redirect()->route('cart.show')->with('error', 'Commande introuvable.');
+    }
+
+    if ($request->ProcReturnCode === '00') {
+        $order->update(['status' => 'paid']);
+
+        Paiements::create([
+            'commande_id' => $order->id,
+            'amount' => $order->totalPrix,
+            'payment_method' => 'Carte Bancaire',
+            'transaction_id' => $request->TransId,
+            'status' => 'paid',
+        ]);
+
+        return redirect()->route('commande.details', ['order' => $order->id])
+                         ->with('success', 'Paiement réussi.');
+    }
+
+    return redirect()->route('cart.show')->with('error', 'Le paiement a échoué.');
+}
+
+public function handleCancel()
+{
+    return redirect()->route('cart.show')->with('error', 'Paiement annulé.');
 }
 
 

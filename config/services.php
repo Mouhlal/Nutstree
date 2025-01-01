@@ -41,12 +41,11 @@ return [
 ],
 
 'cmi' => [
-        'client_id' => env('CMI_CLIENT_ID'),
-        'currency' => env('CMI_CURRENCY'),
-        'payment_url' => env('CMI_PAYMENT_URL'),
-        'secret_key' => env('CMI_SECRET_KEY'),
-        'return_url' => env('CMI_RETURN_URL'),
-        'callback_url' => env('CMI_CALLBACK_URL'),
-    ],
+    'url' => env('CMI_URL', 'https://testpayment.cmi.co.ma/fim/est3Dgate'),
+    'merchant_id' => env('CMI_MERCHANT_ID', '600003425'),
+    'hash_key' => env('CMI_HASH_KEY'),
+    'currency' => '504',
+],
+
 
 ];

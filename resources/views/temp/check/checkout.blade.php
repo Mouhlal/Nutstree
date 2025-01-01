@@ -162,7 +162,7 @@
                             </div>
                             <div class="checkout__input">
                                 <p>Code Postal<span>*</span></p>
-                                <input type="text" name="codepostal" required>
+                                <input type="text" name="codepostal" >
                             </div>
                             <div class="row">
                                 <div class="col-lg-6">

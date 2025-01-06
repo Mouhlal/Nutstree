@@ -35,10 +35,6 @@ class User extends Authenticatable
         'codepostal'
     ];
 
-public function sendPasswordResetNotification($token)
-{
-    $this->notify(new CustomResetPassword($token));
-}
 
 
     public function isAdmin()

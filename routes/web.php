@@ -13,9 +13,21 @@ use App\Http\Controllers\ReviewsController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Auth\ForgotPasswordController;
-use App\Http\Controllers\Auth\ResetPasswordController;
 
+use App\Http\Controllers\Auth\PasswordResetController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
+
+// Affiche le formulaire de demande de réinitialisation
+Route::get('password/reset', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
+
+// Envoie l'e-mail de réinitialisation
+Route::post('password/email', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
+
+// Affiche le formulaire pour entrer un nouveau mot de passe
+Route::get('password/reset/{token}', [PasswordResetController::class, 'showResetForm'])->name('password.reset');
+
+// Gère la réinitialisation du mot de passe
+Route::post('password/reset', [PasswordResetController::class, 'reset'])->name('password.update');
 
 
 

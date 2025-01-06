@@ -29,6 +29,14 @@ class ProduitsController extends Controller
                   });
         }
 
+        // Filtrer par catégorie si elle est sélectionnée
+        $categoryId = $request->query('category');
+        if ($categoryId) {
+            $query->whereHas('categories', function ($q) use ($categoryId) {
+                $q->where('id', $categoryId);
+            });
+        }
+
         // Appliquer la pagination après les filtres
         $produits = $query->paginate(12);
 
@@ -59,6 +67,7 @@ class ProduitsController extends Controller
             'produitsDiscount' => $produitsDiscount,
         ]);
     }
+
 
     public function add(){
         $categories = Categorie::all();

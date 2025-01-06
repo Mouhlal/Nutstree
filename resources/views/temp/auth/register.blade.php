@@ -74,24 +74,40 @@
                     </div>
 
                     <!-- Password -->
-                    <div>
+                    <div class="relative">
                         <label for="password" class="block mb-2 text-sm font-medium text-black">Mot de passe</label>
                         <input type="password" name="password" id="password" required
                             class="w-full px-4 py-2 text-sm text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:ring-green-500 focus:border-green-500"
                             placeholder="••••••••">
+                        <button type="button" id="togglePassword" class="absolute inset-y-0 right-0 pr-3 flex items-center hover:text-gray-800 top-6">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-.343 1.036-1.09 2.44-2.151 3.606a10.05 10.05 0 01-2.197 1.943M2.458 12a10.07 10.07 0 002.197 3.607c1.06 1.167 1.808 2.57 2.15 3.607M15 12c0 2.28-1.293 4.347-3.235 5.42M12 5C8.522 5 4.732 7.943 3.458 12" />
+                            </svg>
+                        </button>
                     </div>
 
                     <!-- Confirm Password -->
-                    <div>
+                    <div class="relative">
                         <label for="password_confirmation" class="block mb-2 text-sm font-medium text-black">Confirmer le mot de passe</label>
                         <input type="password" name="password_confirmation" id="password_confirmation" required
                             class="w-full px-4 py-2 text-sm text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:ring-green-500 focus:border-green-500"
                             placeholder="••••••••">
+                        <button type="button" id="togglePasswordConfirmation" class="absolute inset-y-0 right-0 pr-3 flex items-center hover:text-gray-800 top-6">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-.343 1.036-1.09 2.44-2.151 3.606a10.05 10.05 0 01-2.197 1.943M2.458 12a10.07 10.07 0 002.197 3.607c1.06 1.167 1.808 2.57 2.15 3.607M15 12c0 2.28-1.293 4.347-3.235 5.42M12 5C8.522 5 4.732 7.943 3.458 12" />
+                            </svg>
+                        </button>
                     </div>
 
                     <!-- Submit Button -->
                     <button type="submit"
-                        class="w-full px-4 py-2 text-sm font-medium text-white bg-green-300 rounded-lg hover:bg-green-200 focus:ring-4 focus:ring-yellow-300">
+                        class="w-full px-4 py-2 text-sm font-medium text-white bg-green-700 rounded-lg hover:bg-green-500 focus:ring-4 focus:ring-yellow-300">
                         Inscription
                     </button>
                 </form>
@@ -133,23 +149,21 @@
         @include('temp.layouts.footer')
     <!-- Footer Section End -->
 
-<script>
-    document.getElementById('togglePassword').addEventListener('click', () => {
-    const passwordInput = document.getElementById('password');
-    const eyeIcon = document.querySelector('#togglePassword svg');
+    <script>
+        // Toggle visibility for the password field
+        document.getElementById('togglePassword').addEventListener('click', () => {
+            const passwordInput = document.getElementById('password');
+            const isPassword = passwordInput.type === 'password';
+            passwordInput.type = isPassword ? 'text' : 'password';
+        });
 
-    // Toggle password visibility
-    const isPassword = passwordInput.type === 'password';
-    passwordInput.type = isPassword ? 'text' : 'password';
-
-    // Update the icon
-    eyeIcon.innerHTML = isPassword
-        ? `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0012 19c-4.478 0-8.268-2.943-9.542-7 .343-1.036 1.09-2.44 2.151-3.606A10.07 10.07 0 015.457 7M12 9c1.38 0 2.5 1.12 2.5 2.5S13.38 14 12 14s-2.5-1.12-2.5-2.5S10.62 9 12 9z" />`
-        : `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-.343 1.036-1.09 2.44-2.151 3.606a10.05 10.05 0 01-2.197 1.943M2.458 12a10.07 10.07 0 002.197 3.607c1.06 1.167 1.808 2.57 2.15 3.607M15 12c0 2.28-1.293 4.347-3.235 5.42M12 5C8.522 5 4.732 7.943 3.458 12" />`;
-});
-
-</script>
+        // Toggle visibility for the confirm password field
+        document.getElementById('togglePasswordConfirmation').addEventListener('click', () => {
+            const passwordConfirmationInput = document.getElementById('password_confirmation');
+            const isPassword = passwordConfirmationInput.type === 'password';
+            passwordConfirmationInput.type = isPassword ? 'text' : 'password';
+        });
+    </script>
     <!-- Js Plugins -->
     <script src="/home/js/jquery-3.3.1.min.js"></script>
     <script src="/home/js/bootstrap.min.js"></script>

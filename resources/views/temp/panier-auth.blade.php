@@ -51,8 +51,14 @@
                         </div>
                         <ul>
                             @foreach ($categories as $category)
-                                <li><a href="#">{{ $category->type }}</a></li>
-                            @endforeach
+                        <li>
+                            <a
+                                href="{{ route('prod.index', ['category' => $category->id]) }}"
+                                class="{{ request('category') == $category->id ? 'active' : '' }}">
+                                {{ $category->type }}
+                            </a>
+                        </li>
+                        @endforeach
                         </ul>
                     </div>
                 </div>

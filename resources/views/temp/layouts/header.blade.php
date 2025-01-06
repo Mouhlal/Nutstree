@@ -5,9 +5,8 @@
                 <div class="col-lg-6 col-md-6">
                     <div class="header__top__left">
                         <ul>
-                            <li><i class="fa fa-envelope"></i> hello@colorlib.com</li>
-                            <li>Livraison gratuite pour toute commande de 99 MAD</li>
-
+                            <li><i class="fa fa-envelope"></i> nutstree@gmail.com</li>
+                            <li>Profitez de 10% de réduction sur votre première commande </li>
                         </ul>
                     </div>
                 </div>
@@ -63,7 +62,6 @@
                                 <li><a href="{{route('layouts.contact')}}">Contact</a></li>
                             </ul>
                         </li>
-                        <li><a href="#">Blog</a></li>
                         @if(auth()->check() && (auth()->user()->isAdmin() || auth()->user()->isSuperAdmin()))
                         <li><a href="{{ route('dash.home') }}">Dashboard</a>
                         </li>

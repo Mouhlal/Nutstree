@@ -116,12 +116,14 @@
                             <input type="checkbox" class="w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500">
                             <span class="ml-2 text-sm text-black">Se souvenir de moi</span>
                         </label>
-                        <a href="#" class="text-sm text-green-600 hover:text-black hover:underline">Mot de passe oublié ?</a>
-                    </div>
+                        <a href="#" class="text-sm text-green-600 hover:text-black hover:underline">
+                            Mot de passe oublié ?
+                        </a>
+                        </div>
 
                     <!-- Submit Button -->
                     <button type="submit"
-                        class="w-full px-4 py-2 text-sm font-medium text-white bg-green-300 rounded-lg hover:bg-green-200 focus:ring-4 focus:ring-yellow-300">
+                        class="w-full px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-900 focus:ring-4 focus:ring-yellow-300">
                         Connexion
                     </button>
                 </form>

@@ -51,7 +51,7 @@
                     @foreach ($categories as $category)
                         <div class="col-lg-3">
                             <div class="categories__item set-bg" data-setbg="{{ asset('storage/' . $category->image) }}">
-                                <h5><a href="#">{{ $category->type }}</a></h5>
+                                <h5><a  href="{{ route('prod.index', ['category' => $category->id]) }}">{{ $category->type }}</a></h5>
                             </div>
                         </div>
                     @endforeach

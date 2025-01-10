@@ -16,21 +16,25 @@ class GoogleController extends Controller
 
     public function handleGoogleCallback()
     {
-        $googleUser = Socialite::driver('google')->user();
+        try {
+            $googleUser = Socialite::driver('google')->user();
 
-        $user = User::firstOrCreate(
-            ['email' => $googleUser->getEmail()],
-            [
-                'name' => $googleUser->getName(),
-                'password' => bcrypt(str()->random(16)),
-                'google_id' => $googleUser->getId(), // Ajouter le google_id
-            ]
-        );
-        Auth::login($user);
+            $user = User::firstOrCreate(
+                ['email' => $googleUser->getEmail()],
+                [
+                    'name' => $googleUser->getName(),
+                    'password' => bcrypt(str()->random(16)),
+                    'google_id' => $googleUser->getId(),
+                ]
+            );
+            Auth::login($user);
 
-        return redirect()->route('layouts.home');
-        // Redirigez vers votre page d'accueil ou tableau de bord
+            return redirect()->route('layouts.home');
+        } catch (\Exception $e) {
+            return redirect()->route('login')->withErrors(['msg' => 'Erreur lors de la connexion via Google.']);
+        }
     }
+
     public function authenticated(Request $request, $user)
 {
     // Appeler la méthode mergeCart pour synchroniser le panier

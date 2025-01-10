@@ -208,15 +208,43 @@
                             </div>
                             <div class="tab-pane" id="tabs-3" role="tabpanel">
                                 <div class="product__details__tab__desc">
-                                    <h6>Products Infomation</h6>
-                                    @forelse($produit->reviews as $review)
-                                    <p>
-                                        {{ $produit->$review->content }}
-                                    </p>
-                                    @empty
-                                    <p>pas de commentaires</p>
-                                    @endforelse
-
+                                    <h3>Commentaires :</h3>
+                                    <br>
+                                        @if($produit->reviews->isNotEmpty())
+                                            <ul>
+                                                @foreach($produit->reviews as $review)
+                                                    <li class="m-3">
+                                                        <strong> {{ $review->user->name ?? 'Utilisateur anonyme' }}</strong> :
+                                                        {{ $review->content }} <br>
+                                                        <span>Note : {{ $review->rating }}/5</span>
+                                                    </li>
+                                                @endforeach
+                                            </ul>
+                                        @else
+                                            <p>Aucune revue pour ce produit.</p>
+                                        @endif
+                                        <br>
+                                    <!-- Formulaire pour ajouter un commentaire -->
+                                        <form action="{{ route('reviews.store', $produit->id) }}" method="POST">
+                                        @csrf
+                                        <input type="hidden" name="product_id" value="{{ $produit->id }}">
+                                        <div class="form-group">
+                                            <label for="rating"></label>
+                                            <select name="rating" id="rating" class="form-control pb-3">
+                                                <option value="1">1 - Très mauvais</option>
+                                                <option value="2">2 - Mauvais</option>
+                                                <option value="3">3 - Moyen</option>
+                                                <option value="4">4 - Bon</option>
+                                                <option value="5">5 - Excellent</option>
+                                            </select>
+                                        </div>
+                                        <br>
+                                        <div class="form-group">
+                                            <label for="content">Votre commentaire :</label>
+                                            <textarea name="content" id="content" class="form-control" rows="3" required></textarea>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Soumettre</button>
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -240,17 +268,17 @@
             <div class="row">
                 @foreach ($relatedProducts as $product)
                     <div class="col-lg-3 col-md-4 col-sm-6">
-                        <div class="product__item">
-                            <div class="product__item__pic set-bg" data-setbg="{{ $product->firstImage ? asset('storage/' . $product->firstImage->images) : asset('storage/default.jpg') }}">
-                                <ul class="product__item__pic__hover">
-                                    <li><a style="cursor:pointer" onclick="addToCart({{ $produit->id }})"><i class="fa fa-shopping-cart"></i></a></li>
-                                </ul>
+                            <div class="product__item">
+                                <div class="product__item__pic set-bg" data-setbg="{{ $product->firstImage ? asset('storage/' . $product->firstImage->images) : asset('storage/default.jpg') }}">
+                                    <ul class="product__item__pic__hover">
+                                        <li><a style="cursor:pointer" onclick="addToCart({{ $produit->id }})"><i class="fa fa-shopping-cart"></i></a></li>
+                                    </ul>
+                                </div>
+                                <div class="product__item__text">
+                                    <h6><a href="{{ route('prod.details', $product->id) }}">{{ $product->nom }}</a></h6>
+                                    <h5>{{ number_format($product->prix, 2) }} MAD</h5>
+                                </div>
                             </div>
-                            <div class="product__item__text">
-                                <h6><a href="{{ route('prod.details', $product->id) }}">{{ $product->nom }}</a></h6>
-                                <h5>{{ number_format($product->prix, 2) }} MAD</h5>
-                            </div>
-                        </div>
                     </div>
                 @endforeach
             </div>

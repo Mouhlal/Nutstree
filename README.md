@@ -99,7 +99,8 @@ npm run build
 php artisan serve
 ```
 ### 🛠️ 6. Interface  
-![Page de connexion](https://nutstree.ma/login)
+![Page de connexion](![Login Nutstree](https://nutstree.ma/assets/img/logo.png)
+
 
 ```  
 L'application sera accessible sur **http://127.0.0.1:8000** 🚀  
